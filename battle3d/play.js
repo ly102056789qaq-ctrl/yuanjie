@@ -19,14 +19,62 @@ const FACE = {
 };
 const TILE = { siwei: { basic: 'basic-tile.webp', skill: 'skill-tile.webp', ultimate: 'ultimate-tile.webp' } };
 const SIMPLIFIED = new Set(['dekeke', 'vera', 'rin']);
-// 特效：impact 打在每个目标身上，self 放在出手者脚下；元素闪光由 hit 决定
+// 特效配方：每项 [特效名, 高度(身高比例), 缩放, 染色, 延迟秒]。
+// self 放在出手者身上，impact 打在每个受击目标身上，ally 放在每个受益的队友身上；hit 是每段命中的元素闪光。
+const V = '#b48cff', VL = '#d6c4ff', TH = '#c3a6ff';   // 负相紫、浅紫、雷电紫
 const LOOK = {
-  siwei: { hit: 'hit_purple', basic: { impact: 'siwei_dark' }, skill: { self: 'siwei_ring', impact: 'hit_purple' }, ultimate: { self: 'siwei_ring', impact: 'siwei_dark', video: '../assets/battle/ult/siwei-ult.mp4' } },
-  dekeke: { hit: 'hit_gold', basic: { impact: 'hit_gold' }, skill: { ally: 'dekeke_sun' }, ultimate: { self: 'dekeke_burst', ally: 'dekeke_sun' } },
-  vera: { hit: 'hit_purple', basic: { impact: 'vera_burst' }, skill: { impact: 'vera_bolt' }, ultimate: { impact: 'vera_bolt', self: 'vera_burst', video: '../assets/battle/ult/vera-ult.mp4' } },
-  rin: { hit: 'hit_green', basic: { impact: 'hit_green' }, skill: { ally: 'rin_heal' }, ultimate: { ally: 'rin_heal', cutscene: 'ult_rin' } },
-  enemy: { hit: 'hit_red', basic: { impact: 'hit_dark' } },
+  siwei: {
+    hit: ['hit_purple', 0.55, 1],
+    basic: { self: [['siwei_ring', 0.02, 0.55, VL]], impact: [['siwei_dark', 0.45, 1.1], ['phantom_orb', 0.55, 0.75, V, 0.05]] },
+    skill: { self: [['siwei_ring', 0.02, 1.15], ['dream_motes', 0.6, 1.2, VL]], impact: [['siwei_ring', 0.02, 0.85, V], ['siwei_dark', 0.5, 1], ['phantom_orb', 0.55, 0.9, V, 0.1]] },
+    ultimate: { self: [['siwei_ring', 0.02, 1.4], ['pillar_white', 0, 1.1, V]], impact: [['thunder_orb', 0.5, 1.5, V], ['siwei_dark', 0.45, 1.5], ['pillar_big', 0, 1.2, V, 0.1]],
+      video: '../assets/battle/ult/siwei-ult.mp4' },
+  },
+  dekeke: {
+    hit: ['hit_gold', 0.55, 1],
+    basic: { self: [['gold_sparks', 0.6, 0.8]], impact: [['gold_orb', 0.55, 1.4], ['gold_sparks', 0.5, 1, '', 0.05]] },
+    skill: { self: [['gold_sparks', 0.6, 1]], ally: [['pillar_gold', 0, 1.1], ['gold_bolt', 0.15, 0.9, '', 0.1], ['gold_sparks', 0.7, 1, '', 0.2]] },
+    ultimate: { self: [['dekeke_sun', 0.45, 1.3], ['gold_blast', 0.5, 1.2, '', 0.2]], ally: [['pillar_gold', 0, 1.25], ['dekeke_burst', 0.5, 0.9, '', 0.15]] },
+  },
+  vera: {
+    hit: ['hit_purple', 0.55, 1],
+    basic: { self: [['spark_small', 0.7, 0.8, TH]], impact: [['spark_small', 0.55, 1.3, TH], ['spark_ring', 0.55, 0.9, TH, 0.06]] },
+    skill: { self: [['spark_ring', 0.6, 1, TH]], impact: [['vera_bolt', 0, 1.15, VL], ['vera_burst', 0.5, 1, TH, 0.08], ['spark_ring', 0.5, 1, TH, 0.15]] },
+    ultimate: { self: [['thunder_orb', 0.6, 1.1, TH]], impact: [['thunder_column', 0, 1.5, TH], ['thunder_orb', 0.5, 1.4, TH, 0.08], ['vera_bolt', 0, 1.3, VL, 0.18]],
+      video: '../assets/battle/ult/vera-ult.mp4' },
+  },
+  rin: {
+    hit: ['hit_green', 0.55, 1],
+    basic: { self: [['rin_petals', 0.7, 0.6]], impact: [['green_swirl', 0.5, 0.9], ['rin_petals', 0.6, 0.8, '', 0.05]] },
+    skill: { self: [['green_cloud', 0.02, 1.2]], ally: [['rin_heal', 0.05, 1], ['green_cloud', 0.02, 1.1, '', 0.05], ['rin_petals', 0.8, 0.9, '', 0.12]] },
+    ultimate: { ally: [['rin_heal', 0.05, 1], ['rin_petals', 0.8, 1]], cutscene: 'ult_rin' },
+  },
+  enemy: {
+    hit: ['hit_red', 0.55, 1.1],
+    basic: { self: [['spirit', 0.55, 1.4, '#ff8a8a']], impact: [['hit_dark', 0.5, 1.3], ['seal_red', 0.02, 0.8, '', 0.05]] },
+  },
 };
+// 衍生伤害、状态、领域等系统事件的特效
+const DERIVED_FX = {
+  phantomReplay: [['phantom_orb', 0.5, 1.25, V], ['siwei_dark', 0.45, 1.1, '', 0.05], ['hit_purple', 0.55, 1.1, '', 0.08]],
+  phantomChase: [['phantom_beam', 0.55, 1.4, VL], ['hit_purple', 0.55, 1, '', 0.06]],
+  realityOverwrite: [['pillar_white', 0, 1.6], ['hit_white', 0.5, 1.6, '', 0.08], ['siwei_ring', 0.02, 1.2, VL]],
+  arc: [['spark_ring', 0.6, 1, TH], ['spark_small', 0.5, 1, TH, 0.04]],
+  overload: [['thunder_column', 0, 1.4, TH], ['vera_burst', 0.5, 1.2, TH, 0.08]],
+};
+const STATUS_FX = {
+  dreamMark: { once: [['siwei_ring', 0.02, 0.7, V]], loop: ['dream_motes', 0.55, 0.9, V] },
+  conduct: { once: [['spark_ring', 0.55, 0.9, TH]], loop: ['conduct_loop', 0.5, 0.9, ''] },
+  sync: { once: [['gold_sparks', 0.6, 0.9]] },
+  tempo: { once: [['pillar_cyan', 0, 0.8]] },
+  bloom: { once: [['green_leaf', 0.6, 1]] },
+  shade: { once: [['aura_blue', 0.02, 1, '#9dffc0']] },
+};
+const SYSTEM_FX = [['hit_white'], ['splash_blue'], ['spark_ring'], ['pillar_cyan'], ['hit_dark'], ['siwei_dark'], ['pillar_big'], ['dream_motes'], ['aura_blue'], ['siwei_ring'], ['pillar_white'], ['green_leaf'], ['rin_heal']];
+const PRELOAD = [...new Set([
+  ...Object.values(LOOK).flatMap(l => [l.hit, ...['basic', 'skill', 'ultimate'].flatMap(k => l[k] ? [...(l[k].self || []), ...(l[k].impact || []), ...(l[k].ally || [])] : [])]),
+  ...Object.values(DERIVED_FX).flat(), ...Object.values(STATUS_FX).flatMap(x => [...x.once, ...(x.loop ? [x.loop] : [])]), ...SYSTEM_FX,
+].filter(Boolean).map(x => x[0]))];
 const SLOT_NAME = { basic: '普攻', skill: '战技', ultimate: '终结技' };
 const DERIVED = { phantomReplay: '幻象复现', phantomChase: '幻象追击', realityOverwrite: '现实覆写', arc: '跳电', overload: '过载' };
 
@@ -67,8 +115,10 @@ function numColors(el) {
   const c = hexRgb((ELEMENT[el] || ELEMENT.wuli).color);
   const lum = (0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2]) / 255;
   const base = mix(c, [255, 255, 255], Math.max(0, 0.62 - lum));
-  return { top: `rgb(${mix(base, [255, 255, 255], 0.9)})`, mid: `rgb(${mix(base, [255, 255, 255], 0.55)})`, low: `rgb(${mix(base, [255, 255, 255], 0.12)})`,
-    edge: `rgb(${mix(c, [8, 12, 22], 0.62)})`, glow: `rgba(${base},.55)` };
+  // 崩铁式配色：上半近白（带一点元素色），下半是提亮后的元素色；描边用同色系的深色，外发光用元素色
+  const vivid = mix(base, [255, 255, 255], 0.18);
+  return { top: `rgb(${mix(base, [255, 255, 255], 0.86)})`, mid: `rgb(${mix(base, [255, 255, 255], 0.5)})`, low: `rgb(${vivid})`,
+    edge: `rgb(${mix(c, [10, 14, 30], 0.45)})`, glow: `rgba(${vivid},.6)` };
 }
 
 /* ───────── 动态层 ───────── */
@@ -386,23 +436,31 @@ function playVideo(src, u, slot) {
   });
 }
 
+function playFx(list, node, k = 1) {
+  for (const [name, h = 0.5, sc = 1, tint = '', delay = 0] of list || []) {
+    const go = () => stage.fx(name, node, h, sc * k, '', tint);
+    if (delay > 0) setTimeout(go, delay * 1000 / speed); else go();
+  }
+}
+
 async function present(actor, action, evs, inserted) {
   let camBack = false;
   const look = LOOK[actor.side === 'ally' ? actor.id : 'enemy'] || LOOK.enemy;
   const slot = action.type, cfg = look[slot] || look.basic || {};
   const me = nodeOf(actor);
+  const hasFoeHit = evs.some(e => e.type === 'damage' && e.target.side !== actor.side);
   hitStack.clear();
   showBanner(actor, slot, inserted);
   stage.hideTarget();
 
-  // 1 起手
+  // 1 起手（带运镜）
   let cut = false;
   if (cfg.cutscene && await playCutscene(cfg.cutscene)) { cut = true; /* 插画演出已经演完起手，治疗光也在演出里放过了 */ }
   else if (cfg.video) {
-    // 运镜：推到出手者面前蓄力 → 闪白接视频 → 闪白后越过我方肩头看向敌人，命中后再拉回常态
+    // 推到出手者面前蓄力 → 闪白接视频 → 闪白后越过我方肩头看向敌人，命中后再拉回常态
     stage.shot('close', me, 0.55);
     stage.act(me, 'cast');
-    if (cfg.self) stage.fx(cfg.self, me, 0.02, 1.3);
+    playFx(cfg.self, me);
     await wait(0.35);
     stage.shot('low', me, 0.5);
     stage.shake(0.04, 0.5);
@@ -412,72 +470,89 @@ async function present(actor, action, evs, inserted) {
     camBack = true;
     await wait(0.15);
   }
-  else if (slot === 'basic') { stage.act(me, 'attack'); await wait(0.42); }
+  else if (slot === 'basic') {
+    stage.act(me, 'attack'); playFx(cfg.self, me);
+    await wait(0.42);
+  }
   else {
-    stage.act(me, 'cast');
-    if (cfg.self) stage.fx(cfg.self, me, 0.02, slot === 'ultimate' ? 1.3 : 1);
+    // 战技 / 非视频终结技：镜头先推近出手者，出手瞬间切到看目标的机位
+    stage.shot('close', me, slot === 'ultimate' ? 0.5 : 0.4);
+    stage.act(me, 'cast'); playFx(cfg.self, me, slot === 'ultimate' ? 1.15 : 1);
     if (slot === 'ultimate') stage.shake(0.05, 0.6);
-    await wait(slot === 'ultimate' ? 0.9 : 0.7);
+    await wait(slot === 'ultimate' ? 0.85 : 0.6);
+    if (actor.side === 'ally') { stage.shot(hasFoeHit ? 'enemies' : 'base', '', hasFoeHit ? 0.25 : 0.5); camBack = hasFoeHit; }
   }
 
   // 2 命中：伤害、治疗、状态、击破、倒下
   let total = 0, first = true;
   const fxDone = new Set();
+  const heavyK = slot === 'ultimate' ? 1.2 : 1;
   for (const ev of evs) {
     if (ev.type === 'damage' && ev.target.side !== actor.side || ev.type === 'damage' && ev.derived) {
       const t = ev.target, node = nodeOf(t);
-      if (!fxDone.has(t.id) && cfg.impact && !ev.derived) { fxDone.add(t.id); stage.fx(cfg.impact, node, 0.45, slot === 'ultimate' ? 1.3 : 1); }
-      const tl = t.side === 'ally' ? LOOK.enemy : look;
-      const heavy = slot === 'ultimate' || !!(ev.ctx && ev.ctx.crit);
+      if (ev.derived) playFx(DERIVED_FX[ev.kind] || [['hit_purple', 0.55, 0.8]], node);
+      else if (!fxDone.has(t.id)) { fxDone.add(t.id); playFx(cfg.impact, node, heavyK); }
+      const hl = (t.side === 'ally' ? LOOK.enemy : look).hit;
+      const crit = !!(ev.ctx && ev.ctx.crit), heavy = slot === 'ultimate' || crit;
       stage.hit(node, ev.derived ? '#d8c8ff' : '#ffffff', heavy && !ev.derived);
-      stage.fx(tl.hit, node, 0.55, ev.derived ? 0.7 : 1);
+      if (hl) stage.fx(hl[0], node, hl[1], hl[2] * (crit ? 1.35 : 1) * (ev.derived ? 0.7 : 1));
+      if (crit && !ev.derived) stage.fx('hit_white', node, 0.55, 1.1);
       if (first && !ev.derived) { stage.hitstop(heavy ? 0.09 : 0.06); first = false; }
       shownHp.set(t.id, ev.hpAfter);
       if (ev.amount > 0 || ev.ctx) floatDamage(ev);
       if (t.side === 'enemy') { total += ev.amount; roundDmg.set(ev.attacker.id, (roundDmg.get(ev.attacker.id) || 0) + ev.amount); }
       renderParty(); renderBoss(); renderEnemyBars();
-      await wait(ev.derived ? 0.22 : 0.13);
+      await wait(ev.derived ? 0.28 : 0.13);
     } else if (ev.type === 'damage') {
       shownHp.set(ev.target.id, ev.hpAfter);
     } else if (ev.type === 'heal') {
       const node = nodeOf(ev.target);
-      const fx = (cfg.ally && ev.source === actor) ? cfg.ally : 'rin_heal';
-      if (cut) fxDone.add('heal:' + ev.target.id);
-      if (!fxDone.has('heal:' + ev.target.id)) { fxDone.add('heal:' + ev.target.id); stage.fx(fx, node, 0.05, 1); }
+      const key = 'ally:' + ev.target.id;
+      if (cut) fxDone.add(key);
+      if (!fxDone.has(key)) {
+        fxDone.add(key);
+        if (ev.source === actor && cfg.ally) playFx(cfg.ally, node);
+        else playFx(ev.kind === 'talent' ? [['green_leaf', 0.6, 1.1], ['rin_heal', 0.05, 0.8]] : [['green_leaf', 0.6, 0.9]], node);
+      }
       stage.flash(node, '#9dffb8', 0.28, 0.4);
       shownHp.set(ev.target.id, ev.hpAfter);
       if (ev.amount > 0) floatHeal(ev);
       if (ev.kind === 'talent') floatTag(ev.target, '花信', 'tag green');
       renderParty();
       await wait(0.1);
-    } else if (ev.type === 'status:apply') {
-      const def = battle.status.defs[ev.id] || {};
-      if (def.fx === 'conduct_loop') stage.fx('conduct_loop', nodeOf(ev.target), 0.5, 0.9, ev.id);
+    } else if (ev.type === 'status:apply' || ev.type === 'status:refresh') {
+      const def = battle.status.defs[ev.id] || {}, sfx = STATUS_FX[ev.id], node = nodeOf(ev.target);
       if (cfg.ally && ev.target.side === actor.side && !fxDone.has('ally:' + ev.target.id) && slot !== 'basic') {
-        fxDone.add('ally:' + ev.target.id); stage.fx(cfg.ally, nodeOf(ev.target), 0.05, 1);
+        fxDone.add('ally:' + ev.target.id); playFx(cfg.ally, node);
       }
-      floatTag(ev.target, def.name || ev.id, def.debuff || def.side === 'enemy' ? 'tag red' : 'tag blue');
+      if (sfx) { playFx(sfx.once, node); if (sfx.loop) stage.fx(sfx.loop[0], node, sfx.loop[1], sfx.loop[2], ev.id, sfx.loop[3]); }
+      if (ev.type === 'status:apply') floatTag(ev.target, def.name || ev.id, def.debuff || def.side === 'enemy' ? 'tag red' : 'tag blue');
       await wait(0.05);
     } else if (ev.type === 'status:remove') {
       stage.stopLoop(nodeOf(ev.target) + ':' + ev.id);
     } else if (ev.type === 'break') {
-      stage.fx('hit_white', nodeOf(ev.target), 0.5, 1.8);
+      const node = nodeOf(ev.target);
+      playFx([['hit_white', 0.5, 1.9], ['splash_blue', 0.05, 1.4, '#dbe8ff'], ['spark_ring', 0.55, 1.4, '#eaf2ff', 0.06]], node);
       stage.shake(0.16, 0.4); stage.hitstop(0.12);
       floatTag(ev.target, '击破', 'tag break');
       await wait(0.2);
     } else if (ev.type === 'break:recover') {
       floatTag(ev.target, '韧性恢复', 'tag');
     } else if (ev.type === 'action:advance' && ev.unit.side === actor.side && ev.unit !== actor) {
+      playFx([['pillar_cyan', 0, 0.75]], nodeOf(ev.unit));
       floatTag(ev.unit, '行动提前', 'tag blue');
     } else if (ev.type === 'unit:death') {
+      playFx([['hit_dark', 0.5, 1.8], ['siwei_dark', 0.4, 1.4, '#9aa6c8', 0.1]], nodeOf(ev.unit));
       stage.die(nodeOf(ev.unit));
       if (target === ev.unit) target = battle.enemiesOf({ side: 'ally' })[0] || null;
       await wait(0.3);
-    } else if (ev.type === 'domain:start') {
-      showDomain('幻海展开', true);
+    } else if (ev.type === 'domain:start' || ev.type === 'domain:refresh') {
+      if (ev.type === 'domain:start') showDomain('幻海展开', true);
+      for (const u of battle.units.filter(x => x.alive)) playFx(u.side === 'enemy' ? [['pillar_big', 0, 1.1, V], ['dream_motes', 0.5, 1.2, VL, 0.2]] : [['aura_blue', 0.02, 1, VL]], nodeOf(u));
     } else if (ev.type === 'domain:end' && ev.reason !== 'battleEnd') {
       showDomain('幻海消退', false);
     } else if (ev.type === 'siwei:guard') {
+      playFx([['siwei_ring', 0.02, 1, VL], ['pillar_white', 0, 0.9, VL]], nodeOf(ev.target));
       floatTag(ev.target, '虚实守护', 'tag blue');
     }
   }
@@ -688,7 +763,7 @@ function boot() {
   if (started) return; started = true;
   $('#loading').style.opacity = 0; wrap.classList.remove('is-hidden');
   newBattle(); buildPicks(); hookGameFrame();
-  const y = yj(); if (y && y.preload) setTimeout(() => stage.preload(['hit_white', 'hit_purple', 'hit_gold', 'hit_green', 'hit_red', 'hit_dark', 'siwei_ring', 'siwei_dark', 'vera_bolt', 'vera_burst', 'dekeke_sun', 'dekeke_burst', 'rin_heal', 'conduct_loop']), 600);
+  const y = yj(); if (y && y.preload) setTimeout(() => stage.preload(PRELOAD), 600);
   requestAnimationFrame(follow);
   loop();
 }

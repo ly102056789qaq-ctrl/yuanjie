@@ -7,7 +7,7 @@ from PIL import Image
 
 SRC = os.path.join('C:' + os.sep, 'Users', '86193', 'repos', 'work', 'fxbake')
 OUT = os.path.join('C:' + os.sep, 'Users', '86193', 'repos', 'yuanjie', 'cocos', 'battle', 'assets', 'resources', 'fx')
-MAX = 2048          # 图集边长上限
+MAX = 1600          # 图集边长上限
 QUALITY = 84
 
 # 名字: (烘焙目录, 世界尺寸(米), 帧率, 循环)
@@ -27,6 +27,32 @@ FX = {
     'dekeke_burst': ('zuoci_skill1__003', 3.0, 30, False),
     'rin_heal': ('xiaoqiao_skill1__002', 1.7, 30, False),
     'rin_petals': ('juexing_female', 3.2, 24, False),
+    # 第二批：按角色配招（引擎里可以用 tint 重新着色）
+    'phantom_orb': ('zhangjiao_skill1__002', 2.6, 30, False),
+    'phantom_beam': ('simayi_skill2__001', 3.2, 30, False),
+    'dream_motes': ('xiaoqiao_skill4', 1.8, 24, True),
+    'pillar_white': ('guang_guangzhu', 3.4, 30, False),
+    'spark_small': ('zhangjiao_skill1__003', 2.0, 30, False),
+    'spark_ring': ('zhangjiao_skill1__004', 2.4, 30, False),
+    'thunder_orb': ('zhangjiao_skill4', 3.0, 30, False),
+    'thunder_column': ('zhugeliang_skill3__002', 3.6, 30, False),
+    'gold_orb': ('zuoci_skill1__001', 1.6, 30, False),
+    'gold_sparks': ('zuoci_skill1__002', 2.2, 30, False),
+    'gold_blast': ('zuoci_skill2__001', 3.2, 30, False),
+    'gold_bolt': ('zuoci_skill2__002', 3.0, 30, False),
+    'pillar_gold': ('zhugeliang_skill1__002', 3.0, 30, False),
+    'pillar_cyan': ('zhugeliang_skill1__003', 2.6, 30, False),
+    'pillar_big': ('zhugeliang_skill1__004', 3.6, 30, False),
+    'pillar_red': ('zhugeliang_skill1__001', 2.6, 30, False),
+    'seal_red': ('zhugeliang_skill1__005', 2.8, 30, False),
+    'aura_blue': ('zhugeliang_2skill2__001', 2.6, 30, False),
+    'splash_blue': ('zhugeliang_2skill2__002', 2.6, 30, False),
+    'orb_cyan': ('zhugeliang_skill2__001', 1.8, 30, False),
+    'rain_cyan': ('zhugeliang_skill2__002', 3.0, 30, False),
+    'green_swirl': ('xiaoqiao_skill1__001', 2.0, 30, False),
+    'green_cloud': ('huatuo_skill1__002', 2.4, 30, False),
+    'green_leaf': ('huatuo_skill1__001', 1.4, 30, False),
+    'spirit': ('guojia_skill4', 2.4, 30, False),
 }
 
 

@@ -206,6 +206,6 @@ anim.playOnLoad = false;
 const dir = rig.getComponent('CutsceneDirector') || rig.addComponent('CutsceneDirector');
 dir.fxLibrary = lib;
 dir.fxLayer = fxLayer;
-dir.playOnStart = 'ult_rin';
-dir.loopDelay = 3;
+dir.playOnStart = '';   // 战斗页由 HUD 触发；调试单独预览时可临时改成 'ult_rin'
+dir.loopDelay = 0;
 return { fx: lib.children.map(n => n.name), ui: ui.children.map(n => n.name), events: events.length, duration: D };

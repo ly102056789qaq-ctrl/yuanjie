@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, instantiate, Node, Vec3 } from 'cc';
+import { _decorator, Animation, Component, instantiate, Node, UIOpacity, Vec3 } from 'cc';
 import { FxPlayer } from './FxPlayer';
 import { StageApi } from './StageApi';
 const { ccclass, property } = _decorator;
@@ -26,6 +26,9 @@ export class CutsceneDirector extends Component {
 
     start() {
         // 网页接口：外层 HUD 通过 window.yjBattle 触发演出；演出开始/结束时回调 window.yjOnCutscene(true/false)
+        // 场景里保存的演出节点可能停在编辑器预览的某一帧（插画亮着、镜头在特写）：把每段演出采样回第 0 帧
+        const ui = this.node.getChildByName('UI');
+        if (ui) for (const n of ui.children) { const op = n.getComponent(UIOpacity); if (op) op.opacity = 0; }
         // 战斗表现接口（act / hit / fx / screenPos …）见 StageApi；演出相关的留在这里
         const w = window as any;
         const api = new StageApi(this);
@@ -37,7 +40,7 @@ export class CutsceneDirector extends Component {
             act: (n: string, clip: string) => api.act(n, clip),
             hit: (n: string, hex?: string, heavy?: boolean) => api.hit(n, hex, heavy),
             flash: (n: string, hex?: string, k?: number, dur?: number) => api.flash(n, hex, k, dur),
-            fx: (name: string, n: string, h?: number, scale?: number, loopKey?: string) => api.fx(name, n, h, scale, loopKey),
+            fx: (name: string, n: string, h?: number, scale?: number, loopKey?: string, tint?: string) => api.fx(name, n, h, scale, loopKey, tint),
             stopLoop: (key: string) => api.stopLoop(key),
             preload: (names: string[]) => api.preload(names),
             shake: (amp = 0.08, dur = 0.35) => this.shake(String(amp), String(dur)),

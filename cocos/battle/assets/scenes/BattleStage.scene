@@ -4179,8 +4179,8 @@
     "fxLayer": {
       "__id__": 154
     },
-    "playOnStart": "ult_rin",
-    "loopDelay": 3,
+    "playOnStart": "",
+    "loopDelay": 0,
     "_id": "626vVJK8ZCTL77zSbFbRGa"
   },
   {
@@ -23065,8 +23065,8 @@
     },
     "_enabled": true,
     "_fogDensity": 0.3,
-    "_fogStart": 11,
-    "_fogEnd": 22,
+    "_fogStart": 19,
+    "_fogEnd": 46,
     "_fogAtten": 5,
     "_fogTop": 1.5,
     "_fogRange": 1.2,

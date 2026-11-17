@@ -76,7 +76,7 @@ g.shadows.enabled = false;
 g.fog.enabled = true;
 g.fog.type = 0;
 g.fog.fogColor = col('#33456A');
-g.fog.fogStart = 11;
-g.fog.fogEnd = 22;
+g.fog.fogStart = 19;   // 只压远景（见 12-post.js）
+g.fog.fogEnd = 46;
 
 return { env: env.children.map(n => n.name), camera: camNode.children.map(n => n.name) };

@@ -39,6 +39,12 @@ export class StageApi {
             if (body) this.bodyHome.set(a.name, body.position.clone());
             if (sh) this.shadowScale.set(a.name, sh.scale.clone());
         }
+        // 常态机位（与 40-ult-rin.js 的 SHOT.base 一致）。场景里保存的镜头可能停在演出的某一帧，开场强制回到常态
+        if (this.camera) {
+            this.camBase = this.pose(new Vec3(0.16, 3.55, 13.6), new Vec3(0.14, 0.62, 0));
+            this.camera.node.setPosition(this.camBase.pos);
+            this.camera.node.setRotation(this.camBase.rot);
+        }
         const tpl = host.fxLibrary?.children[0]?.getComponentInChildren(Sprite);
         this.addMat = tpl ? tpl.customMaterial : null;
         resources.load('effects/yj-sprite-flash', EffectAsset, (err, fx) => { if (!err) { this.flashEffect = fx; this.installFlash(); } else console.warn('[Stage] 闪白材质加载失败', err); });
@@ -281,12 +287,12 @@ export class StageApi {
     }
 
     /* 放特效：在角色脚下往上 h（0..1 身高比例）处；scale 相对图集登记的尺寸 */
-    async fx(name: string, actorName: string, h = 0.5, scale = 1, loopKey = ''): Promise<void> {
+    async fx(name: string, actorName: string, h = 0.5, scale = 1, loopKey = '', tint = ''): Promise<void> {
         const a = this.actor(actorName);
         if (!a) return;
         const p = a.worldPosition.clone();
         p.y += this.heightOf(a) * h;
-        const n = await this.spawn(name, scale);
+        const n = await this.spawn(name, scale, tint);
         if (!n) return;
         n.setWorldPosition(p);
         if (loopKey) { this.stopLoop(actorName + ':' + loopKey); this.loops.set(actorName + ':' + loopKey, n); }
@@ -298,7 +304,7 @@ export class StageApi {
         }
     }
 
-    private async spawn(name: string, scale: number): Promise<Node | null> {
+    private async spawn(name: string, scale: number, tint = ''): Promise<Node | null> {
         const layer = this.host.fxLayer || this.host.node.scene;
         const tpl = this.host.fxLibrary?.getChildByName(name);
         if (tpl) {
@@ -327,6 +333,7 @@ export class StageApi {
         const sp = img.addComponent(Sprite);
         sp.sizeMode = Sprite.SizeMode.CUSTOM;
         if (this.addMat) sp.customMaterial = this.addMat;
+        if (tint) sp.color = new Color().fromHEX(tint);   // 叠加混合下颜色相乘：白色/青色特效可以染成角色元素色
         const player = img.addComponent(FxPlayer);
         player.frames = frames;
         player.fps = info.fps;

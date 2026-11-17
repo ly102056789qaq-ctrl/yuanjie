@@ -193,3 +193,16 @@
 @keyframes cine-white{0%{opacity:1}100%{opacity:0}}
 @keyframes cine-push{0%{transform:scale(1.03) translateX(0)}100%{transform:scale(1.13) translateX(var(--dx,2%))}}
 #cine video{transform-origin:55% 45%}
+
+/* ── 照抄崩铁：伤害数字用 DIN（D-DIN，OFL 授权的 DIN 1451 复刻），浅色渐变 + 同色系细描边 + 外发光，不用黑描边 ── */
+@font-face{font-family:"YJ DIN";src:url(../fonts/yj-ddin.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"YJ DIN";src:url(../fonts/yj-ddin-bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"YJ DIN Cond";src:url(../fonts/yj-ddin-cond-bold.woff2) format("woff2");font-weight:700}
+:root{--num:"YJ DIN","YJ Num",var(--sans)}
+.n{font-weight:700;letter-spacing:0}
+.fl b{font-family:"YJ DIN",var(--sans);font-weight:700;letter-spacing:-.01em}
+.fl b .o{-webkit-text-stroke:.055em var(--edge);color:var(--edge);filter:drop-shadow(0 0 .12em var(--glow)) drop-shadow(0 0 .32em var(--glow)) drop-shadow(0 .03em .04em rgba(0,0,0,.45))}
+.fl b .f{background:linear-gradient(180deg,var(--top) 0%,var(--top) 42%,var(--mid) 58%,var(--low) 100%);-webkit-background-clip:text;background-clip:text}
+.fl em,.fl em.crit{font-family:var(--sans);font-weight:700;font-size:.36em;letter-spacing:.06em;margin:0 0 .04em .35em;color:var(--mid);
+  -webkit-text-stroke:.07em var(--edge);paint-order:stroke fill;filter:drop-shadow(0 0 .3em var(--glow))}
+#total .v{font-family:"YJ DIN",var(--sans);font-weight:700}
