@@ -7823,11 +7823,11 @@
       "ascension": {
         "stage": null,
         "notes": null,
-        "art": null,
+        "art": "assets/ascend/rin-ascend.jpg",
         "focus": {
-          "x": null,
-          "y": null,
-          "w": null
+          "x": 0.46,
+          "y": 0.4,
+          "w": 1700
         },
         "shards": [
           {
