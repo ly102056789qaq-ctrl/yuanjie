@@ -53,6 +53,15 @@ export class Battle {
     if (!this.over) this.bus.emit('turn:end', { unit: u });
     this.turnUnit = null; this.timeline.resetAfterTurn(u.id);
   }
+  /* 插入行动（终结技）：不占回合、不重置行动条，也不触发 turn:start / turn:end 上的回合类结算 */
+  insertAction(u, action) {
+    if (this.over || !u.alive) return;
+    const prev = this.turnUnit; this.turnUnit = u;
+    const kit = this.kits.get(u.id);
+    if (kit && kit.act) kit.act(action); else this.genericAct(u, action);
+    this.bus.emit('action', { unit: u, action, inserted: true });
+    this.turnUnit = prev;
+  }
   genericAct(u, act) { const t = act.target || this.enemiesOf(u)[0]; if (t) this.damage.dealDirect(u, t, { mult: act.mult ?? 1, tag: act.type }); }
   /* 按行动序列走一步 */
   step() {

@@ -88,6 +88,17 @@ Cocos Creator 3.8.8 工程已经能跑：夜景战场，四人分层小人，两
 - **伤害飘字**（详见第 5 节第 2 项）：只在暴击时出现“暴击”二字；按元素着色。
 - 用户要开新窗口继续；她最想尽快“战斗爽”：**先接通可玩对局**，再做视觉加强。
 
+## 4.7 已接通可玩对局（2026-11-18 凌晨，未提交）
+
+- `battle3d/play.js` + `play.css`：HUD 层驱动回合（`js/battle/match.js` 的 `buildMatch / nextActor / autoAction / canUlt`），收集一次行动的事件后按顺序演出。`make_overlay.py` 现在只引入这两个文件，不再内联脚本。
+- 遭遇 `data/battle/encounter-cocos.json`（策划数值，自动 200 局平均 6 轮）；`rules.json` 新增能量点、击破规则；`Damage.js` 加暴击区；`Battle.insertAction` 插入终结技。
+- Cocos 表现接口 `StageApi.ts`（由 CutsceneDirector 挂到 `window.yjBattle`）：act / hit / flash / fx / select / target / screenPos / hitstop / die / reset。闪白材质 `resources/effects/yj-sprite-flash.effect`；特效图集 `resources/fx/*.jpg` 由 `cocos/tools/pack_fx.py` 生成（15 套 2.3MB）。
+- 大招视频：`assets/battle/ult/siwei-ult.mp4`、`vera-ult.mp4`，HUD 层全屏播放。Playwright 自带 Chromium 不能放 H.264，验收要用 `channel: 'msedge'`。
+- 数字字体换成 Barlow Condensed（`fonts/yj-num-*.woff2`，OFL），`--num` 变量一处可改回。
+- 动作曲线 `30-anims.js` 重写（抬手 40～45°、smootherstep、头发裙摆跟随），已在编辑器执行并保存场景。
+- 坑：Cocos 构建是 loose 模式，`[...map]` 会变成 `[map]`，遍历 Map 一律用 `Array.from(map.entries())`；iframe 里 Cocos 会拦截按键冒泡，转发要用捕获阶段。
+- 验收脚本在 `repos/tools/play_test.mjs`、`play_test2.mjs`。
+
 ## 5. 今晚任务清单（按优先级）
 
 1. **接通回合对局**（最高优先级）：

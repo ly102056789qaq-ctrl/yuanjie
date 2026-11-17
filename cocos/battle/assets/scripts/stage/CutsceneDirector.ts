@@ -1,5 +1,6 @@
 import { _decorator, Animation, Component, instantiate, Node, Vec3 } from 'cc';
 import { FxPlayer } from './FxPlayer';
+import { StageApi } from './StageApi';
 const { ccclass, property } = _decorator;
 
 /* 演出导演：挂在 CameraRig 上，和镜头动画剪辑放在同一个节点。
@@ -21,11 +22,35 @@ export class CutsceneDirector extends Component {
     private shakeOffset = new Vec3();
 
     private busy = false;
+    private api: StageApi | null = null;
 
     start() {
         // 网页接口：外层 HUD 通过 window.yjBattle 触发演出；演出开始/结束时回调 window.yjOnCutscene(true/false)
+        // 战斗表现接口（act / hit / fx / screenPos …）见 StageApi；演出相关的留在这里
         const w = window as any;
-        w.yjBattle = { playCutscene: (name: string) => this.playCutscene(name), ready: true };
+        const api = new StageApi(this);
+        this.api = api;
+        w.yjBattle = {
+            ready: true,
+            playCutscene: (name: string) => this.playCutscene(name),
+            cutsceneLength: (name: string) => { const st = this.getComponent(Animation)?.getState(name); return st ? st.duration : 0; },
+            act: (n: string, clip: string) => api.act(n, clip),
+            hit: (n: string, hex?: string, heavy?: boolean) => api.hit(n, hex, heavy),
+            flash: (n: string, hex?: string, k?: number, dur?: number) => api.flash(n, hex, k, dur),
+            fx: (name: string, n: string, h?: number, scale?: number, loopKey?: string) => api.fx(name, n, h, scale, loopKey),
+            stopLoop: (key: string) => api.stopLoop(key),
+            preload: (names: string[]) => api.preload(names),
+            shake: (amp = 0.08, dur = 0.35) => this.shake(String(amp), String(dur)),
+            hitstop: (sec?: number) => api.hitstop(sec),
+            screenPos: (n: string, h?: number) => api.screenPos(n, h),
+            target: (n: string, hex?: string) => api.target(n, hex),
+            select: (names: string[], hex?: string) => api.select(names, hex),
+            shot: (kind: string, n?: string, dur?: number) => api.shot(kind, n, dur),
+            hideTarget: () => api.hideTarget(),
+            die: (n: string) => api.die(n),
+            reset: () => api.reset(),
+            get fxReady() { return api.fxReady; },
+        };
         try { window.parent && (window.parent as any).yjOnBattleReady && (window.parent as any).yjOnBattleReady(); } catch (e) { /* 跨域时忽略 */ }
         if (this.playOnStart) this.scheduleOnce(() => this.playCutscene(this.playOnStart), 1.2);
     }

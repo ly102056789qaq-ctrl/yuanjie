@@ -124,8 +124,18 @@ const SHOT = {
   party: camPose([3.3, 3.0, 11.2], [2.6, 1.25, 2.4]),
 };
 tmp.destroy();
+// 节奏：原稿按 9.6 秒排的分镜，用户嫌慢，整体按下面的折线压到约 6 秒（分镜顺序不变，插画段压得最多）。
+// 下面所有时间仍按原稿写，经 M() 换算成实际时间。
+const TIME_MAP = [[0, 0], [0.95, 0.55], [1.1, 0.65], [1.38, 0.82], [4.7, 2.75], [6.6, 3.95], [6.88, 4.12], [8.4, 4.95], [9.4, 5.6], [9.6, 5.75]];
+const M = t => {
+  for (let i = 1; i < TIME_MAP.length; i++) {
+    const [a0, b0] = TIME_MAP[i - 1], [a1, b1] = TIME_MAP[i];
+    if (t <= a1) return +(b0 + (b1 - b0) * (t - a0) / (a1 - a0)).toFixed(4);
+  }
+  return TIME_MAP[TIME_MAP.length - 1][1];
+};
 // [时间, 机位, 是否硬切]；相邻机位之间用缓入缓出
-const ROUTE = [[0, 'base'], [0.95, 'rinPush'], [1.3, 'rinClose'], [6.7, 'party', true], [8.4, 'party'], [9.4, 'base']];
+const ROUTE = [[0, 'base'], [0.95, 'rinPush'], [1.3, 'rinClose'], [6.7, 'party', true], [8.4, 'party'], [9.4, 'base']].map(([t, ...r]) => [M(t), ...r]);
 const ease = x => x * x * (3 - 2 * x);
 function camAt(t) {
   for (let i = 0; i < ROUTE.length - 1; i++) {
@@ -138,10 +148,11 @@ function camAt(t) {
     }
   }
 }
-const D = 9.6;
+const D = M(9.6);
 const clip = new cc.AnimationClip('ult_rin');
 clip.duration = D; clip.sample = 60; clip.wrapMode = cc.AnimationClip.WrapMode.Normal;
-function track(path, prop, comp, keysPerChannel, n = 3) {
+function track(path, prop, comp, keysPerChannel, n = 3, remap = true) {
+  if (remap) keysPerChannel = keysPerChannel.map(keys => keys.map(([t, v]) => [M(t), v]));
   const tr = n === 1 ? new cc.animation.RealTrack() : new cc.animation.VectorTrack();
   if (n !== 1) tr.componentsCount = n;
   let tp = new cc.animation.TrackPath().toHierarchy(path);
@@ -158,20 +169,20 @@ for (let t = 0; t <= D + 1e-6; t += 1 / 30) times.push(+t.toFixed(4));
 for (const [t, , cut] of ROUTE) if (cut) { times.push(+(t - 0.001).toFixed(4)); }
 times.sort((a, b) => a - b);
 for (const t of times) { const p = camAt(t); for (let c = 0; c < 3; c++) { ck[c].push([t, p.pos[c]]); rk[c].push([t, p.rot[c]]); } }
-track('Main Camera', 'position', null, ck);
-track('Main Camera', 'eulerAngles', null, rk);
+track('Main Camera', 'position', null, ck, 3, false);
+track('Main Camera', 'eulerAngles', null, rk, 3, false);
 
 // 插画：透明度 + 慢推（缩放）+ 平移
 const op = (path, keys) => track(path, 'opacity', 'cc.UIOpacity', [keys], 1);
-op('UI/Flash', [[0, 0], [0.95, 0], [1.1, 255], [1.38, 0], [6.48, 0], [6.6, 255], [6.88, 0], [D, 0]]);
-op('UI/CG_A', [[0, 0], [1.1, 0], [1.12, 255], [4.7, 255], [4.72, 0], [D, 0]]);
-op('UI/CG_B', [[0, 0], [4.7, 0], [4.72, 255], [6.6, 255], [6.62, 0], [D, 0]]);
-op('UI/BarTop', [[0, 0], [1.1, 0], [1.12, 255], [6.6, 255], [6.62, 0], [D, 0]]);
-op('UI/BarBottom', [[0, 0], [1.1, 0], [1.12, 255], [6.6, 255], [6.62, 0], [D, 0]]);
-op('UI/Subtitle', [[0, 0], [2.9, 0], [3.3, 255], [4.5, 255], [4.68, 0], [D, 0]]);
+op('UI/Flash', [[0, 0], [0.95, 0], [1.1, 255], [1.38, 0], [6.48, 0], [6.6, 255], [6.88, 0], [9.6, 0]]);
+op('UI/CG_A', [[0, 0], [1.1, 0], [1.12, 255], [4.7, 255], [4.72, 0], [9.6, 0]]);
+op('UI/CG_B', [[0, 0], [4.7, 0], [4.72, 255], [6.6, 255], [6.62, 0], [9.6, 0]]);
+op('UI/BarTop', [[0, 0], [1.1, 0], [1.12, 255], [6.6, 255], [6.62, 0], [9.6, 0]]);
+op('UI/BarBottom', [[0, 0], [1.1, 0], [1.12, 255], [6.6, 255], [6.62, 0], [9.6, 0]]);
+op('UI/Subtitle', [[0, 0], [2.0, 0], [2.4, 255], [4.5, 255], [4.68, 0], [9.6, 0]]);
 const sc = (path, keys) => track(path, 'scale', null, [keys, keys, keys.map(([t]) => [t, 1])]);
-sc('UI/CG_A', [[0, 1.0], [1.12, 1.0], [4.7, 1.08], [D, 1.08]]);
-sc('UI/CG_B', [[0, 1.0], [4.72, 1.0], [6.6, 1.07], [D, 1.07]]);
+sc('UI/CG_A', [[0, 1.0], [1.12, 1.0], [4.7, 1.08], [9.6, 1.08]]);
+sc('UI/CG_B', [[0, 1.0], [4.72, 1.0], [6.6, 1.07], [9.6, 1.07]]);
 track('UI/CG_A', 'position', null, [[[0, 40], [1.12, 40], [4.7, 90]], [[0, 0], [1.12, 0], [4.7, -30]], [[0, 0], [4.7, 0]]]);
 track('UI/CG_B', 'position', null, [[[0, 20], [4.72, 20], [6.6, -30]], [[0, 0], [4.72, 0], [6.6, 10]], [[0, 0], [6.6, 0]]]);
 
@@ -185,7 +196,7 @@ const events = [
   ...ALLIES.map((a, i) => ({ frame: 7.0 + i * 0.12, func: 'fx', params: ['petals', `Actors/${a}`, '1.6', '1'] })),
   { frame: 7.0, func: 'act', params: ['Actors/Ally_Rin', 'cast'] },
 ];
-clip.events = events;
+clip.events = events.map(e => ({ ...e, frame: M(e.frame) }));
 
 const saved = await saveAsset('db://assets/anims/cutscene/ult_rin.anim', clip);
 let anim = rig.getComponent(cc.Animation) || rig.addComponent(cc.Animation);

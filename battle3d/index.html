@@ -255,6 +255,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #cue{left:50%;top:126px;transform:translateX(-50%);font-size:15px;letter-spacing:.24em}
 #cue::before,#cue::after{content:"";display:inline-block;width:40px;height:1px;background:#fff;vertical-align:middle;margin:0 14px;box-shadow:0 1px 0 rgba(16,28,44,.6)}
 </style>
+<link rel="stylesheet" href="play.css">
 </head>
 <body>
 <iframe id="game" src="game/index.html" allow="autoplay; fullscreen"></iframe>
@@ -410,24 +411,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 
 <div id="cue" class="abs t">点击终结技</div>
 </div></div>
-<script>
-/* HUD 按 1920×1080 等比缩放居中；点击终结技 → Cocos 播放大招演出，演出期间隐藏 HUD */
-const wrap = document.getElementById('hudwrap');
-function fit() { const k = Math.min(innerWidth / 1920, innerHeight / 1080); wrap.style.transform = `translate(-50%,-50%) scale(${k})`; }
-addEventListener('resize', fit); fit();
-const game = document.getElementById('game');
-let ready = false;
-window.yjOnBattleReady = () => { ready = true; document.getElementById('loading').style.opacity = 0; wrap.classList.remove('is-hidden'); };
-window.yjOnCutscene = on => wrap.classList.toggle('is-hidden', on);
-function ult() { try { game.contentWindow.yjBattle.playCutscene('ult_rin'); } catch (e) { console.warn('战斗场景尚未就绪', e); } }
-for (const el of [document.getElementById('ult-tile'), document.querySelector('#pc-rin .ult')]) {
-  if (!el) continue;
-  el.addEventListener('click', ult);
-  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') ult(); });
-}
-addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') ult(); });
-// iframe 里的接口准备好之前也可能已经加载完：轮询一次兜底
-const poll = setInterval(() => { try { if (game.contentWindow.yjBattle && !ready) { window.yjOnBattleReady(); } } catch (e) {} if (ready) clearInterval(poll); }, 500);
-</script>
+<script type="module" src="play.js"></script>
 </body>
 </html>

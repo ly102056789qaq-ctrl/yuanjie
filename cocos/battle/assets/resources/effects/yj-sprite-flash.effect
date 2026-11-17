@@ -1,0 +1,55 @@
+// 战斗小人用的精灵材质：在内置精灵着色的基础上多一个 flashColor（rgb 颜色，a 混合量），
+// 受击闪白、元素色闪光都靠它；a = 0 时和内置精灵完全一样。
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        flashColor: { value: [1, 1, 1, 0], editor: { type: color } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+  out vec4 color;
+  out vec2 uv0;
+  vec4 vert () {
+    uv0 = a_texCoord;
+    color = a_color;
+    return cc_matViewProj * vec4(a_position, 1);
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  in vec4 color;
+  in vec2 uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  uniform Flash { vec4 flashColor; };
+  vec4 frag () {
+    vec4 o = CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+    o *= color;
+    o.rgb = mix(o.rgb, flashColor.rgb, flashColor.a);
+    ALPHA_TEST(o);
+    return o;
+  }
+}%

@@ -51,29 +51,13 @@ s = s.replace('body{width:1920px;height:1080px;overflow:hidden;position:relative
               '#hud{width:1920px;height:1080px;overflow:hidden;position:relative;')
 s = s.replace('<title>战斗 HUD 精修稿 · 1920×1080</title>', '<title>源界 · 战斗演示（Cocos）</title>')
 s = s.replace('<body>\n', '<body>\n<iframe id="game" src="game/index.html" allow="autoplay; fullscreen"></iframe>\n<div id="loading">战斗场景加载中</div>\n<div id="hudwrap" class="is-hidden"><div id="hud">\n', 1)
+# 可玩对局的逻辑和样式在 battle3d/play.js、play.css（ES Module，直接引用仓库里的 js/battle）
 script = '''
 </div></div>
-<script>
-/* HUD 按 1920×1080 等比缩放居中；点击终结技 → Cocos 播放大招演出，演出期间隐藏 HUD */
-const wrap = document.getElementById('hudwrap');
-function fit() { const k = Math.min(innerWidth / 1920, innerHeight / 1080); wrap.style.transform = `translate(-50%,-50%) scale(${k})`; }
-addEventListener('resize', fit); fit();
-const game = document.getElementById('game');
-let ready = false;
-window.yjOnBattleReady = () => { ready = true; document.getElementById('loading').style.opacity = 0; wrap.classList.remove('is-hidden'); };
-window.yjOnCutscene = on => wrap.classList.toggle('is-hidden', on);
-function ult() { try { game.contentWindow.yjBattle.playCutscene('ult_rin'); } catch (e) { console.warn('战斗场景尚未就绪', e); } }
-for (const el of [document.getElementById('ult-tile'), document.querySelector('#pc-rin .ult')]) {
-  if (!el) continue;
-  el.addEventListener('click', ult);
-  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') ult(); });
-}
-addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') ult(); });
-// iframe 里的接口准备好之前也可能已经加载完：轮询一次兜底
-const poll = setInterval(() => { try { if (game.contentWindow.yjBattle && !ready) { window.yjOnBattleReady(); } } catch (e) {} if (ready) clearInterval(poll); }, 500);
-</script>
+<script type="module" src="play.js"></script>
 </body>'''
 s = s.replace('\n</body>', script, 1)
+s = s.replace('</style>', '</style>\n<link rel="stylesheet" href="play.css">', 1)
 open(os.path.join(out_dir, 'index.html'), 'w', encoding='utf-8').write(s)
 icons = os.path.join(out_dir, 'hud-icons')
 shutil.copytree(os.path.join(REPO, 'design', 'hud', 'icons'), icons, dirs_exist_ok=True)

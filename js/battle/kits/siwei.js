@@ -126,7 +126,8 @@ export function siweiKit(battle, me, config) {
       if (t) battle.damage.dealDirect(me, t, { mult: sk.basic.mult, tag: 'basic', toughness: sk.basic.toughness });
       battle.gainEnergy(me, D.energy.perAction.basic);
     },
-    castUltimate: ultimate
+    castUltimate: ultimate,
+    targets(type) { return type === 'skill' ? 'all' : 'enemy'; },
   };
 }
 registerKit('siwei', siweiKit);

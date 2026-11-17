@@ -45,7 +45,40 @@ export function buildMatch({ rules, statsDef, characters, skills, team, enemies,
       return { type: 'basic', target: foes[Math.floor(Math.random() * foes.length)], mult: 1 };
     };
   }
+  // 能量点：我方普攻 +1、战技 -1（插入的终结技不算）
+  const sp = rules.skillPoints || { start: 3, max: 5 };
+  battle.sp = { n: sp.start, max: sp.max };
+  battle.bus.on('action', ev => {
+    if (ev.unit.side !== 'ally' || ev.inserted) return;
+    const d = ev.action.type === 'basic' ? 1 : ev.action.type === 'skill' ? -1 : 0;
+    if (d) { battle.sp.n = Math.max(0, Math.min(battle.sp.max, battle.sp.n + d)); battle.bus.emit('sp', { n: battle.sp.n, delta: d }); }
+  });
+  // 韧性击破：行动延后；到它自己的回合开始时韧性回满
+  const br = rules.break || { delay: 0.25 };
+  battle.bus.on('break', ev => battle.delay(ev.target, br.delay, 'break'));
+  battle.bus.on('turn:start', ev => {
+    const u = ev.unit;
+    if (u.broken) { u.broken = false; u.toughness = u.maxToughness; battle.bus.emit('break:recover', { target: u }); }
+  });
   return battle;
+}
+
+/* 终结技消耗（思惟诺姆升格 I 首次减费等由 kit 自己算） */
+export function ultCost(battle, u) {
+  const kit = battle.kits.get(u.id);
+  if (kit && kit.ultCost) return kit.ultCost();
+  const e = u.config && u.config.data && u.config.data.energy;
+  return e ? e.ultCost : Infinity;
+}
+export const canUlt = (battle, u) => u.alive && u.side === 'ally' && u.maxEnergy != null && u.energy >= ultCost(battle, u);
+
+/* 自动战斗 / 托管：按 kit 的 ai() 出招；能量点不够时把战技换成普攻 */
+export function autoAction(battle, u) {
+  const kit = battle.kits.get(u.id);
+  let a = (kit && kit.ai && kit.ai()) || { type: 'basic' };
+  if (a.type === 'ultimate') a = { type: 'skill' };
+  if (a.type === 'skill' && u.side === 'ally' && battle.sp && battle.sp.n <= 0) a = { type: 'basic' };
+  return a;
 }
 
 /* 逐步推进：返回下一个行动者以及是否需要玩家输入（我方）。轮次结算由 Battle 统一处理 */

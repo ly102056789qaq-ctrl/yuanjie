@@ -1,7 +1,7 @@
 /* 伤害结算管线（严格对应设计文档「六、重要结算顺序」）：
    1 resolve   确定目标和伤害属性
    2 read      读取攻击方、目标和领域状态
-   3 calc      常规伤害（攻击×倍率×(1+增伤)×防御区×(1+易伤)）——钩子 dmg:calc 可改 bonus / defIgnore
+   3 calc      常规伤害（攻击×倍率×(1+增伤)×暴击区×防御区×(1+易伤)）——钩子 dmg:calc 可改 bonus / defIgnore
    4 independent  独立倍率（如虚实倍率），连乘，不与第 3 步任何乘区相加——钩子 dmg:independent
    5 apply     护盾、生命变化；致命判定钩子 dmg:lethal 可否决
    6 record    记录实际直接伤害——钩子 dmg:record
@@ -27,7 +27,9 @@ export class DamageSystem {
     // 3
     ctx.bonus = attacker.stats.dmgBonus || 0; ctx.defIgnore = 0; ctx.vuln = 0;
     bus.pipe('dmg:calc', ctx);
-    ctx.regular = attacker.stats.atk * ctx.mult * (1 + ctx.bonus) * defFactor(rules, attacker, target, ctx.defIgnore) * (1 + ctx.vuln);
+    ctx.crit = (b.rng || Math.random)() < (attacker.stats.critRate || 0);
+    ctx.regular = attacker.stats.atk * ctx.mult * (1 + ctx.bonus) * (ctx.crit ? 1 + (attacker.stats.critDmg || 0) : 1)
+      * defFactor(rules, attacker, target, ctx.defIgnore) * (1 + ctx.vuln);
     trace.push('calc');
     // 4
     ctx.independent = []; bus.pipe('dmg:independent', ctx);
