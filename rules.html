@@ -65,7 +65,7 @@ function setE(i){const e=E[i];els.querySelectorAll('.el2').forEach((b,j)=>{b.cla
  document.getElementById('coreimg').src=`assets/icons/el-${e[0]}.webp`;document.getElementById('elcn').textContent=e[1];document.getElementById('elen').textContent=e[2];
  document.getElementById('elidx').textContent=String(i+1).padStart(2,'0')+' ／ 10';
  document.getElementById('elkw').innerHTML=e.slice(3,6).map(k=>`<span>${k}</span>`).join('');
- const WHO={yansheng:['tangli.html','棠梨·听雨'],leidian:['character.html?id=vera','薇拉·洛朗']};
+ const WHO={yansheng:['tangli.html','棠梨·听雨'],fuzhao:['decoco.html','德可可'],leidian:['character.html?id=vera','薇拉·洛朗']};
  const box=document.getElementById('elwho'),w=WHO[e[0]];
  if(w){box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div><b>${w[1]}</b><span>${e[1]}</span></div><a href="${w[0]}">查看档案 →</a>`}
  else{box.hidden=true;box.innerHTML=''}}
