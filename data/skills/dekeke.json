@@ -6,9 +6,9 @@
   "title": "协同演算",
   "version": "V0.1 战斗原型方案",
   "element": {
-    "id": "yansheng",
-    "name": "演生",
-    "tbd": true
+    "id": "fuzhao",
+    "name": "辐照",
+    "tbd": false
   },
   "role": "通辅，全队协同与行动效率辅助",
   "core": [
