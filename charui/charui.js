@@ -114,7 +114,7 @@ function skDetail(sd,key){const n=skNode(sd,key);if(!n.d)return '';const d=n.d;
   const icon=n.kind==='minor'?`<span class="skmi big">${ic('lock')}</span>`:`<img src="${E(d.icon)}" alt="">`;
   const minorVal=n.kind==='minor'?(d.format==='flat'?`+${d.value}`:`+${(d.value*100).toFixed(1).replace(/\.0$/,'')}%`):'';
   const params=n.kind==='minor'?[[d.name,minorVal]]:Object.entries(d.params||{}).filter(([k])=>PNAME[k]).map(([k,v])=>[PNAME[k],pv(k,v)]);
-  const desc=n.kind==='minor'?`${E(d.name)} ${minorVal}（暂定）`:d.desc?HLS(d.desc):'<span class="none">数据锁定</span>';
+  const desc=n.kind==='minor'?`${E(d.name)} ${minorVal}${sd.id==='rin'?'':'（暂定）'}`:d.desc?HLS(d.desc):'<span class="none">数据锁定</span>';
   const tags=(d.type||[]).slice(0,3);
   return `<div class="skc">
     <div class="skch"><span class="skci">${icon}</span><div class="skct"><small>${E(label)}</small><h3>${E(d.name||'数据锁定')}</h3>
@@ -328,13 +328,13 @@ function asData(c){const a=c.ascension||{};const sh=Array.from({length:6},(_,i)=
   const un=sh.map((s,i)=>s.unlocked===true||s.unlocked===false?s.unlocked:(st!=null&&i<st));
   const f=a.focus||{};const iw=+f.w||1820,ih=iw*941/1672;const fx=L(f.x)?.7:+f.x,fy=L(f.y)?.27:+f.y;
   const img={x:920-fx*iw,y:316-fy*ih,w:iw,h:ih};return {a,sh,st,un,img}}
-function asCard(c,i){const {a,sh,un,img}=asData(c);const s=sh[i]||{};const lk=L(s.name);const ok=un[i];
+function asCard(c,i){const {a,sh,un,img}=asData(c);const s=sh[i]||{};const lk=L(s.name);const ok=un[i];const unknown=c.id==='rin'&&s.unlocked==null&&L(a.stage);
   const p=ASPOLY[i];const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);const bx=Math.min(...xs),by=Math.min(...ys),bw=Math.max(...xs)-bx,bh=Math.max(...ys)-by;
   const CW=416,CH=230;const k=Math.max(CW/bw,CH/bh)*1.15;const cx=bx+bw/2,cy=by+bh/2;
   const top=s.art?`<img src="${E(s.art)}" alt="">`:a.art?`<span class="acimg" style="background-image:url('${E(a.art)}');background-size:${img.w*k}px ${img.h*k}px;background-position:${CW/2-(cx-img.x)*k}px ${CH/2-(cy-img.y)*k}px"></span>`:`<span class="acimg none">${ic('lock')}</span>`;
   return `<div class="ascard${ok?'':' lkd'}${i===5?' ult':''}" role="region" aria-label="升格 ${ROMAN[i]}"><div class="act">${top}<i class="acsh"></i><b class="acr">${ROMAN[i]}</b></div>
    <div class="acb"><h3 class="${lk?'none':''}">${lk?'数据锁定':E(s.name)}</h3><i class="acl"></i>${L(s.desc)?`<p class="none">${ic('lock')} 升格效果 · 数据锁定</p>`:`<p>${HL(s.desc)}</p>`}${L(s.quote)?'':`<blockquote class="acq">「${E(s.quote)}」</blockquote>`}</div>
-   <div class="acf">${ok?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span>已解锁</span>':`${ic('lock')}<span>未解锁</span>`}</div></div>`}
+   <div class="acf">${ok?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span>已解锁</span>':unknown?`${ic('lock')}<span>数据锁定</span>`:`${ic('lock')}<span>未解锁</span>`}</div></div>`}
 function ascend(c){const {a,un,st,img}=asData(c);const has=!!a.art;const n=un.filter(Boolean).length;
   const bg=has?`background-image:url('${E(a.art)}');background-size:${img.w}px ${img.h}px;background-position:${img.x}px ${img.y}px`:'';
   const shards=ASIN.map((p,i)=>`<button type="button" class="ash${un[i]?'':' alk'}${i===asSel?' on':''}" data-asi="${i}" aria-label="升格 ${ROMAN[i]}${un[i]?'':'（未解锁）'}" aria-pressed="${i===asSel}" style="clip-path:polygon(${p.map(q=>q[0].toFixed(1)+'px '+q[1].toFixed(1)+'px').join(',')})"><span class="asimg" style="${bg}"></span><i class="asgl"></i></button>`).join('');
@@ -405,7 +405,7 @@ function archive(c){const p=c.profile||{};
     ${c.page?`<a class="full" href="${E(c.page)}">查看完整档案页 <i>▸</i></a>`:''}</div></div>`}
 
 async function render(c,anim=true){
-  cur=c;document.title=`${c.name} · 角色 · 源界 ASTERIAL`;
+  cur=c;app.dataset.id=c.id;document.title=`${c.name} · 角色 · 源界 ASTERIAL`;
   const i=C.indexOf(c);$('#no').innerHTML=`<span class="bcd"></span>No. ${String(i+1).padStart(3,'0')}${c.code?`<em>${E(c.code)}</em>`:''}`;
   $('#footcode').textContent=`SYN-${String(7400+i*13).padStart(4,'0')}-${String(i+1).padStart(2,'0')}`;
   $('#ghost').textContent=(c.roman||'').split(' ')[0]||'';
