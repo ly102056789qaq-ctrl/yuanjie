@@ -22,7 +22,7 @@
   <div class="rl-bg" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
   <div class="sh "><div class="rail" data-rv="wipe"><span class="mono">规则</span><i class="ticks"></i></div>
 <h2 class="hd" id="ru-h" data-rv="up">六职业</h2><p data-rv="up" style="--d:.1s">角色以「职业 ／ 元素」标注。</p></div>
-  <div class="bns"><div class="bn" data-rv="cut" style="--d:0.00s"><img src="assets/icons/class-qianggong.webp" alt=""><b>强攻</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn" data-rv="cut" style="--d:0.06s"><img src="assets/icons/class-pozhen.webp" alt=""><b>破阵</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.12s"><img src="assets/icons/class-shibian.webp" alt=""><b>蚀变</b><div class="us"><a href="character.html?id=vera">薇拉·洛朗 →</a></div></div><div class="bn" data-rv="cut" style="--d:0.18s"><img src="assets/icons/class-ganshe.webp" alt=""><b>干涉</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.24s"><img src="assets/icons/class-zhiyuan.webp" alt=""><b>支援</b><div class="us"><a href="tangli.html">棠梨·听雨 →</a><a href="character.html?id=dekeke">德可可 →</a></div></div><div class="bn" data-rv="cut" style="--d:0.30s"><img src="assets/icons/class-shouhu.webp" alt=""><b>守护</b><div class="us"><span class="none">暂无公开角色</span></div></div></div>
+  <div class="bns"><div class="bn" data-rv="cut" style="--d:0.00s"><img src="assets/icons/class-qianggong.webp" alt=""><b>强攻</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn" data-rv="cut" style="--d:0.06s"><img src="assets/icons/class-pozhen.webp" alt=""><b>破阵</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.12s"><img src="assets/icons/class-shibian.webp" alt=""><b>蚀变</b><div class="us"><a href="character.html?id=vera">薇拉·洛朗 →</a></div></div><div class="bn" data-rv="cut" style="--d:0.18s"><img src="assets/icons/class-ganshe.webp" alt=""><b>干涉</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.24s"><img src="assets/icons/class-zhiyuan.webp" alt=""><b>支援</b><div class="us"><a href="tangli.html">棠梨·听雨 →</a><a href="character.html?id=dekeke">德可可 →</a></div></div><div class="bn has" data-rv="cut" style="--d:0.30s"><img src="assets/icons/class-shouhu.webp" alt=""><b>守护</b><div class="us"><a href="character.html?id=rin">若叶凛·望月 →</a></div></div></div>
   <div class="rfoot"><span class="lock">各职业的说明 · 未公开</span></div>
 </section>
 <section class="scr ru2" id="rules" aria-labelledby="rules-h">
@@ -65,9 +65,11 @@ function setE(i){const e=E[i];els.querySelectorAll('.el2').forEach((b,j)=>{b.cla
  document.getElementById('coreimg').src=`assets/icons/el-${e[0]}.webp`;document.getElementById('elcn').textContent=e[1];document.getElementById('elen').textContent=e[2];
  document.getElementById('elidx').textContent=String(i+1).padStart(2,'0')+' ／ 10';
  document.getElementById('elkw').innerHTML=e.slice(3,6).map(k=>`<span>${k}</span>`).join('');
- const WHO={yansheng:['tangli.html','棠梨·听雨'],fuzhao:['decoco.html','德可可'],leidian:['character.html?id=vera','薇拉·洛朗']};
- const box=document.getElementById('elwho'),w=WHO[e[0]];
- if(w){box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div><b>${w[1]}</b><span>${e[1]}</span></div><a href="${w[0]}">查看档案 →</a>`}
+ const WHO={yansheng:[['tangli.html','棠梨·听雨'],['character.html?id=rin','若叶凛·望月']],fuzhao:['decoco.html','德可可'],leidian:['character.html?id=vera','薇拉·洛朗']};
+ const rows=raw=>!raw?[]:(Array.isArray(raw[0])?raw:[raw]);
+ const box=document.getElementById('elwho'),list=rows(WHO[e[0]]);
+ if(list.length===1){const w=list[0];box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div><b>${w[1]}</b><span>${e[1]}</span></div><a href="${w[0]}">查看档案 →</a>`}
+ else if(list.length){box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div>${list.map(w=>`<a href="${w[0]}"><b>${w[1]}</b></a>`).join('')}<span>${e[1]}</span></div>`}
  else{box.hidden=true;box.innerHTML=''}}
 setE(5);
 </script>

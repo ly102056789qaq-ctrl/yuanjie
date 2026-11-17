@@ -52,9 +52,21 @@ function currentMotion() {
   return (art && art.dataset.motion) || 'siwei';
 }
 
+/* 若叶凛：头颈刚体、无整身漂浮；胸口约 0.5%、4.5s；发梢裙摆花束末梢最多 3px。不改上面的常数。 */
+const RN = {
+  COLLAR: 0.40,
+  HIPS: 0.72,
+  HEAD_CX: 0.50,
+  PERIOD: 4.5,
+  BREEZE: 5.2,
+  SWAY: 3,
+  /* 开闭眼原图对齐后只盖住眼睛，不含两侧耳环 */
+  EYE: { x: 0.42, y: 0.142, w: 0.22, h: 0.055 },
+};
+
 function isSubtleMotion() {
   const m = currentMotion();
-  return m === 'dekeke' || m === 'vera';
+  return m === 'dekeke' || m === 'vera' || m === 'rin';
 }
 
 function deformDekeke(nx, ny, t, w, h) {
@@ -135,9 +147,34 @@ function deformVera(nx, ny, t, w, h) {
   return [dx, dy, breathe, phase];
 }
 
+function deformRin(nx, ny, t, w, h) {
+  const phase = (t / RN.PERIOD) * Math.PI * 2;
+  const breathe = Math.sin(phase);
+  const collar = RN.COLLAR, hips = RN.HIPS, headCx = RN.HEAD_CX;
+  const shoulderRise = 0.005 * (hips - collar) * h * breathe;
+  let dx = 0;
+  let dy = (ny <= collar) ? shoulderRise : shoulderRise * smoothstep(hips, collar, ny);
+  const breeze = Math.sin((t / RN.BREEZE) * Math.PI * 2);
+  const windX = RN.SWAY * breeze;
+  const windY = RN.SWAY * 0.28 * breeze;
+  const faceNeck = (1 - smoothstep(collar - 0.02, collar + 0.02, ny))
+    * (1 - smoothstep(0.16, 0.38, Math.abs(nx - headCx) * 2));
+  const free = 1 - faceNeck;
+  const side = smoothstep(0.28, 0.70, Math.abs(nx - 0.50) * 2);
+  const longHair = smoothstep(0.55, 0.94, ny) * side * free;
+  const hem = smoothstep(0.88, 0.98, ny);
+  const bouquet = smoothstep(0.34, 0.46, ny) * (1 - smoothstep(0.58, 0.70, ny))
+    * (1 - smoothstep(0.18, 0.46, Math.abs(nx - 0.48) * 2));
+  const wt = Math.min(1, longHair * 0.8 + hem * 0.65 + bouquet * 0.3);
+  dx += wt * windX;
+  dy += wt * windY;
+  return [dx, dy, breathe, phase];
+}
+
 function deformAt(nx, ny, t, w, h) {
   if (currentMotion() === 'dekeke') return deformDekeke(nx, ny, t, w, h);
   if (currentMotion() === 'vera') return deformVera(nx, ny, t, w, h);
+  if (currentMotion() === 'rin') return deformRin(nx, ny, t, w, h);
   const phase = (t / PERIOD) * Math.PI * 2;
   const breathe = Math.sin(phase);
   const hair = Math.sin(phase * 0.72 + 0.9);
@@ -180,6 +217,8 @@ let srcKey = '';
 let reduced = false;
 let openTex = null;
 let blinkTex = null;
+let blinkSprite = null;
+let blinkMask = null;
 let root = null;
 let orb = null;
 let orbGlow = null;
@@ -213,9 +252,28 @@ function scheduleBlink() {
   blinkTimer = setTimeout(() => { blinkOnce(Math.random() < 0.28); }, wait);
 }
 
+function rinEyePatch() {
+  return currentMotion() === 'rin' && blinkSprite;
+}
+
 async function blinkOnce(doubleBlink) {
   if (!mesh || !openTex || !blinkTex || reduced) return;
   blinking = true;
+  if (rinEyePatch()) {
+    blinkSprite.visible = true;
+    await sleep(150);
+    if (blinkSprite) blinkSprite.visible = false;
+    if (doubleBlink && blinkSprite) {
+      await sleep(80);
+      if (!blinkSprite) return;
+      blinkSprite.visible = true;
+      await sleep(140);
+      if (blinkSprite) blinkSprite.visible = false;
+    }
+    blinking = false;
+    scheduleBlink();
+    return;
+  }
   mesh.texture = blinkTex;
   await sleep(150);
   if (!mesh) return;
@@ -312,6 +370,23 @@ async function attach(src) {
     rest = Float32Array.from(buf.data);
     root.addChild(mesh);
 
+    blinkSprite = null;
+    blinkMask = null;
+    if (currentMotion() === 'rin' && blinkTex) {
+      blinkSprite = new Sprite(blinkTex);
+      blinkSprite.width = w;
+      blinkSprite.height = h;
+      blinkSprite.visible = false;
+      blinkMask = new Graphics();
+      const eye = RN.EYE;
+      blinkMask.rect(eye.x * w, eye.y * h, eye.w * w, eye.h * h);
+      blinkMask.fill({ color: 0xffffff, alpha: 1 });
+      blinkMask.alpha = 0;
+      blinkSprite.mask = blinkMask;
+      root.addChild(blinkMask);
+      root.addChild(blinkSprite);
+    }
+
     if (orbOn) {
       const orbUrl = (typeof YJ !== 'undefined' && YJ.src) ? await YJ.src(orbSrc) : orbSrc;
       const otex = prepTexture(await Assets.load(orbUrl));
@@ -344,6 +419,14 @@ async function attach(src) {
     mesh.height = h;
     const buf = positionsOf(mesh);
     rest = Float32Array.from(buf.data);
+    if (blinkSprite && blinkMask && currentMotion() === 'rin') {
+      blinkSprite.width = w;
+      blinkSprite.height = h;
+      blinkMask.clear();
+      const eye = RN.EYE;
+      blinkMask.rect(eye.x * w, eye.y * h, eye.w * w, eye.h * h);
+      blinkMask.fill({ color: 0xffffff });
+    }
     if (orb) {
       orb.alpha = ORB_ALPHA;
       orb.width = w * ORB_W;
@@ -378,8 +461,13 @@ function tick() {
   buf.update();
 
   if (root) {
-    /* 德可可整身不漂浮，只留网格内的轻呼吸与末梢微风 */
+    /* 德可可、薇拉、若叶凛整身不漂浮 */
     root.y = isSubtleMotion() ? 0 : Math.sin(phase * 0.85 + 0.3) * h * FLOAT_AMP;
+  }
+  if (blinkSprite && blinkMask && currentMotion() === 'rin') {
+    const rise = 0.005 * (RN.HIPS - RN.COLLAR) * h * Math.sin((t / RN.PERIOD) * Math.PI * 2);
+    blinkSprite.y = rise;
+    blinkMask.y = rise;
   }
   if (orb) {
     const [dx, dy] = deformAt(orbNx, orbNy, t, w, h);
@@ -420,6 +508,8 @@ async function destroy() {
   if (app && !reduced) try { app.ticker.remove(tick); } catch (e) {}
   if (root) { try { root.destroy({ children: true }); } catch (e) {} root = null; }
   mesh = null;
+  blinkSprite = null;
+  blinkMask = null;
   orb = null;
   orbGlow = null;
   sparkles = [];

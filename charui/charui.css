@@ -1142,3 +1142,15 @@ canvas.spwave{position:absolute;left:0;right:0;top:120px;width:100%;height:84px;
 .mob .skp{width:auto;height:auto;display:flex;align-items:center;gap:10px}.mob .skp .dia{position:relative;left:auto;top:auto;width:64px;height:64px}.mob .skp .dia img{width:64px;height:64px}.mob .skp .lb{position:relative;left:auto;top:auto}
 .mob .skprog{flex-wrap:wrap}
 .mob .skside{height:auto}
+/* 若叶凛：雾绿 / 月白 / 浅金，只作用于这个角色 */
+.cu[data-id=rin] .skcd .hb{color:#2F6B52}
+.cu[data-id=rin] .met .hl,.cu[data-id=rin] .acb p .hl{color:#8A6A32}
+.cu[data-id=rin] .mxart:has(img)::before,
+.cu[data-id=rin] .mxart:has(img)::after{content:"";position:absolute;pointer-events:none;z-index:2}
+.cu[data-id=rin] .mxart:has(img)::before{left:43%;top:36%;width:20%;height:24%;background:radial-gradient(circle at 48% 58%,rgba(255,252,230,.85),rgba(170,220,160,.0) 58%),radial-gradient(circle at 78% 28%,rgba(255,228,170,.8),transparent 42%);mix-blend-mode:soft-light;animation:rinGlint 4.6s ease-in-out infinite}
+.cu[data-id=rin] .mxart:has(img)::after{left:56%;top:36%;width:6px;height:6px;border-radius:50%;background:#FFF8E8;box-shadow:0 0 8px 3px rgba(255,236,190,.95),-20px 24px 0 0 #F3E2A8,16px 32px 0 0 #E7F6D8;filter:drop-shadow(0 0 3px rgba(255,236,190,.9));animation:rinMote 5.2s ease-in-out infinite}
+@keyframes rinGlint{0%,100%{opacity:.62}50%{opacity:1}}
+@keyframes rinMote{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){
+ .cu[data-id=rin] .mxart:has(img)::before,.cu[data-id=rin] .mxart:has(img)::after{animation:none}
+}
