@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>角色编辑器 · 源界 ASTERIAL</title>
+<link rel="stylesheet" href="charui/editor.css">
+</head>
+<body>
+<header class="eb">
+  <a class="logo" href="people.html"><b>源界</b><span>角色编辑器</span><small>CHARACTER EDITOR</small></a>
+  <span class="st" id="status">载入中…</span>
+  <div class="acts">
+    <button type="button" id="bPreview" class="pri">在新窗口预览</button>
+    <label class="btn">导入 JSON<input type="file" id="fImport" accept=".json,application/json" hidden></label>
+    <button type="button" id="bJson">只导出 JSON</button>
+    <button type="button" id="bZip" class="hot">导出更新包 .zip</button>
+    <button type="button" id="bReset" class="ghost">放弃草稿</button>
+  </div>
+</header>
+<main class="ew">
+  <aside class="elist">
+    <div class="lh"><b>角色</b><small id="cnt"></small></div>
+    <div id="list" class="items"></div>
+    <div class="lacts"><button type="button" id="bAdd">＋ 新建角色</button><button type="button" id="bUp" title="上移">↑</button><button type="button" id="bDown" title="下移">↓</button><button type="button" id="bDel" class="ghost" title="删除">删除</button></div>
+    <p class="hint">所有修改自动存成<b>本机草稿</b>（只在这台电脑的这个浏览器里），线上网站不会变。改好后点「导出更新包」，把 zip 发给小惟发布。</p>
+  </aside>
+  <section class="form" id="form"></section>
+  <aside class="pv">
+    <div class="pvh"><b>实时预览</b><small>1920×1080 缩放</small><select id="pvTab"><option value="detail">详情</option><option value="skill">技能</option><option value="module">模组</option><option value="spectrum">频谱</option><option value="ascend">升格</option><option value="archive">档案</option></select></div>
+    <div class="pvf"><iframe id="pv" title="预览" src="about:blank"></iframe></div>
+    <div class="pvh"><b>立绘裁切</b><small>拖动移动 · 滚轮缩放</small></div>
+    <div class="crop" id="crop">
+      <div class="cbox" id="cbox"><img id="cimg" alt=""><i class="g gname">名字区</i><i class="g gpanel">右侧面板</i><i class="bb" id="cbb"></i><i class="fc" id="cfc"></i><span class="empty" id="cempty">还没有立绘<br><small>在左侧「立绘」里上传</small></span></div>
+    </div>
+  </aside>
+</main>
+<script src="charui/core.js"></script>
+<script src="charui/zip.js"></script>
+<script src="charui/editor.js"></script>
+</body>
+</html>

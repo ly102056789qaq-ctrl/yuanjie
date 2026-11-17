@@ -1,0 +1,17 @@
+{
+  "_doc": "新角色模板：复制为 data/skills/<id>.json，填好后在 data/skills/index.json 里加 id。没有专属机制就保持 kit = generic；有专属机制再写 js/battle/kits/<id>.js。null = 数据锁定。",
+  "id": "new_character",
+  "kit": "generic",
+  "name": null,
+  "title": null,
+  "element": { "id": null, "name": null },
+  "energy": { "max": 100, "ultCost": 100, "perAction": { "basic": 20, "skill": 30, "ultimate": 5 }, "tbd": true },
+  "skills": [
+    { "slot": "basic", "label": "普通攻击", "no": "01", "name": null, "type": [], "icon": null, "params": { "mult": 1.0, "toughness": 10 }, "desc": null, "level": null, "maxLevel": null, "upgrade": null },
+    { "slot": "skill", "label": "战技", "no": "02", "name": null, "type": [], "icon": null, "params": { "mult": 1.5, "toughness": 20 }, "desc": null, "level": null, "maxLevel": null, "upgrade": null },
+    { "slot": "talent", "label": "天赋", "no": "03", "name": null, "type": [], "icon": null, "params": {}, "desc": null, "level": null, "maxLevel": null, "upgrade": null },
+    { "slot": "ultimate", "label": "终结技", "no": "04", "name": null, "type": [], "icon": null, "params": { "aoeMult": 2.0, "toughness": 20 }, "desc": null, "level": null, "maxLevel": null, "upgrade": null }
+  ],
+  "ascensions": [],
+  "potential": { "progress": null, "major": [], "minor": [] }
+}

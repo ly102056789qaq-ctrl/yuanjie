@@ -1,0 +1,6 @@
+{
+  "name": "yuanjie-v13-gameui",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test tests/battle/*.test.js" }
+}

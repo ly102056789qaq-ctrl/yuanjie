@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>幻海演练 · 源界</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="battle.css">
+</head>
+<body>
+  <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;overflow:hidden">
+    <defs>
+      <linearGradient id="yj-bevel" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF"/>
+        <stop offset=".55" stop-color="#C9D4E4"/>
+        <stop offset="1" stop-color="#8FA3BC"/>
+      </linearGradient>
+      <linearGradient id="yj-bevel-on" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF"/>
+        <stop offset="1" stop-color="#2A8AA8"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div id="stage">
+    <div id="world">
+      <div id="far" aria-hidden="true"></div>
+      <canvas id="scene3d"></canvas>
+    </div>
+    <div id="pixi"></div>
+    <div id="grade" aria-hidden="true"></div>
+    <div id="domain-wash" aria-hidden="true"></div>
+    <div id="bars"></div>
+    <div id="tgt" aria-hidden="true"></div>
+    <div id="fx"></div>
+    <div id="hud">
+      <div id="wave">
+        <div class="row"><span class="k">回合</span><b id="round-n">1</b><span class="dim">/数据锁定</span></div>
+        <div class="row"><span class="k">波次</span><b>1</b><span class="dim">/1</span></div>
+      </div>
+      <div id="boss" hidden>
+        <div class="bp"><img alt=""></div>
+        <div class="bx">
+          <div class="brow">
+            <div class="bn" id="boss-name">测试敌人</div>
+            <div class="bhp"><i id="boss-fill"></i><span class="bticks" aria-hidden="true"></span></div>
+            <div class="bnm" id="boss-hp"></div>
+          </div>
+          <div class="bmarks" id="boss-marks"></div>
+        </div>
+      </div>
+      <div id="tools">
+        <button type="button" class="is-locked" title="暂停 · 数据锁定" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14"/><rect x="13.5" y="5" width="4.5" height="14"/></svg>
+          <span class="sr">暂停</span>
+        </button>
+        <button type="button" class="is-locked" title="倍速 · 数据锁定" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,5 13,12 5,19"/><polygon points="13,5 21,12 13,19"/></svg>
+          <span class="sr">倍速</span>
+        </button>
+        <button type="button" class="is-locked" title="自动 · 数据锁定" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 8 8h-2.4A5.6 5.6 0 1 1 12 6.4V9l4-4-4-4v3z"/></svg>
+          <span class="sr">自动</span>
+        </button>
+        <button type="button" id="btn-restart" title="再来一局">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 7.5 10.6l-2.2-.9A5.6 5.6 0 1 1 12 6.4V9l4.2-3.2L12 2.6V4z"/></svg>
+          <span class="sr">再来</span>
+        </button>
+      </div>
+      <div id="order" aria-label="行动顺序"></div>
+      <button type="button" id="support" class="is-locked" title="支援 · 数据锁定" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a3.5 3.5 0 0 0 5 0l2.2-2.2a3.5 3.5 0 0 0-5-5L11 8"/><path d="M14 10a3.5 3.5 0 0 0-5 0L6.8 12.2a3.5 3.5 0 0 0 5 5L13 16"/></svg>
+        <span>支援</span>
+      </button>
+      <div id="party" aria-label="我方状态"></div>
+      <div id="dock">
+        <div id="skill-banner">
+          <span class="k" id="skill-label"></span>
+          <span id="skill-name"></span>
+        </div>
+        <div id="skills" aria-label="技能"></div>
+        <div id="sp" title="战技点尚未写入战斗核心">战技点 · 数据锁定</div>
+      </div>
+      <button type="button" id="dispatch" class="is-locked" title="瞬时调度 · 数据锁定" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><path d="M12 8.5V12l2.6 1.6"/></svg>
+        <span>瞬时调度</span>
+      </button>
+      <div id="tip" role="tooltip"></div>
+      <div id="cue">选择普攻或战技</div>
+    </div>
+    <div id="cutin" aria-hidden="true">
+      <div class="veil"></div>
+      <div class="art"><img alt=""></div>
+      <div class="copy"><div class="k"></div><h2></h2></div>
+    </div>
+    <div id="result">
+      <div class="panel">
+        <div class="k">BATTLE RESULT</div>
+        <h2 id="result-title">胜</h2>
+        <button type="button" id="btn-again">再来一局</button>
+      </div>
+    </div>
+    <div id="orient">请横持屏幕</div>
+  </div>
+  <script type="module" src="js/battle/stage/main.js"></script>
+</body>
+</html>

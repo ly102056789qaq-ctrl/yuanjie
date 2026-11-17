@@ -1,0 +1,255 @@
+{
+  "id": "vera",
+  "kit": "generic",
+  "name": "薇拉·洛朗",
+  "short": "薇拉",
+  "title": "电磁回路",
+  "version": "V1.0 设计草案",
+  "element": {
+    "id": "leidian",
+    "name": "雷电"
+  },
+  "role": "蚀变副C",
+  "core": [
+    "电磁回路",
+    "导电",
+    "协同放电",
+    "过载"
+  ],
+  "energy": {
+    "max": 120,
+    "ultCost": 120,
+    "name": "超限值",
+    "perAction": {
+      "basic": null,
+      "skill": null,
+      "ultimate": null
+    },
+    "tbd": true
+  },
+  "skills": [
+    {
+      "slot": "basic",
+      "label": "普通攻击",
+      "no": "01",
+      "name": "精确制导",
+      "type": [
+        "单体",
+        "雷电伤害"
+      ],
+      "icon": "assets/skills/vera/basic.webp",
+      "params": {
+        "mult": 1.0,
+        "bonus": 0.3
+      },
+      "desc": "对指定单体造成==100%==攻击力的雷电伤害。若目标处于【导电】状态，则本次攻击额外造成==30%==攻击力的雷电伤害。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "skill",
+      "label": "战技",
+      "no": "02",
+      "name": "闭合电路",
+      "type": [
+        "扩散攻击",
+        "施加异常"
+      ],
+      "icon": "assets/skills/vera/skill.webp",
+      "params": {
+        "mult": 1.4,
+        "adjacent": 0.7,
+        "duration": 2
+      },
+      "desc": "对指定目标造成==140%==攻击力的雷电伤害，并对相邻敌人造成==70%==攻击力的雷电伤害。\n对命中的敌人施加【导电】，持续目标==2==回合。重复施加时刷新持续时间。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "talent",
+      "label": "天赋",
+      "no": "03",
+      "name": "连锁反应",
+      "type": [
+        "后台协同",
+        "电荷积累"
+      ],
+      "icon": "assets/skills/vera/talent.webp",
+      "params": {
+        "arc": 0.8,
+        "bounce": 0.4,
+        "overload": 1.2,
+        "chargeMax": 3
+      },
+      "desc": "其他队友正常行动期间，首次直接伤害命中【导电】目标时，薇拉触发一次【协同放电】：对受击目标造成==80%==攻击力的雷电伤害；若存在另一名导电敌人，额外弹射一次==40%==攻击力的雷电伤害；获得==1==层【电荷】。\n每次薇拉自身行动后，最多触发==2==次协同放电；==3==层电荷触发【过载】，对所有导电敌人造成==120%==攻击力雷电伤害。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "ultimate",
+      "label": "终结技",
+      "no": "04",
+      "name": "极限工况",
+      "type": [
+        "群体爆发"
+      ],
+      "icon": "assets/skills/vera/ultimate.webp",
+      "previewTag": "连锁放电",
+      "params": {
+        "cost": 120,
+        "mult": 1.8,
+        "dotSettle": 0.8
+      },
+      "desc": "消耗==120==点超限值。\n对敌方全体造成==180%==攻击力的雷电伤害，并施加持续==2==回合的【导电】。\n随后立即结算一次相当于原效果==80%==的导电持续伤害。这次额外结算不消耗导电层数，也不会触发协同放电。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    }
+  ],
+  "ascensions": [
+    {
+      "no": "I",
+      "name": "第一份设计稿",
+      "desc": "进入战斗时，自动为生命值最高的敌人施加==2==回合【导电】，并获得==1==层电荷。"
+    },
+    {
+      "no": "II",
+      "name": "不接受无效设计",
+      "desc": "协同放电的基础伤害提高==25%==，命中导电目标时有额外效果：使目标下一次受到的雷电持续伤害提高==20%==。"
+    },
+    {
+      "no": "III",
+      "name": "每一条线路都有意义",
+      "desc": "战技命中处于【导电】状态的敌人时，立即结算一次该目标==50%==的导电持续伤害，不消耗状态。"
+    },
+    {
+      "no": "IV",
+      "name": "突破额定负荷",
+      "desc": "触发【过载】所需电荷由==3==层降低至==2==层。每次薇拉自身行动之间，最多触发一次过载。"
+    },
+    {
+      "no": "V",
+      "name": "完美不等于妥协",
+      "desc": "敌人受到【过载】伤害后，受到的雷电伤害额外提高==12%==，持续==2==回合。"
+    },
+    {
+      "no": "VI",
+      "name": "最后一项修改",
+      "desc": "每次薇拉释放终结技后，下一次【过载】伤害提高==100%==，且会额外向当前生命值最高的导电目标释放一次不产生电荷的强化协同放电。"
+    }
+  ],
+  "potential": {
+    "progress": null,
+    "major": [
+      {
+        "id": "A",
+        "name": "冗余线路",
+        "icon": "assets/skills/vera/potA.webp",
+        "params": {
+          "soloBounce": 0.75
+        },
+        "desc": "只有一名敌人处于【导电】时，协同放电原本应弹射的第二段伤害改为作用于该目标，倍率为原弹射倍率的==75%==。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "B",
+        "name": "安全余量",
+        "icon": "assets/skills/vera/potB.webp",
+        "params": {
+          "bonus": 0.12,
+          "duration": 2
+        },
+        "desc": "施放战技后，薇拉自身雷电伤害提高==12%==，持续==2==回合。协同放电造成伤害时也可享受该增益。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "C",
+        "name": "自适应调节",
+        "icon": "assets/skills/vera/potC.webp",
+        "params": {
+          "resShred": 0.1,
+          "duration": 2
+        },
+        "desc": "【过载】命中目标后，使目标雷电抗性降低==10%==，持续目标==2==回合。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      }
+    ],
+    "minor": [
+      {
+        "id": "atk1",
+        "name": "攻击力",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "atk2",
+        "name": "攻击力",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "atk3",
+        "name": "攻击力",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "atk4",
+        "name": "攻击力",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "dmg1",
+        "name": "雷电伤害",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "dmg2",
+        "name": "雷电伤害",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "dmg3",
+        "name": "雷电伤害",
+        "value": 0.03,
+        "unlocked": null
+      },
+      {
+        "id": "spd1",
+        "name": "速度",
+        "value": 2,
+        "format": "flat",
+        "unlocked": null
+      },
+      {
+        "id": "spd2",
+        "name": "速度",
+        "value": 2,
+        "format": "flat",
+        "unlocked": null
+      }
+    ]
+  },
+  "fx": {
+    "basic": "薇拉抬起一只手，紫色电弧从指尖快速射出，准确击中目标。动作短促利落。",
+    "skill": "薇拉在空中划出几条简洁的紫色线条，细线迅速转化为电磁导轨，电流沿预定路径贯穿敌方阵列。",
+    "talent": "薇拉无需回到前台，细小的紫色电弧直接从敌人之间弹射，右侧同步显示电荷计数。",
+    "ultimate": "镜头快速切至薇拉侧面，她调整眼前的电磁构型。战场上方浮现数道巨大的环状电磁轨道，紫白色电弧骤然贯穿全部目标，最后形成一次强烈的连锁放电。"
+  },
+  "_notes": "角色界面展示用。战斗逻辑未实装。数值均为设计案初版测试值。"
+}

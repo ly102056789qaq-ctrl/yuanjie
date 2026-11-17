@@ -1,0 +1,219 @@
+{
+  "id": "dekeke",
+  "kit": "generic",
+  "name": "德可可",
+  "short": "德可可",
+  "title": "协同演算",
+  "version": "V0.1 战斗原型方案",
+  "element": {
+    "id": "yansheng",
+    "name": "演生",
+    "tbd": true
+  },
+  "role": "通辅，全队协同与行动效率辅助",
+  "core": [
+    "同调",
+    "演算样本",
+    "路径校正"
+  ],
+  "energy": {
+    "max": 135,
+    "ultCost": 135,
+    "name": "超限值",
+    "perAction": {
+      "basic": null,
+      "skill": null,
+      "ultimate": null
+    },
+    "tbd": true
+  },
+  "skills": [
+    {
+      "slot": "basic",
+      "label": "普通攻击",
+      "no": "01",
+      "name": "指令已接收",
+      "type": [
+        "单体伤害"
+      ],
+      "icon": "assets/skills/dekeke/basic.webp",
+      "params": {
+        "mult": 1.0
+      },
+      "desc": "对指定敌方单体造成相当于德可可==100%==攻击力的所属属性伤害。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "skill",
+      "label": "战技",
+      "no": "02",
+      "name": "这一次，我们同步",
+      "type": [
+        "团队增益"
+      ],
+      "icon": "assets/skills/dekeke/skill.webp",
+      "params": {
+        "syncBonus": 0.2,
+        "duration": 2
+      },
+      "desc": "对我方全体施加【同调】，持续各自==2==回合。\n【同调】：造成的最终伤害提高==20%==。直接伤害、持续伤害、击破伤害、追击及衍生伤害均可以受益。\n施放战技时额外获得==1==点能量点，每==2==次德可可自身回合最多触发一次。\n重复施放仅刷新持续时间，不叠加相同增益。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "talent",
+      "label": "天赋",
+      "no": "03",
+      "name": "在你行动之前",
+      "type": [
+        "行动优化"
+      ],
+      "icon": "assets/skills/dekeke/talent.webp",
+      "params": {
+        "sampleMax": 4,
+        "advance": 0.12
+      },
+      "desc": "当德可可以外的队友结束一次正常行动时，获得==1==层【演算样本】，最多==4==层。\n达到==4==层时自动消耗全部样本，触发【路径校正】：从存活队友中选出行动条上距离下一次行动最远的==1==人，使其行动提前==12%==，并为全队补充==1==点能量点。\n每两次德可可自身行动之间，最多触发一次【路径校正】。\n额外行动、终结技插入、追击和衍生伤害不会重复提供样本。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    },
+    {
+      "slot": "ultimate",
+      "label": "终结技",
+      "no": "04",
+      "name": "明天，不止一个答案",
+      "type": [
+        "行动推进"
+      ],
+      "icon": "assets/skills/dekeke/ultimate.webp",
+      "previewTag": "并行推演",
+      "params": {
+        "cost": 135,
+        "advance": 0.15,
+        "spdBonus": 0.1,
+        "energyRefund": 8
+      },
+      "desc": "消耗==135==点超限值。\n德可可启动高精度并行推演，为全队计算新的行动路径。\n除德可可外，我方全体（四人队伍中即其余三名队友）行动提前==15%==。\n全队速度提高==10%==，持续各自==2==回合。\n全体角色下一次正常行动结束后，恢复==8==点超限值，每人至多触发一次。",
+      "level": null,
+      "maxLevel": null,
+      "upgrade": null
+    }
+  ],
+  "ascensions": [
+    {
+      "no": "I",
+      "name": "冷启动",
+      "params": {
+        "openingSamples": 2
+      },
+      "desc": "战斗开始时获得==2==层演算样本。"
+    },
+    {
+      "no": "II",
+      "name": "冗余保护",
+      "params": {
+        "syncDr": 0.08
+      },
+      "desc": "处于同调状态的队友受到伤害降低==8%==。"
+    },
+    {
+      "no": "III",
+      "name": "自主判断",
+      "params": {
+        "correctionEnergy": 6
+      },
+      "desc": "路径校正额外为被提前行动的队友恢复==6==点超限值。"
+    }
+  ],
+  "potential": {
+    "progress": null,
+    "major": [
+      {
+        "id": "I",
+        "name": "始终在线",
+        "icon": "assets/skills/dekeke/pot1.webp",
+        "params": {
+          "syncExtra": 1
+        },
+        "desc": "同调持续时间增加==1==回合。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "II",
+        "name": "再计算一次",
+        "icon": "assets/skills/dekeke/pot2.webp",
+        "params": {
+          "energyRefund": 12
+        },
+        "desc": "终结技提供的行动结束回能由==8==点超限值增加至==12==点超限值。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "III",
+        "name": "未被定义的变量",
+        "icon": "assets/skills/dekeke/pot3.webp",
+        "params": {},
+        "desc": "战技等级+2，普通攻击等级+1。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "IV",
+        "name": "更少的误差",
+        "icon": "assets/skills/dekeke/pot4.webp",
+        "params": {
+          "sampleNeed": 3
+        },
+        "desc": "路径校正所需样本从==4==层减少至==3==层。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "V",
+        "name": "我仍在学习",
+        "icon": "assets/skills/dekeke/pot5.webp",
+        "params": {},
+        "desc": "终结技等级+2，天赋等级+2。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      },
+      {
+        "id": "VI",
+        "name": "我选择的未来",
+        "icon": "assets/skills/dekeke/pot6.webp",
+        "params": {
+          "teamAdvance": 0.08
+        },
+        "desc": "路径校正改为使全体存活队友行动提前==8%==，并保留原本的能量点恢复。",
+        "unlocked": null,
+        "level": null,
+        "maxLevel": null,
+        "upgrade": null
+      }
+    ],
+    "minor": []
+  },
+  "fx": {
+    "basic": "德可可抬起手，手边出现一块半透明的运算界面。她轻触其中一个数据节点，一束经过精确定位的光线击中目标。",
+    "skill": "德可可双眼浮现微弱的运算光环，空中展开四个代表队伍成员的数据节点。四条不同颜色的光线依次连接，形成完整的协同网络。角色头顶短暂显示对应的同调标记，随后融入状态栏。",
+    "talent": "队友正常行动结束后采集演算样本；集齐后自动触发路径校正，优化行动顺序并补充能量点。",
+    "ultimate": "画面骤然暗下，时间仿佛停止。德可可站在战场中央，周围展开无数条细密的数据路径。她抬起头：“明天……不止一个答案。”所有路径在她身后交汇，其余三名队友的行动节点同时向前跃迁。"
+  },
+  "_notes": "设计案中的「共享共鸣值」在数据与界面中记为能量点；终结技能量与行动结束回能记为超限值。队伍规模按四人队书写。数值均为首轮测试值。"
+}

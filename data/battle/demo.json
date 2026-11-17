@@ -1,0 +1,79 @@
+{
+  "_doc": "演示遭遇。角色和敌人都从这份数据装配，换角色只需改 allies / 对应 skills、sprites。",
+  "id": "demo-siwei",
+  "allies": [
+    {
+      "id": "siwei",
+      "skillData": "data/skills/siwei.json",
+      "sprite": "data/sprites/siwei.json",
+      "portrait": "assets/battle/siwei-face.webp",
+      "bust": "assets/battle/siwei-bust.webp",
+      "cutin": "assets/art/siwei-test.webp",
+      "element": "negative",
+      "stats": {
+        "atk": 1000,
+        "hp": 8600,
+        "def": 520,
+        "spd": 110,
+        "critRate": 0,
+        "critDmg": 0
+      },
+      "energy": 90,
+      "stand": {
+        "x": 1.42,
+        "y": 0,
+        "z": 0.22
+      },
+      "height": 2.42
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e0",
+      "name": "测试敌人",
+      "sprite": "assets/battle/enemy-a.webp",
+      "portrait": "assets/battle/enemy-a-face.webp",
+      "stats": {
+        "atk": 420,
+        "hp": 14000,
+        "def": 420,
+        "spd": 86
+      },
+      "toughness": 120,
+      "weaknesses": [
+        "negative"
+      ],
+      "stand": {
+        "x": -1.08,
+        "y": 0,
+        "z": 0.22
+      },
+      "height": 3.15,
+      "anchor": 0.96
+    },
+    {
+      "id": "e1",
+      "name": "测试敌人",
+      "sprite": "assets/battle/enemy-b.webp",
+      "portrait": "assets/battle/enemy-b-face.webp",
+      "stats": {
+        "atk": 330,
+        "hp": 9800,
+        "def": 300,
+        "spd": 96
+      },
+      "toughness": 80,
+      "weaknesses": [
+        "negative"
+      ],
+      "stand": {
+        "x": -2.22,
+        "y": 0.16,
+        "z": 0.22
+      },
+      "height": 2.35,
+      "anchor": 0.92,
+      "hover": true
+    }
+  ]
+}

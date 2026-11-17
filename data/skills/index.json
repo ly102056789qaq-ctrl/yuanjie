@@ -1,0 +1,8 @@
+{
+  "_doc": "有技能数据的角色 id 列表。新增角色：复制 _template.json 为 <id>.json 并加到这里。",
+  "ids": [
+    "siwei",
+    "dekeke",
+    "vera"
+  ]
+}

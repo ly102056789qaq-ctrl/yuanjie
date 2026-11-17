@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>战斗小人</title>
+<link rel="icon" href="data:,">
+<style>
+@font-face{font-family:"YJ Sans";src:url(fonts/yj-sans.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"YJ Title";src:url(fonts/yj-title.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"YJ Mono";src:url(fonts/yj-mono.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --ink:#131C33;--ink2:#46526E;--ink3:#8590A8;
+  --cob:#2342E6;--cob2:#5C87F6;
+  --bg0:#F4F7FB;--bg1:#E6EDF6;
+  --sans:"YJ Sans",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+  --title:"YJ Title",var(--sans);
+  --mono:"YJ Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{
+  min-height:100%;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  background:
+    radial-gradient(1200px 600px at 50% 18%,#FFFFFF 0%,transparent 70%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+}
+
+header{
+  display:flex;align-items:baseline;gap:16px;
+  padding:22px 28px 8px;
+  pointer-events:none;
+}
+header .lab{
+  font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink3);
+}
+header h1{
+  font-family:var(--title);font-size:28px;font-weight:400;letter-spacing:.04em;line-height:1;
+}
+header .hint{margin-left:auto;font-size:12px;color:var(--ink3);letter-spacing:.04em}
+
+#stage{
+  position:relative;
+  min-height:0;
+  overflow:hidden;
+}
+#stage canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+
+#floor{
+  position:absolute;
+  transform:translate(-50%,-30%);
+  pointer-events:none;
+}
+#floor .disk,#floor .ring{display:block}
+#floor .disk{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at 50% 45%,
+      rgba(19,28,51,.16) 0%,
+      rgba(35,66,230,.10) 36%,
+      rgba(35,66,230,.04) 62%,
+      transparent 75%);
+  filter:blur(1px);
+}
+#floor .ring{
+  position:absolute;inset:-8%;
+  border-radius:50%;
+  border:1px solid rgba(35,66,230,.12);
+  opacity:.7;
+}
+
+footer{
+  display:flex;justify-content:center;align-items:center;gap:10px;
+  padding:8px 20px 28px;
+}
+button{
+  appearance:none;font-family:var(--sans);
+  min-width:88px;height:40px;padding:0 18px;
+  background:#fff;color:var(--ink);
+  border:1px solid rgba(19,28,51,.16);
+  font-size:14px;letter-spacing:.12em;
+  cursor:pointer;
+}
+button:hover{border-color:var(--cob);color:var(--cob)}
+button[aria-pressed="true"]{
+  background:var(--cob);color:#fff;border-color:var(--cob);
+}
+button:focus-visible{outline:2px solid var(--cob2);outline-offset:3px}
+
+@media (max-width:640px){
+  header{padding:16px 16px 4px}
+  header h1{font-size:22px}
+  footer{padding:6px 12px 20px;gap:8px}
+  button{min-width:76px;height:38px;font-size:13px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  button{transition:none}
+}
+</style>
+</head>
+<body>
+  <header>
+    <span class="lab">SPRITE LAB</span>
+    <h1 id="who">思惟诺姆</h1>
+    <span class="hint" id="hint"></span>
+  </header>
+  <div id="stage">
+    <div id="floor" aria-hidden="true"><i class="ring"></i><i class="disk"></i></div>
+  </div>
+  <footer>
+    <button type="button" data-anim="idle" aria-pressed="true">待机</button>
+    <button type="button" data-anim="attack" aria-pressed="false">攻击</button>
+    <button type="button" data-anim="hit" aria-pressed="false">受击</button>
+  </footer>
+  <script type="module" src="js/sprite/lab.js"></script>
+</body>
+</html>
