@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>职业 · 元素 · 源界 ASTERIAL</title>
+<meta name="description" content="源界规则：六职业与十元素。">
+<link rel="preload" href="fonts/yj-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="polish.css">
+<link rel="stylesheet" href="pages.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<header class="bar">
+  <a class="logo" href="index.html" aria-label="源界 首页"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M9 2h12L13 16H1z" fill="#1734FF"/><path d="M17 14h12L21 28H9z" fill="#0A0E1F"/><path d="M23 2h4l-3 5h-4z" fill="#FF2B2B"/></svg>源界<small>ASTERIAL</small></a>
+  <nav id="gnav" aria-label="站点导航"><a href="world.html">世界<small>WORLD</small></a><a href="history.html">历史<small>HISTORY</small></a><a href="regions.html">地域<small>REGIONS</small></a><a href="orgs.html">组织<small>FACTIONS</small></a><a href="people.html">人物<small>CHARACTERS</small></a><a href="stories.html">故事<small>STORIES</small></a><a href="rules.html" class="on" aria-current="page">职业 · 元素<small>CLASS / ELEMENT</small></a></nav>
+  <button class="mbtn" type="button" aria-controls="gnav" aria-expanded="false" aria-label="打开导航"><i></i><i></i><i></i></button>
+</header>
+<main id="top">
+<section class="scr ru grain" id="classes" aria-labelledby="ru-h">
+  <div class="rl-bg" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+  <div class="sh "><div class="rail" data-rv="wipe"><span class="mono">规则</span><i class="ticks"></i></div>
+<h2 class="hd" id="ru-h" data-rv="up">六职业</h2><p data-rv="up" style="--d:.1s">角色以「职业 ／ 元素」标注。</p></div>
+  <div class="bns"><div class="bn" data-rv="cut" style="--d:0.00s"><img src="assets/icons/class-qianggong.webp" alt=""><b>强攻</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn" data-rv="cut" style="--d:0.06s"><img src="assets/icons/class-pozhen.webp" alt=""><b>破阵</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.12s"><img src="assets/icons/class-shibian.webp" alt=""><b>蚀变</b><div class="us"><a href="character.html?id=vera">薇拉·洛朗 →</a></div></div><div class="bn" data-rv="cut" style="--d:0.18s"><img src="assets/icons/class-ganshe.webp" alt=""><b>干涉</b><div class="us"><span class="none">暂无公开角色</span></div></div><div class="bn has" data-rv="cut" style="--d:0.24s"><img src="assets/icons/class-zhiyuan.webp" alt=""><b>支援</b><div class="us"><a href="tangli.html">棠梨·听雨 →</a><a href="character.html?id=dekeke">德可可 →</a></div></div><div class="bn" data-rv="cut" style="--d:0.30s"><img src="assets/icons/class-shouhu.webp" alt=""><b>守护</b><div class="us"><span class="none">暂无公开角色</span></div></div></div>
+  <div class="rfoot"><span class="lock">各职业的说明 · 未公开</span></div>
+</section>
+<section class="scr ru2" id="rules" aria-labelledby="rules-h">
+  <div class="rl-bg" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+  <div class="sh "><div class="rail" data-rv="wipe"><span class="mono">规则</span><i class="ticks"></i></div>
+<h2 class="hd" id="rules-h" data-rv="up">十元素</h2><p data-rv="up" style="--d:.1s">点选元素，读数面板随之切换。</p></div>
+  <div class="dialw">
+    <div class="dial" id="dial" data-rv="up" style="--d:.15s">
+      <svg class="ring" viewBox="0 0 600 600" aria-hidden="true">
+        <circle cx="300" cy="300" r="292" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+        <circle cx="300" cy="300" r="250" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-dasharray="2 6"/>
+        <circle cx="300" cy="300" r="150" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+        <g id="tk"></g>
+      </svg>
+      <div class="ptr" id="ptr"><i></i></div>
+      <div class="core"><img id="coreimg" src="assets/icons/el-xiliu.webp" alt=""></div>
+      <div id="els"></div>
+    </div>
+    <div class="read2" id="read2" aria-live="polite" data-rv="cut" style="--d:.25s">
+      <div class="rtop"><span class="mono">元素</span><span class="mono" id="elidx">06 ／ 10</span></div>
+      <b id="elcn">汐流</b>
+      <span class="py" id="elen">XILIU</span>
+      <div class="kw" id="elkw"></div>
+      <div class="elwho" id="elwho" hidden></div>
+    </div>
+  </div>
+
+</section>
+<script>
+const E=[['wuli','物理','','冲击','破坏','动能','#7D8496'],['huoyan','火焰','','燃烧','热能','毁灭','#E5412A'],['bingshuang','冰霜','','冻结','减速','凝结','#2F86E0'],['leidian','雷电','','电能','爆发','麻痹','#7442D6'],['fengxi','风息','','流动','加速','扩散','#14937F'],['xiliu','汐流','','流动','治愈','适应','#1E5FE0'],['jingyan','晶岩','','坚固','构筑','共振','#B0732A'],['yansheng','演生','','生长','演化','再生','#38913F'],['fuzhao','辐照','','辐射','纯化','照耀','#CF9A12'],['fuxiang','负相','','逆转','虚无','相消','#2C2A78']];
+const els=document.getElementById('els'),tk=document.getElementById('tk');
+let t='';for(let k=0;k<120;k++){const a=k*3*Math.PI/180,r1=k%10==0?268:276;t+=`<line x1="${300+Math.cos(a)*r1}" y1="${300+Math.sin(a)*r1}" x2="${300+Math.cos(a)*284}" y2="${300+Math.sin(a)*284}" stroke="rgba(255,255,255,${k%10==0?.8:.3})" stroke-width="${k%10==0?2:1}"/>`}tk.innerHTML=t;
+E.forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.className='el2';const ang=(-90+i*36);b.style.setProperty('--a',ang+'deg');
+ b.innerHTML=`<span><img src="assets/icons/el-${e[0]}.webp" alt=""></span><b>${e[1]}</b>`;
+ b.addEventListener('click',()=>setE(i));b.addEventListener('mouseenter',()=>{if(matchMedia('(hover:hover)').matches)setE(i)});els.appendChild(b)});
+function setE(i){const e=E[i];els.querySelectorAll('.el2').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',j===i)});
+ document.getElementById('ptr').style.setProperty('--a',(-90+i*36)+'deg');
+ const rd=document.getElementById('read2');rd.style.setProperty('--ec',e[6]);rd.classList.remove('flip');void rd.offsetWidth;rd.classList.add('flip');
+ document.getElementById('dial').style.setProperty('--ec',e[6]);
+ document.getElementById('coreimg').src=`assets/icons/el-${e[0]}.webp`;document.getElementById('elcn').textContent=e[1];document.getElementById('elen').textContent=e[2];
+ document.getElementById('elidx').textContent=String(i+1).padStart(2,'0')+' ／ 10';
+ document.getElementById('elkw').innerHTML=e.slice(3,6).map(k=>`<span>${k}</span>`).join('');
+ const WHO={yansheng:['tangli.html','棠梨·听雨'],leidian:['character.html?id=vera','薇拉·洛朗']};
+ const box=document.getElementById('elwho'),w=WHO[e[0]];
+ if(w){box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div><b>${w[1]}</b><span>${e[1]}</span></div><a href="${w[0]}">查看档案 →</a>`}
+ else{box.hidden=true;box.innerHTML=''}}
+setE(5);
+</script>
+</main>
+<footer class="scr endmini" id="end">
+  <div class="end-plate" aria-hidden="true"><img src="assets/cg/hero.webp" alt="" loading="lazy"></div>
+  <div class="end-top">
+    <p class="q" data-rv="up">“世界终会为你的勇敢让步。”<small>探索者协会口号</small></p>
+    <nav class="endnav" aria-label="页面导航" data-rv="up" style="--d:.1s"><a href="index.html" class="hi"><b>首页</b><i></i></a><a href="world.html"><b>世界</b><i></i></a><a href="history.html"><b>历史</b><i></i></a><a href="regions.html"><b>地域</b><i></i></a><a href="orgs.html"><b>组织</b><i></i></a><a href="people.html"><b>人物</b><i></i></a><a href="stories.html"><b>故事</b><i></i></a><a href="rules.html"><b>职业 · 元素</b><i></i></a></nav>
+  </div>
+  <div class="mark" aria-hidden="true" data-rv="wipe">ASTERIAL</div>
+  <div class="fine"><span>源界 ASTERIAL · 原创世界观 · 试做版</span><span>依据《源界设定整理初稿》2026-11-08</span><a href="#top">回到顶部 ↑</a></div>
+</footer>
+<script src="ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>角色 · 源界 ASTERIAL</title>
+<meta name="description" content="源界角色界面：职业、元素、属性、技能、模组、频谱、升格与档案。">
+<link rel="preload" href="fonts/yj-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="charui/charui.css">
+<script type="importmap">{"imports":{"three":"./charui/vendor/three/three.module.min.js"}}</script>
+</head>
+<body>
+<div id="app" class="cu" data-tab="detail">
+  <div class="bgl" aria-hidden="true"><img id="bgimg" alt=""><i class="wash"></i><i class="flare"></i></div>
+  <div class="stage" id="stage">
+    <div class="deco" aria-hidden="true">
+      <i class="ln l1"></i><i class="ln l2"></i><i class="ln l3"></i><i class="ln l4"></i>
+      <span class="mt m1">PN-0314 //<br>ΔT 0.000 728 s</span><span class="mt m2">AST-UI · CHARACTER PROFILE</span>
+      <span class="cr c1"></span><span class="cr c2"></span><span class="cr c3"></span>
+    </div>
+    <div class="artbox" id="artbox">
+      <div class="halo" aria-hidden="true"><i></i><i></i></div>
+      <b class="ghost" id="ghost" aria-hidden="true"></b>
+      <img id="art" alt="">
+      <div class="noart" id="noart" hidden><div class="nf" aria-hidden="true"><i class="k1"></i><i class="k2"></i><i class="k3"></i><i class="k4"></i><b id="nfch"></b><i class="scan"></i><span class="mt">PORTRAIT SLOT · AWAITING UPLOAD</span></div><span class="lk"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="1" fill="currentColor"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" fill="none" stroke="currentColor" stroke-width="2"/></svg>立绘 · 待上传</span></div>
+      <i class="floor" aria-hidden="true"></i>
+    </div>
+    <header class="top">
+      <a class="back" href="people.html" aria-label="返回人物名册"><span class="bk"></span><b>角色</b><small>CHARACTER</small></a>
+      <div class="tr">
+        <span class="no" id="no"></span>
+        <button class="swap" id="swapbtn" type="button"><span class="si"></span>切换角色<i>▸</i></button>
+      </div>
+    </header>
+    <nav class="rail" id="rail" role="tablist" aria-label="角色分页"></nav>
+    <section class="ident" id="ident" aria-live="polite"></section>
+    <div class="panes" id="panes"></div>
+    <footer class="foot" aria-hidden="true"><span class="bc"></span><span class="mt" id="footcode">SYN-0000-00</span></footer>
+  </div>
+  <div class="roster" id="roster" hidden>
+    <div class="rhead"><div><b>切换角色</b><small>CHARACTER ROSTER</small></div><button type="button" class="rx" id="rclose" aria-label="关闭">✕</button></div>
+    <div class="rbody" id="rbody"></div>
+  </div>
+  <div class="draftbar" id="draftbar" hidden>正在预览本地草稿 · 不会影响线上页面 <a href="editor.html">回到编辑器</a></div>
+</div>
+<script src="charui/core.js"></script>
+<script src="charui/charui.js"></script>
+<script type="module" src="charui/portrait-breath.js"></script>
+</body>
+</html>

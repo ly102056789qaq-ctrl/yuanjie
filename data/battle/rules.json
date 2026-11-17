@@ -1,0 +1,7 @@
+{
+  "_doc": "全局战斗规则。所有角色共用；未定稿的参数集中放这里，不写死在脚本里。",
+  "turn": { "trackLength": 10000, "firstRoundAV": 150, "roundAV": 100, "durationUnit": "round", "_note": "持续时间统一按「轮」计，在轮末扣减（幻海、梦痕都按此规则）。轮长为暂定值。" },
+  "defConstant": 1000,
+  "defIgnoreCap": 0.6,
+  "_tbd": ["defConstant", "defIgnoreCap", "turn.firstRoundAV", "turn.roundAV"]
+}
