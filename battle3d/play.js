@@ -19,58 +19,58 @@ const FACE = {
 };
 const TILE = { siwei: { basic: 'basic-tile.webp', skill: 'skill-tile.webp', ultimate: 'ultimate-tile.webp' } };
 const SIMPLIFIED = new Set(['dekeke', 'vera', 'rin']);
-// 特效配方：每项 [特效名, 高度(身高比例), 缩放, 染色, 延迟秒]。
+// 特效配方：每项 [特效名, 高度(身高比例), 缩放, 染色, 延迟秒]。g_ 开头的是 145 套古风包里的手绘特效，按原色使用。
 // self 放在出手者身上，impact 打在每个受击目标身上，ally 放在每个受益的队友身上；hit 是每段命中的元素闪光。
-const V = '#b48cff', VL = '#d6c4ff', TH = '#c3a6ff';   // 负相紫、浅紫、雷电紫
+const V = '#b48cff', VL = '#d6c4ff', TH = '#c3a6ff';
 const LOOK = {
   siwei: {
-    hit: ['hit_purple', 0.55, 1],
-    basic: { self: [['siwei_ring', 0.02, 0.55, VL]], impact: [['siwei_dark', 0.45, 1.1], ['phantom_orb', 0.55, 0.75, V, 0.05]] },
-    skill: { self: [['siwei_ring', 0.02, 1.15], ['dream_motes', 0.6, 1.2, VL]], impact: [['siwei_ring', 0.02, 0.85, V], ['siwei_dark', 0.5, 1], ['phantom_orb', 0.55, 0.9, V, 0.1]] },
-    ultimate: { self: [['siwei_ring', 0.02, 1.4], ['pillar_white', 0, 1.1, V]], impact: [['thunder_orb', 0.5, 1.5, V], ['siwei_dark', 0.45, 1.5], ['pillar_big', 0, 1.2, V, 0.1]],
+    hit: ['hit_purple', 0.55, 0.9],
+    basic: { impact: [['g_purple_star', 0.55, 1.1], ['g_purple_smoke', 0.45, 0.9, '', 0.06]] },
+    skill: { self: [['g_purple_sigil', 0.5, 1]], impact: [['g_purple_nova', 0.5, 1.1], ['g_purple_moon', 0.55, 0.9, '', 0.1]] },
+    ultimate: { self: [['g_purple_sigil', 0.5, 1.3]], impact: [['g_purple_barrage', 0.55, 1.3], ['g_purple_nova', 0.5, 1.4, '', 0.12], ['g_purple_star', 0.55, 1.3, '', 0.25]],
       video: '../assets/battle/ult/siwei-ult.mp4' },
   },
   dekeke: {
-    hit: ['hit_gold', 0.55, 1],
-    basic: { self: [['gold_sparks', 0.6, 0.8]], impact: [['gold_orb', 0.55, 1.4], ['gold_sparks', 0.5, 1, '', 0.05]] },
-    skill: { self: [['gold_sparks', 0.6, 1]], ally: [['pillar_gold', 0, 1.1], ['gold_bolt', 0.15, 0.9, '', 0.1], ['gold_sparks', 0.7, 1, '', 0.2]] },
-    ultimate: { self: [['dekeke_sun', 0.45, 1.3], ['gold_blast', 0.5, 1.2, '', 0.2]], ally: [['pillar_gold', 0, 1.25], ['dekeke_burst', 0.5, 0.9, '', 0.15]] },
+    hit: ['hit_gold', 0.55, 0.9],
+    basic: { impact: [['g_gold_slash', 0.55, 1.1], ['g_gold_sparks', 0.5, 0.9, '', 0.06]] },
+    skill: { self: [['g_gold_sparks', 0.6, 1]], ally: [['g_gold_tower', 0.3, 1.1], ['g_gold_orb', 0.55, 0.8, '', 0.12]] },
+    ultimate: { self: [['g_gold_orb', 0.55, 1.4]], ally: [['g_gold_shield', 0.5, 1.1], ['g_gold_tower', 0.3, 1.1, '', 0.12]] },
   },
   vera: {
-    hit: ['hit_purple', 0.55, 1],
-    basic: { self: [['spark_small', 0.7, 0.8, TH]], impact: [['spark_small', 0.55, 1.3, TH], ['spark_ring', 0.55, 0.9, TH, 0.06]] },
-    skill: { self: [['spark_ring', 0.6, 1, TH]], impact: [['vera_bolt', 0, 1.15, VL], ['vera_burst', 0.5, 1, TH, 0.08], ['spark_ring', 0.5, 1, TH, 0.15]] },
-    ultimate: { self: [['thunder_orb', 0.6, 1.1, TH]], impact: [['thunder_column', 0, 1.5, TH], ['thunder_orb', 0.5, 1.4, TH, 0.08], ['vera_bolt', 0, 1.3, VL, 0.18]],
+    hit: ['hit_purple', 0.55, 0.9],
+    basic: { impact: [['g_bolt_burst', 0.55, 1.1]] },
+    skill: { self: [['g_spark_white', 0.6, 0.8]], impact: [['g_thunder', 0.5, 1.2], ['g_bolt_slash', 0.5, 1, '', 0.08]] },
+    ultimate: { impact: [['g_bolt_slash', 0.5, 1.4], ['g_thunder', 0.5, 1.5, '', 0.1], ['g_bolt_yellow', 0.5, 1.2, '', 0.22]],
       video: '../assets/battle/ult/vera-ult.mp4' },
   },
   rin: {
-    hit: ['hit_green', 0.55, 1],
-    basic: { self: [['rin_petals', 0.7, 0.6]], impact: [['green_swirl', 0.5, 0.9], ['rin_petals', 0.6, 0.8, '', 0.05]] },
-    skill: { self: [['green_cloud', 0.02, 1.2]], ally: [['rin_heal', 0.05, 1], ['green_cloud', 0.02, 1.1, '', 0.05], ['rin_petals', 0.8, 0.9, '', 0.12]] },
-    ultimate: { ally: [['rin_heal', 0.05, 1], ['rin_petals', 0.8, 1]], cutscene: 'ult_rin' },
+    hit: ['hit_green', 0.55, 0.9],
+    basic: { impact: [['g_green_burst', 0.5, 1]] },
+    skill: { self: [['g_leaves', 0.5, 1]], ally: [['g_flowers', 0.1, 0.9], ['g_green_rings', 0.4, 0.8, '', 0.1]] },
+    ultimate: { ally: [['g_flowers', 0.1, 1]], cutscene: 'ult_rin' },
   },
   enemy: {
-    hit: ['hit_red', 0.55, 1.1],
-    basic: { self: [['spirit', 0.55, 1.4, '#ff8a8a']], impact: [['hit_dark', 0.5, 1.3], ['seal_red', 0.02, 0.8, '', 0.05]] },
+    hit: ['hit_red', 0.55, 1],
+    basic: { self: [['g_red_orb', 0.55, 1]], impact: [['g_red_cross', 0.55, 1.1], ['g_red_blast', 0.5, 0.8, '', 0.08]] },
   },
 };
 // 衍生伤害、状态、领域等系统事件的特效
 const DERIVED_FX = {
-  phantomReplay: [['phantom_orb', 0.5, 1.25, V], ['siwei_dark', 0.45, 1.1, '', 0.05], ['hit_purple', 0.55, 1.1, '', 0.08]],
-  phantomChase: [['phantom_beam', 0.55, 1.4, VL], ['hit_purple', 0.55, 1, '', 0.06]],
-  realityOverwrite: [['pillar_white', 0, 1.6], ['hit_white', 0.5, 1.6, '', 0.08], ['siwei_ring', 0.02, 1.2, VL]],
-  arc: [['spark_ring', 0.6, 1, TH], ['spark_small', 0.5, 1, TH, 0.04]],
-  overload: [['thunder_column', 0, 1.4, TH], ['vera_burst', 0.5, 1.2, TH, 0.08]],
+  phantomReplay: [['g_purple_sigil', 0.5, 1.1], ['g_purple_star', 0.55, 0.9, '', 0.08]],
+  phantomChase: [['g_purple_moon', 0.55, 1.1]],
+  realityOverwrite: [['g_purple_shield', 0.5, 1.3], ['hit_white', 0.5, 1.4, '', 0.08]],
+  arc: [['g_spark_white', 0.55, 0.8]],
+  overload: [['g_bolt_yellow', 0.5, 1.2], ['g_bolt_burst', 0.55, 1, '', 0.06]],
 };
 const STATUS_FX = {
-  dreamMark: { once: [['siwei_ring', 0.02, 0.7, V]], loop: ['dream_motes', 0.55, 0.9, V] },
-  conduct: { once: [['spark_ring', 0.55, 0.9, TH]], loop: ['conduct_loop', 0.5, 0.9, ''] },
-  sync: { once: [['gold_sparks', 0.6, 0.9]] },
+  dreamMark: { once: [['g_purple_smoke', 0.5, 0.8]], loop: ['g_dream_bubbles', 0.6, 0.8, ''] },
+  conduct: { once: [['g_spark_white', 0.55, 0.7]], loop: ['conduct_loop', 0.5, 0.9, ''] },
+  sync: { once: [['g_gold_sparks', 0.6, 0.9]] },
   tempo: { once: [['pillar_cyan', 0, 0.8]] },
-  bloom: { once: [['green_leaf', 0.6, 1]] },
-  shade: { once: [['aura_blue', 0.02, 1, '#9dffc0']] },
+  bloom: { once: [['g_leaves', 0.5, 0.9]] },
+  shade: { once: [['g_green_rings', 0.4, 0.9]] },
 };
-const SYSTEM_FX = [['hit_white'], ['splash_blue'], ['spark_ring'], ['pillar_cyan'], ['hit_dark'], ['siwei_dark'], ['pillar_big'], ['dream_motes'], ['aura_blue'], ['siwei_ring'], ['pillar_white'], ['green_leaf'], ['rin_heal']];
+const SYSTEM_FX = [['hit_white'], ['g_ice_shatter'], ['g_spark_white'], ['pillar_cyan'], ['g_purple_smoke'], ['g_sea_wave'], ['g_purple_shield'], ['g_herb'], ['g_leaves']];
 const PRELOAD = [...new Set([
   ...Object.values(LOOK).flatMap(l => [l.hit, ...['basic', 'skill', 'ultimate'].flatMap(k => l[k] ? [...(l[k].self || []), ...(l[k].impact || []), ...(l[k].ally || [])] : [])]),
   ...Object.values(DERIVED_FX).flat(), ...Object.values(STATUS_FX).flatMap(x => [...x.once, ...(x.loop ? [x.loop] : [])]), ...SYSTEM_FX,
@@ -424,6 +424,7 @@ function playVideo(src, u, slot) {
       resolve(true);
     };
     cineVideo.onended = finish; cineVideo.onerror = finish;
+    cineVideo.classList.remove('live'); cineVideo.onplaying = () => cineVideo.classList.add('live');   // 解码出第一帧前不显示（否则会闪一下灰底）
     cineVideo.src = src; cineVideo.currentTime = 0; cineVideo.muted = false;
     // 视频本身也带运镜：慢推 + 轻微横移（按角色换方向）
     cineVideo.style.animation = 'none'; void cineVideo.offsetWidth;
@@ -512,7 +513,7 @@ async function present(actor, action, evs, inserted) {
       if (!fxDone.has(key)) {
         fxDone.add(key);
         if (ev.source === actor && cfg.ally) playFx(cfg.ally, node);
-        else playFx(ev.kind === 'talent' ? [['green_leaf', 0.6, 1.1], ['rin_heal', 0.05, 0.8]] : [['green_leaf', 0.6, 0.9]], node);
+        else playFx(ev.kind === 'talent' ? [['g_herb', 0.55, 1]] : [['g_leaves', 0.5, 0.8]], node);
       }
       stage.flash(node, '#9dffb8', 0.28, 0.4);
       shownHp.set(ev.target.id, ev.hpAfter);
@@ -532,7 +533,7 @@ async function present(actor, action, evs, inserted) {
       stage.stopLoop(nodeOf(ev.target) + ':' + ev.id);
     } else if (ev.type === 'break') {
       const node = nodeOf(ev.target);
-      playFx([['hit_white', 0.5, 1.9], ['splash_blue', 0.05, 1.4, '#dbe8ff'], ['spark_ring', 0.55, 1.4, '#eaf2ff', 0.06]], node);
+      playFx([['g_ice_shatter', 0.5, 1.5], ['hit_white', 0.5, 1.6, '', 0.04]], node);
       stage.shake(0.16, 0.4); stage.hitstop(0.12);
       floatTag(ev.target, '击破', 'tag break');
       await wait(0.2);
@@ -542,17 +543,17 @@ async function present(actor, action, evs, inserted) {
       playFx([['pillar_cyan', 0, 0.75]], nodeOf(ev.unit));
       floatTag(ev.unit, '行动提前', 'tag blue');
     } else if (ev.type === 'unit:death') {
-      playFx([['hit_dark', 0.5, 1.8], ['siwei_dark', 0.4, 1.4, '#9aa6c8', 0.1]], nodeOf(ev.unit));
+      playFx([['g_purple_smoke', 0.45, 1.6], ['hit_white', 0.5, 1.2, '', 0.1]], nodeOf(ev.unit));
       stage.die(nodeOf(ev.unit));
       if (target === ev.unit) target = battle.enemiesOf({ side: 'ally' })[0] || null;
       await wait(0.3);
     } else if (ev.type === 'domain:start' || ev.type === 'domain:refresh') {
       if (ev.type === 'domain:start') showDomain('幻海展开', true);
-      for (const u of battle.units.filter(x => x.alive)) playFx(u.side === 'enemy' ? [['pillar_big', 0, 1.1, V], ['dream_motes', 0.5, 1.2, VL, 0.2]] : [['aura_blue', 0.02, 1, VL]], nodeOf(u));
+      for (const u of battle.units.filter(x => x.alive)) playFx(u.side === 'enemy' ? [['g_sea_wave', 0.15, 1], ['g_purple_smoke', 0.5, 0.9, '', 0.3]] : [['g_purple_sigil', 0.45, 0.8]], nodeOf(u));
     } else if (ev.type === 'domain:end' && ev.reason !== 'battleEnd') {
       showDomain('幻海消退', false);
     } else if (ev.type === 'siwei:guard') {
-      playFx([['siwei_ring', 0.02, 1, VL], ['pillar_white', 0, 0.9, VL]], nodeOf(ev.target));
+      playFx([['g_purple_shield', 0.5, 1.1]], nodeOf(ev.target));
       floatTag(ev.target, '虚实守护', 'tag blue');
     }
   }

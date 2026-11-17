@@ -206,3 +206,5 @@
 .fl em,.fl em.crit{font-family:var(--sans);font-weight:700;font-size:.36em;letter-spacing:.06em;margin:0 0 .04em .35em;color:var(--mid);
   -webkit-text-stroke:.07em var(--edge);paint-order:stroke fill;filter:drop-shadow(0 0 .3em var(--glow))}
 #total .v{font-family:"YJ DIN",var(--sans);font-weight:700}
+#cine video{opacity:0}
+#cine video.live{opacity:1}

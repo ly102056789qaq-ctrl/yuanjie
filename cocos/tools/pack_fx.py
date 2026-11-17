@@ -53,11 +53,44 @@ FX = {
     'green_cloud': ('huatuo_skill1__002', 2.4, 30, False),
     'green_leaf': ('huatuo_skill1__001', 1.4, 30, False),
     'spirit': ('guojia_skill4', 2.4, 30, False),
+    # 第三批：145 套古风包（手绘质感，按原色使用）
+    'g_purple_star': ('E54178', 2.6, 30, False),
+    'g_purple_smoke': ('E54086', 2.4, 30, False),
+    'g_purple_nova': ('E54176', 3.0, 30, False),
+    'g_purple_sigil': ('E54061', 2.4, 30, False),
+    'g_purple_moon': ('E54095', 2.6, 30, False),
+    'g_purple_shield': ('E54062', 2.8, 30, False),
+    'g_purple_barrage': ('E54155', 3.4, 30, False),
+    'g_dream_bubbles': ('E50127', 1.8, 30, True),
+    'g_bolt_burst': ('E54007', 2.4, 30, False),
+    'g_thunder': ('E53059', 3.0, 30, False),
+    'g_bolt_slash': ('E54171', 3.2, 30, False),
+    'g_spark_white': ('E54003', 2.4, 30, False),
+    'g_bolt_yellow': ('E54085', 3.2, 30, False),
+    'g_gold_slash': ('E53048', 2.8, 30, False),
+    'g_gold_orb': ('E54151', 2.8, 30, False),
+    'g_gold_tower': ('E54150', 2.8, 30, False),
+    'g_gold_shield': ('E54060', 2.8, 30, False),
+    'g_gold_sparks': ('E54098', 2.2, 30, False),
+    'g_flowers': ('E54139', 2.6, 30, False),
+    'g_green_rings': ('E54070', 2.2, 30, False),
+    'g_herb': ('E54079', 2.2, 30, False),
+    'g_leaves': ('E53215', 2.0, 30, False),
+    'g_green_burst': ('E54175', 2.4, 30, False),
+    'g_red_cross': ('E54169', 2.8, 30, False),
+    'g_red_blast': ('E54015', 2.6, 30, False),
+    'g_red_orb': ('E54020', 2.4, 30, False),
+    'g_ice_shatter': ('E54093', 2.6, 30, False),
+    'g_sea_wave': ('E54122', 4.2, 30, False),
 }
 
 
+SRC38 = os.path.join('C:' + os.sep, 'Users', '86193', 'repos', 'work', 'fxbake38')   # 145 套古风包（Spine 3.8，repos/tools/bake38.mjs 烘焙）
+
+
 def pack(name, src_dir, size, fps, loop):
-    info = json.load(open(os.path.join(SRC, src_dir, 'info.json'), encoding='utf-8'))
+    root = SRC38 if src_dir.startswith('E') else SRC
+    info = json.load(open(os.path.join(root, src_dir, 'info.json'), encoding='utf-8'))
     n, (w, h) = info['frames'], info['size']
     cols = math.ceil(math.sqrt(n * h / w))
     rows = math.ceil(n / cols)
@@ -65,7 +98,7 @@ def pack(name, src_dir, size, fps, loop):
     fw, fh = max(1, int(w * k)), max(1, int(h * k))
     sheet = Image.new('RGB', (cols * fw, rows * fh), (0, 0, 0))
     for i in range(n):
-        im = Image.open(os.path.join(SRC, src_dir, f'f{i:03d}.png')).convert('RGBA')
+        im = Image.open(os.path.join(root, src_dir, f'f{i:03d}.png')).convert('RGBA')
         bg = Image.new('RGBA', im.size, (0, 0, 0, 255))
         bg.alpha_composite(im)
         fr = bg.convert('RGB').resize((fw, fh), Image.LANCZOS)
