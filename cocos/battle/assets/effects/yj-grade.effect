@@ -1,0 +1,55 @@
+// 画面调色层：移植自旧版 battle.css 的 #grade（暗角 + 颗粒，正片叠底，不透明度 .28）。
+// 全屏、最后绘制，不受深度影响。
+CCEffect %{
+  techniques:
+  - name: transparent
+    passes:
+    - vert: grade-vs:vert
+      frag: grade-fs:frag
+      priority: 255
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: dst_color
+          blendDst: zero
+          blendSrcAlpha: zero
+          blendDstAlpha: one
+      properties:
+        grainTexture: { value: white }
+        params:       { value: [0.28, 180, 0.22, 0], editor: { tooltip: 'x 整体强度, y 颗粒尺寸(px), z 暗角深度' } }
+}%
+
+CCProgram grade-vs %{
+  precision highp float;
+  in vec3 a_position;
+  out vec2 v_screen;
+  vec4 vert () {
+    v_screen = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.0, 1.0);
+  }
+}%
+
+CCProgram grade-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec2 v_screen;
+  uniform sampler2D grainTexture;
+  uniform Constant { vec4 params; };
+
+  vec4 frag () {
+    vec2 px = v_screen * cc_screenSize.xy;
+    vec4 g = texture(grainTexture, fract(px / params.y));
+    vec3 grain = mix(vec3(1.0), g.rgb, g.a);   // 颗粒图几乎全透明，按透明度叠
+    // 旧版：radial-gradient(120% 90% at 50% 28%, transparent 52%, rgba(10,16,28,.22) 100%)
+    vec2 d = (vec2(v_screen.x, 1.0 - v_screen.y) - vec2(0.5, 0.28)) / vec2(0.6, 0.45);
+    float v = smoothstep(0.52, 1.0, length(d)) * params.z;
+    vec3 vig = mix(vec3(1.0), vec3(10.0, 16.0, 28.0) / 255.0, v);
+    vec3 m = grain * vig;
+    return vec4(mix(vec3(1.0), m, params.x), 1.0);
+  }
+}%

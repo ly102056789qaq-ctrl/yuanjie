@@ -1,0 +1,50 @@
+// 序列帧特效（2D 精灵材质）：黑底发光图按叠加混合，黑色即透明。color 的 alpha 可整体淡出。
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: fx-vs:vert
+      frag: fx-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: zero
+          blendDstAlpha: one
+      rasterizerState:
+        cullMode: none
+      properties:
+        intensity: { value: 0.8 }
+}%
+
+CCProgram fx-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+  out vec4 color;
+  out vec2 uv0;
+  vec4 vert () {
+    uv0 = a_texCoord;
+    color = a_color;
+    return cc_matViewProj * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram fx-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  in vec4 color;
+  in vec2 uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  uniform Fx { float intensity; };
+  vec4 frag () {
+    vec4 o = CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+    return vec4(o.rgb * color.rgb * color.a * intensity, 1.0);
+  }
+}%

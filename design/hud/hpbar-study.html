@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>血条质感专项稿</title>
+<!-- 只研究“一根条”的质感：四个方案 × 亮/暗两种场景，右侧放大 3 倍。 -->
+<style>
+@font-face{font-family:"YJ Sans";src:url(../../fonts/yj-sans.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:"YJ Wide";src:url(../../fonts/yj-wide.woff2) format("woff2");font-weight:100 900;font-stretch:50% 150%}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1920px;height:1080px;background:#0B1119;font-family:"YJ Sans",sans-serif;color:#fff;-webkit-font-smoothing:antialiased;padding:40px 60px}
+h1{font-size:22px;font-weight:600;letter-spacing:.12em;margin-bottom:22px;color:#DCE6F2}
+.grid{display:grid;grid-template-columns:200px 520px 520px 1fr;gap:18px 28px;align-items:center}
+.head{font-size:13px;letter-spacing:.16em;color:#8FA3BC}
+.label{font-size:15px;font-weight:600;line-height:1.5}
+.label small{display:block;font-size:12px;font-weight:400;color:#9FB0C4;line-height:1.5}
+.scene{position:relative;height:200px;overflow:hidden;border-radius:2px}
+.scene.bright{background:url(plate.webp) 18% 92%/1920px auto}
+.scene.dark{background:linear-gradient(rgba(6,10,18,.55),rgba(6,10,18,.55)),url(plate.webp) 70% 30%/1920px auto}
+.zoom{position:relative;height:200px;overflow:hidden;border-radius:2px;background:url(plate.webp) 18% 92%/1920px auto}
+.zoom .inner{position:absolute;left:0;top:0;transform:scale(3);transform-origin:0 0}
+.unit{position:absolute;left:40px;top:70px;width:220px}
+.zoom .unit{left:8px;top:12px}
+
+/* 共用：数字和图标 */
+.row{display:flex;align-items:flex-end;gap:5px;height:26px;margin-bottom:3px}
+.row img{width:22px;height:22px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.8))}
+.num{font-family:"YJ Wide";font-stretch:80%;font-weight:800;font-size:24px;line-height:1;font-style:italic;letter-spacing:.01em;
+  -webkit-text-stroke:3px #0A1018;paint-order:stroke fill;filter:drop-shadow(0 2px 1px rgba(0,0,0,.55))}
+.num small{font-size:13px;font-weight:700;opacity:.85}
+.sub{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.en{font-family:"YJ Wide";font-stretch:80%;font-weight:800;font-style:italic;font-size:15px;color:#fff;-webkit-text-stroke:2.5px #0A1018;paint-order:stroke fill}
+
+/* ── A：新月式 双层釉面 ── */
+.A .track{position:relative;height:10px;background:rgba(4,8,14,.62);box-shadow:0 0 0 1px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.5)}
+.A .lag{position:absolute;left:0;top:0;bottom:0;width:84%;background:linear-gradient(180deg,#FFFFFF 0 50%,#E4ECF2 50%)}
+.A .fill{position:absolute;left:0;top:0;bottom:0;width:72%;
+  background:linear-gradient(180deg,#B8FFD9 0,#B8FFD9 1px,#5BF0A6 1px,#5BF0A6 48%,#1FCF7C 48%,#13B067 100%)}
+.A .fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.10) 0 2px,transparent 2px 5px)}
+.A .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(0,0,0,.45) calc(10% - 1px) 10%)}
+.A .ep{position:relative;height:4px;margin-top:2px;width:80%;background:rgba(4,8,14,.62);box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.A .ep i{position:absolute;left:0;top:0;bottom:0;width:60%;background:linear-gradient(180deg,#C9F4FF 0 50%,#3CC8F5 50%)}
+
+/* ── B：星铁式 细条 + 亮白高光 ── */
+.B .track{position:relative;height:7px;background:rgba(10,16,24,.55);box-shadow:0 0 0 1px rgba(0,0,0,.7)}
+.B .lag{position:absolute;left:0;top:0;bottom:0;width:84%;background:rgba(255,255,255,.92)}
+.B .fill{position:absolute;left:0;top:0;bottom:0;width:72%;background:linear-gradient(180deg,#E9FFF4 0,#E9FFF4 1.5px,#7CF4BC 1.5px,#38DD92 100%);box-shadow:0 0 6px rgba(80,255,170,.45)}
+.B .ticks{display:none}
+.B .ep{position:relative;height:3px;margin-top:3px;width:100%;background:rgba(10,16,24,.55)}
+.B .ep i{position:absolute;left:0;top:0;bottom:0;width:60%;background:#7FE3FF;box-shadow:0 0 5px rgba(127,227,255,.8)}
+
+/* ── C：斜切 + 金属端帽（较重） ── */
+.C .track{position:relative;height:11px;background:rgba(4,8,14,.66);clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.9)}
+.C .lag{position:absolute;left:0;top:0;bottom:0;width:84%;background:#FFF}
+.C .fill{position:absolute;left:0;top:0;bottom:0;width:72%;
+  background:linear-gradient(180deg,#D4FFE8 0,#D4FFE8 1px,#62F2AA 1px,#62F2AA 46%,#22D27F 46%,#0E9E5B 100%)}
+.C .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 21px,rgba(0,0,0,.5) 21px 22px)}
+.C .cap{position:absolute;right:-8px;top:-3px;width:12px;height:17px;background:linear-gradient(135deg,#FFFFFF,#AEBFD1 55%,#6D8098);clip-path:polygon(6px 0,100% 0,6px 100%,0 100%);filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.C .ep{position:relative;height:4px;margin-top:2px;width:80%;background:rgba(4,8,14,.62);clip-path:polygon(2px 0,100% 0,calc(100% - 2px) 100%,0 100%)}
+.C .ep i{position:absolute;left:0;top:0;bottom:0;width:60%;background:linear-gradient(180deg,#D7F7FF 0 50%,#41C9F2 50%)}
+
+/* ── D：A 的结构 + 青色系（与源界主色统一） ── */
+.D .track{position:relative;height:10px;background:rgba(4,8,14,.62);box-shadow:0 0 0 1px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.5)}
+.D .lag{position:absolute;left:0;top:0;bottom:0;width:84%;background:linear-gradient(180deg,#FFFFFF 0 50%,#E4ECF2 50%)}
+.D .fill{position:absolute;left:0;top:0;bottom:0;width:72%;
+  background:linear-gradient(180deg,#D8FFF6 0,#D8FFF6 1px,#6FF5D8 1px,#6FF5D8 48%,#1CCFB0 48%,#0EA593 100%)}
+.D .fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.10) 0 2px,transparent 2px 5px)}
+.D .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(0,0,0,.45) calc(10% - 1px) 10%)}
+.D .ep{position:relative;height:4px;margin-top:2px;width:80%;background:rgba(4,8,14,.62);box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.D .ep i{position:absolute;left:0;top:0;bottom:0;width:60%;background:linear-gradient(180deg,#E0E8FF 0 50%,#6C8CFF 50%)}
+</style>
+</head>
+<body>
+<h1>血条质感专项稿 · 四个方案</h1>
+<div class="grid" id="grid">
+  <div></div><div class="head">亮场景（现在的冰原）</div><div class="head">暗场景（压暗后）</div><div class="head">放大 3 倍</div>
+</div>
+<template id="unit">
+  <div class="unit">
+    <div class="row"><img src="../../assets/icons/el-fuxiang.webp" alt=""><span class="num">8600<small> / 12000</small></span></div>
+    <div class="track"><i class="lag"></i><i class="fill"></i><i class="ticks"></i><i class="cap"></i></div>
+    <div class="ep"><i></i></div>
+    <div class="sub"><span class="en">90</span></div>
+  </div>
+</template>
+<script>
+const rows = [
+  ['A', '方案 A · 新月式', '半透明黑槽、上亮下深的双层釉面、白色残影、细斜纹和 10 格刻度'],
+  ['B', '方案 B · 星铁式', '更细更轻，亮白高光线，填充带一点辉光，没有刻度'],
+  ['C', '方案 C · 斜切加端帽', '两端斜切，右端加一枚金属端帽，最有“部件感”'],
+  ['D', '方案 D · A 的结构配青色', '和《源界》的钴蓝、青色主色统一，生命条偏青绿'],
+];
+const grid = document.getElementById('grid'), tpl = document.getElementById('unit');
+for (const [k, title, desc] of rows) {
+  const label = document.createElement('div'); label.className = 'label'; label.innerHTML = `${title}<small>${desc}</small>`; grid.appendChild(label);
+  for (const cls of ['scene bright', 'scene dark', 'zoom']) {
+    const box = document.createElement('div'); box.className = cls + ' ' + k;
+    const u = tpl.content.cloneNode(true);
+    if (cls === 'zoom') { const inner = document.createElement('div'); inner.className = 'inner'; inner.appendChild(u); box.appendChild(inner); }
+    else box.appendChild(u);
+    grid.appendChild(box);
+  }
+}
+</script>
+</body>
+</html>

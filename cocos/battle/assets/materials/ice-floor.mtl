@@ -1,0 +1,49 @@
+{
+  "__type__": "cc.Material",
+  "_name": "",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "9481bcdd-5945-4e45-ba93-bb922627a551",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {
+      "CC_USE_HDR": true,
+      "CC_USE_FLOAT_OUTPUT": false,
+      "CC_SHADOWMAP_FORMAT": 0,
+      "CC_SHADOWMAP_USE_LINEAR_DEPTH": 0,
+      "CC_SUPPORT_CASCADED_SHADOW_MAP": true,
+      "CC_SHADOW_TYPE": 0,
+      "CC_DIR_SHADOW_PCF_TYPE": 0,
+      "CC_DIR_LIGHT_SHADOW_TYPE": 0,
+      "CC_CASCADED_LAYERS_TRANSITION": false,
+      "CC_USE_IBL": 0,
+      "CC_USE_DIFFUSEMAP": 0,
+      "CC_IBL_CONVOLUTED": false,
+      "CC_USE_FOG": 0,
+      "CC_USE_ACCURATE_FOG": 0,
+      "CC_TONE_MAPPING_TYPE": 0
+    }
+  ],
+  "_states": [
+    {}
+  ],
+  "_props": [
+    {
+      "mainTexture": {
+        "__uuid__": "1004aa17-bdff-4b9f-8f50-73b60ef14dad@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "params": {
+        "__type__": "cc.Vec4",
+        "x": 8.2,
+        "y": 0.92,
+        "z": 0,
+        "w": 0
+      }
+    }
+  ]
+}
