@@ -1,0 +1,180 @@
+{
+  "id": "liselotte",
+  "name": "莉泽洛特·法尔肯",
+  "energy": {
+    "max": 130,
+    "ultCost": 130
+  },
+  "skills": [
+    {
+      "slot": "basic",
+      "label": "普攻",
+      "name": "例行点名",
+      "desc": "单体物理伤害，有80%基础概率施加1层战创，目标入席时提高至100%。",
+      "icon": "assets/skills/liselotte/basic.webp",
+      "type": [
+        "物理",
+        "普攻"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1
+      },
+      "rankOne": {
+        "mult": 0.6
+      }
+    },
+    {
+      "slot": "skill",
+      "label": "战技",
+      "name": "交叉火网",
+      "desc": "扩散射击，主目标获得2层战创，相邻目标获得1层。军势满时换为统合齐射，并采样非物理持续伤害属性追加协同弹。",
+      "icon": "assets/skills/liselotte/skill.webp",
+      "type": [
+        "物理",
+        "战技"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1.1,
+        "enhanced": 1.5,
+        "shot": 0.8
+      },
+      "rankOne": {
+        "mult": 0.66,
+        "enhanced": 0.9,
+        "shot": 0.48
+      }
+    },
+    {
+      "slot": "talent",
+      "label": "天赋",
+      "name": "前线伤亡报告",
+      "desc": "战创按敌方行动结算，每层造成攻击力105%加目标生命上限0.6%的物理流血，生命项上限为攻击力75%。每个独立结算事件最多获得1点军势。",
+      "icon": "assets/skills/liselotte/talent.webp",
+      "type": [
+        "物理",
+        "天赋"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "bleed": 1.05
+      },
+      "rankOne": {
+        "bleed": 0.63
+      }
+    },
+    {
+      "slot": "ultimate",
+      "label": "终结技",
+      "name": "帝国总攻令",
+      "desc": "全体物理攻击，施加2层战创，自身进入2回合总攻态势，战创伤害提高30%。",
+      "icon": "assets/skills/liselotte/ultimate.webp",
+      "type": [
+        "物理",
+        "终结技"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1.5
+      },
+      "rankOne": {
+        "mult": 0.9
+      }
+    }
+  ],
+  "potential": {
+    "major": [
+      {
+        "id": "A",
+        "name": "进攻无需许可",
+        "desc": "开战获得1点军势。",
+        "unlockLevel": 20,
+        "icon": "assets/skills/liselotte/talent.webp"
+      },
+      {
+        "id": "B",
+        "name": "绝对火力优势",
+        "desc": "目标有两种持续伤害时，战创伤害提高20%。",
+        "unlockLevel": 40,
+        "icon": "assets/skills/liselotte/talent.webp"
+      },
+      {
+        "id": "C",
+        "name": "胜利不计代价",
+        "desc": "自然战创结算恢复4点能量，每两次自身行动之间最多12点。",
+        "unlockLevel": 60,
+        "icon": "assets/skills/liselotte/talent.webp"
+      }
+    ],
+    "minor": [
+      {
+        "id": "m0",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.04,
+        "unlockLevel": 10
+      },
+      {
+        "id": "m1",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 20
+      },
+      {
+        "id": "m2",
+        "stat": "spd",
+        "name": "速度",
+        "value": 1,
+        "unlockLevel": 25
+      },
+      {
+        "id": "m3",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.04,
+        "unlockLevel": 30
+      },
+      {
+        "id": "m4",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 40
+      },
+      {
+        "id": "m5",
+        "stat": "spd",
+        "name": "速度",
+        "value": 2,
+        "unlockLevel": 45
+      },
+      {
+        "id": "m6",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.04,
+        "unlockLevel": 50
+      },
+      {
+        "id": "m7",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 60
+      },
+      {
+        "id": "m8",
+        "stat": "spd",
+        "name": "速度",
+        "value": 2,
+        "unlockLevel": 70
+      }
+    ]
+  }
+}

@@ -2,24 +2,41 @@
    碎片 = 有厚度的挤出体：正面贴她的原画（自发光保真 + 清漆反射），侧面是发光玻璃边；
    正面再叠一层物理透射玻璃（折射、色散、虹彩）；裂缝流光、选中描边和光尘走选择性泛光（Bloom）。
    只负责画面；点击、键盘、文字都在 HTML 层。 */
-import * as THREE from 'three';
+import * as THREE from './vendor/three/three.module.min.js';
 import {EffectComposer} from './vendor/three/jsm/postprocessing/EffectComposer.js';
 import {RenderPass} from './vendor/three/jsm/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from './vendor/three/jsm/postprocessing/UnrealBloomPass.js';
 import {ShaderPass} from './vendor/three/jsm/postprocessing/ShaderPass.js';
 import {OutputPass} from './vendor/three/jsm/postprocessing/OutputPass.js';
-import {RoomEnvironment} from './vendor/three/jsm/environments/RoomEnvironment.js';
 
-const BLOOM=1;const useBloom=new URLSearchParams(location.search).get('bloom')==='1';
-export async function mount(host,o){
+const BLOOM=1;
+async function loadRoom() {
+  const response=await fetch(new URL('../assets/ascend/glass-room.bin',import.meta.url));
+  if(!response.ok)throw new Error(`升格反光贴图加载失败 (${response.status})`);
+  const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
+  const buffer=await new Response(stream).arrayBuffer();
+  const header=new DataView(buffer);
+  const texture=new THREE.DataTexture(new Uint16Array(buffer,4),header.getUint16(0,true),header.getUint16(2,true),THREE.RGBAFormat,THREE.HalfFloatType);
+  texture.mapping=THREE.CubeUVReflectionMapping;
+  texture.magFilter=texture.minFilter=THREE.LinearFilter;
+  texture.colorSpace=THREE.LinearSRGBColorSpace;
+  texture.needsUpdate=true;
+  return texture;
+}
+export async function mount(canvas,o){
   /* o: {polys:[[ [x,y],... ]×6], art:url|null, img:{x,y,w,h}, unlocked:[bool×6], sel, stage:{w,h}} —— 坐标都是 1920×1080 舞台像素 */
   const W=o.stage.w,H=o.stage.h;
-  const canvas=document.createElement('canvas');canvas.className='as3d';host.prepend(canvas);
-  let renderer;
-  try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance',premultipliedAlpha:true})}catch(e){canvas.remove();throw e}
+  const useBloom=o.bloom;
+  let image=null;
+  if(o.art){
+    const response=await fetch(o.art);
+    if(!response.ok)throw new Error(`升格原画加载失败 (${response.status})`);
+    image=await createImageBitmap(await response.blob(),{imageOrientation:'flipY',premultiplyAlpha:'none',colorSpaceConversion:'none'});
+  }
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance',premultipliedAlpha:true});
   renderer.setClearColor(0x000000,0);renderer.toneMapping=THREE.NoToneMapping;renderer.outputColorSpace=THREE.SRGBColorSpace;
   const scene=new THREE.Scene();
-  const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;
+  scene.environment=await loadRoom();
   const fov=18,D=(H/2)/Math.tan(THREE.MathUtils.degToRad(fov/2));
   const cam=new THREE.PerspectiveCamera(fov,W/H,D*.3,D*3);cam.position.set(0,0,D);cam.layers.enable(BLOOM);
   const S=(x,y)=>new THREE.Vector2(x-W/2,H/2-y);       /* 舞台像素 → 世界坐标（y 向上） */
@@ -27,16 +44,12 @@ export async function mount(host,o){
   scene.add(new THREE.AmbientLight(0xffffff,.25));
 
   /* 贴图：原画 + 去饱和压暗版（未解锁） */
-  const loadImg=src=>new Promise((r,j)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>r(im);im.onerror=j;im.src=src});
   let tex=null,texLk=null;
-  if(o.art){const im=await loadImg(o.art);
+  if(image){const im=image;
     tex=new THREE.Texture(im);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=4;tex.needsUpdate=true;
-    const cv=document.createElement('canvas');cv.width=im.naturalWidth>>1;cv.height=im.naturalHeight>>1;const g=cv.getContext('2d');g.filter='grayscale(.9) brightness(.3) contrast(1.1)';g.drawImage(im,0,0,cv.width,cv.height);
-    texLk=new THREE.CanvasTexture(cv);texLk.colorSpace=THREE.SRGBColorSpace}
-  /* 玻璃表面的细微起伏（法线贴图，程序生成），让透射层产生轻微折射 */
-  const nmap=(()=>{const n=256,cv=document.createElement('canvas');cv.width=cv.height=n;const g=cv.getContext('2d');const id=g.createImageData(n,n);
-    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const a=Math.sin(x*.07+Math.sin(y*.05)*2)*.5+Math.sin((x+y)*.031)*.5;const b=Math.cos(y*.06+Math.sin(x*.04)*2)*.5;const i=(y*n+x)*4;
-      id.data[i]=128+a*40;id.data[i+1]=128+b*40;id.data[i+2]=255;id.data[i+3]=255}g.putImageData(id,0,0);const t=new THREE.CanvasTexture(cv);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);return t})();
+    if(o.unlocked.includes(false)){
+      const cv=new OffscreenCanvas(Math.max(1,im.width>>1),Math.max(1,im.height>>1));const g=cv.getContext('2d');g.filter='grayscale(.9) brightness(.3) contrast(1.1)';g.drawImage(im,0,0,cv.width,cv.height);
+      texLk=new THREE.CanvasTexture(cv);texLk.flipY=false;texLk.colorSpace=THREE.SRGBColorSpace}}
 
   const DEPTH=22,group=new THREE.Group();scene.add(group);group.scale.setScalar(.95);
   const shards=[];
@@ -83,25 +96,25 @@ export async function mount(host,o){
     const pts=new THREE.Points(g,m);pts.layers.set(BLOOM);scene.add(pts);return m})();
 
   /* 选择性泛光：只有 BLOOM 层参与，最后加回主画面；保留透明背景 */
-  const bloomC=new EffectComposer(renderer);bloomC.renderToScreen=false;
+  let bloomC,finalC;
+  if(useBloom){
+  bloomC=new EffectComposer(renderer);bloomC.renderToScreen=false;
   const bloomRender=new RenderPass(scene,cam);bloomRender.clearAlpha=0;bloomC.addPass(bloomRender);
   const bloom=new UnrealBloomPass(new THREE.Vector2(W,H),.7,.45,0);bloomC.addPass(bloom);
-  const finalC=new EffectComposer(renderer);const mainRender=new RenderPass(scene,cam);mainRender.clearAlpha=0;finalC.addPass(mainRender);
+  finalC=new EffectComposer(renderer);const mainRender=new RenderPass(scene,cam);mainRender.clearAlpha=0;finalC.addPass(mainRender);
   const mix=new ShaderPass(new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:null},tBloom:{value:bloomC.renderTarget2.texture}},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
     fragmentShader:'uniform sampler2D tDiffuse;uniform sampler2D tBloom;varying vec2 vUv;void main(){vec4 b=texture2D(tDiffuse,vUv);vec3 g=texture2D(tBloom,vUv).rgb;float l=clamp(max(g.r,max(g.g,g.b)),0.,1.);gl_FragColor=vec4(b.rgb+g,clamp(b.a+l,0.,1.));}'}),'tDiffuse');
-  finalC.addPass(mix);finalC.addPass(new OutputPass());
+  finalC.addPass(mix);finalC.addPass(new OutputPass());}
 
-  let k=1;function resize(){const r=host.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,1.5);
+  function resize(r){const dpr=Math.min(r.dpr,1.5);
     const px=Math.max(1,r.width*dpr),py=Math.max(1,r.height*dpr);const cap=Math.min(1,Math.sqrt(2.4e6/(px*py)));
-    renderer.setPixelRatio(dpr*cap);renderer.setSize(r.width,r.height,false);bloomC.setSize(r.width,r.height);finalC.setSize(r.width,r.height);
-    bloomC.setPixelRatio&&bloomC.setPixelRatio(dpr*cap*.5);k=r.width/W*dpr*cap;dust.uniforms.uK.value=k;canvas.style.width='100%';canvas.style.height='100%'}
-  const ro=new ResizeObserver(resize);ro.observe(host);resize();
+    renderer.setDrawingBufferSize(r.width,r.height,dpr*cap);
+    if(useBloom){bloomC.setPixelRatio(dpr*cap*.5);bloomC.setSize(r.width,r.height);finalC.setSize(r.width,r.height)}
+    dust.uniforms.uK.value=r.width/W*dpr*cap}
 
   /* 鼠标视差 */
   const mouse={x:0,y:0,tx:0,ty:0};
-  const onMove=e=>{const r=host.getBoundingClientRect();mouse.tx=((e.clientX-r.left)/r.width-.5)*2;mouse.ty=((e.clientY-r.top)/r.height-.5)*2};
-  addEventListener('pointermove',onMove,{passive:true});
 
   let sel=o.sel??-1,pulse=-9,raf=0,running=false,t0=performance.now(),last=t0,frames=0,slow=0;const api={};
   function frame(now){raf=0;if(!running)return;const t=(now-t0)/1000,dt=Math.min(.05,(now-last)/1000);last=now;
@@ -115,14 +128,16 @@ export async function mount(host,o){
       s.edge.material.uniforms.uA.value+=(((on?1.15:0)+(on?pu*2:0))-s.edge.material.uniforms.uA.value)*.2;s.edge.material.uniforms.uT.value=t;
       if(tex)s.cap.emissive.setRGB(1-(on?.1:0),1-(on?.05:0),1);s.cap.emissiveIntensity=tex?((s.lk?.9:1)+(on?.08+pu*.25:0)):1});
     crack.uniforms.uT.value=t;dust.uniforms.uT.value=t;
-    if(useBloom){cam.layers.set(BLOOM);bloomC.render(dt);cam.layers.enableAll();finalC.render(dt)}else renderer.render(scene,cam);
+    draw(dt);
+    if(frames===0)api.onFirstFrame();
     frames++;if(dt>1/40)slow++;if(frames===120&&slow>70&&api.onSlow)api.onSlow();
-    raf=requestAnimationFrame(frame)}
+    if(running)raf=requestAnimationFrame(frame)}
   api.start=()=>{if(running)return;running=true;last=performance.now();raf=requestAnimationFrame(frame)};
   api.stop=()=>{running=false;if(raf)cancelAnimationFrame(raf);raf=0};
-  api.dbg=()=>({sel,running,frames,lift:shards.map(s=>+s.lift.toFixed(1)),uA:shards.map(s=>+s.edge.material.uniforms.uA.value.toFixed(2))});api.select=i=>{sel=i;pulse=(performance.now()-t0)/1000};
-  api.renderOnce=()=>{cam.layers.set(BLOOM);bloomC.render(.016);cam.layers.enableAll();finalC.render(.016)};
-  api.destroy=()=>{api.stop();ro.disconnect();removeEventListener('pointermove',onMove);renderer.dispose();scene.traverse(x=>{x.geometry&&x.geometry.dispose();(Array.isArray(x.material)?x.material:[x.material]).forEach(m=>m&&m.dispose&&m.dispose())});canvas.remove()};
+  api.resize=resize;
+  api.pointer=position=>{mouse.tx=position.x;mouse.ty=position.y};
+  api.select=i=>{sel=i;pulse=(performance.now()-t0)/1000};
+  function draw(dt){if(useBloom){cam.layers.set(BLOOM);bloomC.render(dt);cam.layers.enableAll();finalC.render(dt)}else renderer.render(scene,cam)}
   return api}
 
 /* 沿多边形的柔和发光描边（用于选中） */

@@ -1,5 +1,5 @@
 /* 角色培养页立绘待机：不拆图层。PixiJS 网格做呼吸/发带摆动，贴图交换眨眼，光球单独一层。 */
-import { Application, Assets, Container, Graphics, MeshPlane, Sprite } from '../js/sprite/vendor/pixi.min.mjs';
+import { Application, Assets, Container, Graphics, MeshPlane, Sprite } from '../js/sprite/vendor/pixi.min.js';
 
 const PERIOD = 3.6;
 const VX = 15;
@@ -64,9 +64,23 @@ const RN = {
   EYE: { x: 0.42, y: 0.142, w: 0.22, h: 0.055 },
 };
 
+const portraitProfiles = {
+  daier:{eyes:[430,187],period:4.8,shoulder:.29,hips:.7,sway:1.9},
+  liselotte:{eyes:[393,256],period:4.3,shoulder:.32,hips:.68,sway:1.65},
+  shen:{eyes:[374,214],period:4.6,shoulder:.30,hips:.69,sway:1.8},
+  eliot:{eyes:[379,202],period:4.2,shoulder:.28,hips:.66,sway:3.2}
+};
+
+function portraitOffset(profile, nx, ny, time, height) {
+  const phase = time * Math.PI * 2 / profile.period;
+  const rise = height * .0022 * Math.sin(phase) * (1-smoothstep(profile.shoulder,profile.hips,ny));
+  const tips = smoothstep(.42,.88,ny) * smoothstep(.13,.45,Math.abs(nx-.5));
+  return [tips*profile.sway*Math.sin(phase*.78),rise];
+}
+
 function isSubtleMotion() {
   const m = currentMotion();
-  return m === 'dekeke' || m === 'vera' || m === 'rin';
+  return !!portraitProfiles[m] || m === 'dekeke' || m === 'vera' || m === 'rin';
 }
 
 function deformDekeke(nx, ny, t, w, h) {
@@ -232,6 +246,23 @@ let orbOn = false;
 function artEl() { return document.getElementById('art'); }
 function boxEl() { return document.getElementById('artbox'); }
 
+function portraitVisible() {
+  const page = document.getElementById('app');
+  const tab = page.dataset.tab;
+  return !document.hidden && tab !== 'skill' && (page.classList.contains('mob') || !['ascend', 'module', 'spectrum'].includes(tab));
+}
+
+function syncPlayback() {
+  if (!app?.ticker) return;
+  if (!portraitVisible()) {
+    app.stop();
+    clearBlinkTimer();
+  } else if (mesh) {
+    if (!app.ticker.started) app.start();
+    if (!blinkTimer && !blinking) scheduleBlink();
+  }
+}
+
 function syncCanvasBox() {
   const art = artEl();
   if (!art || !canvas) return;
@@ -247,13 +278,13 @@ function clearBlinkTimer() {
 
 function scheduleBlink() {
   clearBlinkTimer();
-  if (reduced || !blinkTex || !mesh) return;
+  if (reduced || !blinkTex || !mesh || !portraitVisible()) return;
   const wait = 3000 + Math.random() * 3000;
   blinkTimer = setTimeout(() => { blinkOnce(Math.random() < 0.28); }, wait);
 }
 
 function rinEyePatch() {
-  return currentMotion() === 'rin' && blinkSprite;
+  return Boolean(blinkSprite);
 }
 
 async function blinkOnce(doubleBlink) {
@@ -333,6 +364,7 @@ async function attach(src) {
       backgroundAlpha: 0,
       antialias: true,
       autoDensity: true,
+      autoStart: false,
       resolution: window.devicePixelRatio || 1,
       width: w,
       height: h,
@@ -372,7 +404,11 @@ async function attach(src) {
 
     blinkSprite = null;
     blinkMask = null;
-    if (currentMotion() === 'rin' && blinkTex) {
+    if (portraitProfiles[currentMotion()] && blinkTex) {
+      blinkSprite = new Sprite(blinkTex);
+      blinkSprite.visible = false;
+      root.addChild(blinkSprite);
+    } else if (currentMotion() === 'rin' && blinkTex) {
       blinkSprite = new Sprite(blinkTex);
       blinkSprite.width = w;
       blinkSprite.height = h;
@@ -417,8 +453,6 @@ async function attach(src) {
   } else if (mesh) {
     mesh.width = w;
     mesh.height = h;
-    const buf = positionsOf(mesh);
-    rest = Float32Array.from(buf.data);
     if (blinkSprite && blinkMask && currentMotion() === 'rin') {
       blinkSprite.width = w;
       blinkSprite.height = h;
@@ -439,7 +473,7 @@ async function attach(src) {
     }
   }
 
-  art.style.visibility = 'hidden';
+  if (art.style.visibility !== 'hidden') art.style.visibility = 'hidden';
   canvas.classList.add('ok');
 }
 
@@ -448,17 +482,25 @@ function tick() {
   const buf = positionsOf(mesh);
   const data = buf.data;
   const t = (app.ticker.lastTime || 0) / 1000;
-  const w = mesh.width, h = mesh.height;
+  const profile = portraitProfiles[currentMotion()];
+  const w = profile ? openTex.width : mesh.width;
+  const h = profile ? openTex.height : mesh.height;
   const phase = (t / PERIOD) * Math.PI * 2;
   const breathe = Math.sin(phase);
   for (let i = 0; i < rest.length; i += 2) {
     const x = rest[i], y = rest[i + 1];
     const nx = x / w, ny = y / h;
-    const [dx, dy] = deformAt(nx, ny, t, w, h);
+    const [dx, dy] = profile ? portraitOffset(profile,nx,ny,t,h) : deformAt(nx, ny, t, w, h);
     data[i] = x + dx;
     data[i + 1] = y + dy;
   }
   buf.update();
+  if (profile && blinkSprite) {
+    const [left,top] = profile.eyes;
+    const [,rise] = portraitOffset(profile,left/w,top/h,t,h);
+    blinkSprite.position.set(left*mesh.scale.x,(top+rise)*mesh.scale.y);
+    blinkSprite.scale.copyFrom(mesh.scale);
+  }
 
   if (root) {
     /* 德可可、薇拉、若叶凛整身不漂浮 */
@@ -524,7 +566,7 @@ async function destroy() {
   if (art) art.style.visibility = '';
 }
 
-async function onArtPlaced() {
+async function updatePortrait() {
   const art = artEl();
   if (!art) return;
   const on = art.dataset.breath === '1' && art.src && art.classList.contains('ok');
@@ -532,12 +574,34 @@ async function onArtPlaced() {
     if (app || canvas) await destroy();
     return;
   }
-  await attach(art.currentSrc || art.src);
+  if (portraitVisible()) await attach(art.currentSrc || art.src);
+  syncPlayback();
+}
+
+let placing = false;
+let pendingPlacement = false;
+async function onArtPlaced() {
+  pendingPlacement = true;
+  if (placing) return;
+  placing = true;
+  try {
+    while (pendingPlacement) {
+      pendingPlacement = false;
+      await updatePortrait();
+    }
+  } finally { placing = false; }
 }
 
 if (typeof window !== 'undefined') {
   window.YJ = window.YJ || {};
   YJ.onArtPlaced = onArtPlaced;
+  const togglePlayback = () => {
+    const art = artEl();
+    if (portraitVisible() && (!mesh || srcKey !== (art.currentSrc || art.src))) onArtPlaced();
+    else syncPlayback();
+  };
+  new MutationObserver(togglePlayback).observe(document.getElementById('app'), { attributes: true, attributeFilter: ['data-tab'] });
+  document.addEventListener('visibilitychange', togglePlayback);
   addEventListener('resize', () => { syncCanvasBox(); onArtPlaced(); });
   const art = artEl();
   if (art) {

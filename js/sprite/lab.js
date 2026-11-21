@@ -1,4 +1,4 @@
-import { Application } from './vendor/pixi.min.mjs';
+import { Application } from './vendor/pixi.min.js';
 import { SpriteRig, loadSpriteData } from './rig.js';
 import { EventBus } from '../battle/core/EventBus.js';
 

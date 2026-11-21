@@ -1,0 +1,44 @@
+{
+  "_doc": "角色战斗属性方案（2026-11-17 用户授权由我们参考二游通行做法拟定）。角色页与战斗共用：js/battle/stats.js 的 statsFor() 读这里。数值可随平衡调整，改这一份即可。",
+  "levelMax": 80,
+  "levelFloor": 0.15,
+  "classBase": {
+    "qianggong": { "hp": 1100, "atk": 700, "def": 480, "spd": 102 },
+    "ganshe":    { "hp": 1050, "atk": 650, "def": 460, "spd": 104 },
+    "shibian":   { "hp": 1000, "atk": 640, "def": 450, "spd": 106 },
+    "pozhen":    { "hp": 1150, "atk": 620, "def": 500, "spd": 100 },
+    "zhiyuan":   { "hp": 1080, "atk": 560, "def": 480, "spd": 106 },
+    "shouhu":    { "hp": 1300, "atk": 520, "def": 600, "spd": 101 }
+  },
+  "starMultiplier": { "5": 1.0, "6": 1.08 },
+  "common": { "critRate": 0.05, "critDmg": 0.5, "effectHit": 0, "effectRes": 0, "energyRegen": 0, "dmgBonus": 0 },
+  "module": {
+    "_doc": "5★ 专属模组 Lv80 的基础属性，按定位取值",
+    "default": { "atk": 530, "hp": 1060, "def": 400 },
+    "siwei": { "atk": 530, "hp": 1060 },
+    "vera": { "atk": 530, "hp": 1060 },
+    "dekeke": { "hp": 1060, "spd": 8 },
+    "rin": { "hp": 1060, "def": 400 }
+  },
+  "energy": {
+    "_doc": "超限值获取：行动与受击。角色技能数据里写了 perAction 的以角色数据为准",
+    "perAction": { "basic": 20, "skill": 30, "ultimate": 5 },
+    "onHit": 10,
+    "battleStart": 0.5
+  },
+  "minorStat": {
+    "_doc": "潜能属性节点名称 → 属性键；value 为小数比例，速度为固定值",
+    "生命值": "hpPct",
+    "攻击力": "atkPct",
+    "防御力": "defPct",
+    "效果抵抗": "effectRes",
+    "效果命中": "effectHit",
+    "速度": "spd",
+    "暴击率": "critRate",
+    "暴击伤害": "critDmg",
+    "雷电伤害": "dmgBonus",
+    "负相伤害": "dmgBonus",
+    "辐照伤害": "dmgBonus",
+    "演生伤害": "dmgBonus"
+  }
+}

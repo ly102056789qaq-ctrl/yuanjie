@@ -164,6 +164,10 @@
     ],
     "groups": [
       {
+        "id": "frostfire-trial",
+        "name": "战斗试用"
+      },
+      {
         "id": "fc",
         "name": "法涅斯与克拉拉"
       },
@@ -182,6 +186,10 @@
       {
         "id": "ai",
         "name": "小Y · 思惟诺姆与AI线"
+      },
+      {
+        "id": "first-up",
+        "name": "首期限定"
       }
     ],
     "stats": [
@@ -2805,13 +2813,13 @@
     {
       "id": "liselotte",
       "name": "莉泽洛特·法尔肯",
-      "roman": "",
+      "roman": "LISELOTTE FALKEN",
       "group": "dr",
-      "role": "德兰塔总参谋长 · 第一夫人",
+      "role": "首期限定 · 物理流血主输出",
       "code": "",
-      "stars": null,
-      "cls": null,
-      "element": null,
+      "stars": 6,
+      "cls": "shibian",
+      "element": "wuli",
       "level": {
         "cur": null,
         "max": null
@@ -2827,27 +2835,39 @@
       "skills": [
         {
           "slot": "normal",
-          "name": null,
-          "desc": null,
-          "tags": []
+          "name": "例行点名",
+          "desc": "单体物理伤害，有80%基础概率施加1层战创，目标入席时提高至100%。",
+          "tags": [
+            "普攻"
+          ],
+          "icon": "assets/skills/liselotte/basic.webp"
         },
         {
           "slot": "skill",
-          "name": null,
-          "desc": null,
-          "tags": []
-        },
-        {
-          "slot": "ult",
-          "name": null,
-          "desc": null,
-          "tags": []
+          "name": "交叉火网",
+          "desc": "扩散射击，主目标获得2层战创，相邻目标获得1层。军势满时换为统合齐射，并采样非物理持续伤害属性追加协同弹。",
+          "tags": [
+            "战技"
+          ],
+          "icon": "assets/skills/liselotte/skill.webp"
         },
         {
           "slot": "talent",
-          "name": null,
-          "desc": null,
-          "tags": []
+          "name": "前线伤亡报告",
+          "desc": "战创按敌方行动结算，每层造成攻击力105%加目标生命上限0.6%的物理流血，生命项上限为攻击力75%。每个独立结算事件最多获得1点军势。",
+          "tags": [
+            "天赋"
+          ],
+          "icon": "assets/skills/liselotte/talent.webp"
+        },
+        {
+          "slot": "ult",
+          "name": "帝国总攻令",
+          "desc": "全体物理攻击，施加2层战创，自身进入2回合总攻态势，战创伤害提高30%。",
+          "tags": [
+            "终结技"
+          ],
+          "icon": "assets/skills/liselotte/ultimate.webp"
         }
       ],
       "potentials": [
@@ -2883,11 +2903,11 @@
         }
       ],
       "module": {
-        "name": null,
+        "name": "未归档的战报",
         "roman": null,
         "no": null,
-        "stars": null,
-        "art": null,
+        "stars": 5,
+        "art": "assets/art/liselotte-module.webp",
         "level": {
           "cur": null,
           "max": null
@@ -2907,40 +2927,48 @@
           }
         ],
         "effect": {
-          "name": null,
-          "level": null,
-          "desc": null,
-          "icon": null
-        }
+          "name": "未归档的战报",
+          "desc": "效果命中提高18%。战创伤害提高24%，异色协同弹伤害提高12%。"
+        },
+        "refinement": 1,
+        "dotHit": [
+          0.18,
+          0.21,
+          0.24,
+          0.27,
+          0.3
+        ]
       },
       "spectrum": {
         "intro": null,
         "code": null,
         "set": {
-          "name": null,
-          "max": null,
+          "name": "铁律行军",
+          "max": 4,
           "icon": null,
           "bonuses": [
             {
               "n": 2,
-              "desc": null
+              "desc": "攻击力提高12%。"
             },
             {
               "n": 4,
-              "desc": null
+              "desc": "持续伤害提高18%，战技施加至少两层战创恢复4点能量。"
             }
-          ]
+          ],
+          "bonusStat": "atkPct",
+          "bonusValue": 0.12
         },
         "slots": [
           {
-            "name": null,
-            "icon": null,
+            "name": "铁律行军 01",
+            "icon": "assets/spectrum/liselotte/01.webp",
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -2971,14 +2999,14 @@
             ]
           },
           {
-            "name": null,
-            "icon": null,
+            "name": "铁律行军 02",
+            "icon": "assets/spectrum/liselotte/02.webp",
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -3009,14 +3037,14 @@
             ]
           },
           {
-            "name": null,
-            "icon": null,
+            "name": "铁律行军 03",
+            "icon": "assets/spectrum/liselotte/03.webp",
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -3047,14 +3075,14 @@
             ]
           },
           {
-            "name": null,
-            "icon": null,
+            "name": "铁律行军 04",
+            "icon": "assets/spectrum/liselotte/04.webp",
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -3085,14 +3113,14 @@
             ]
           },
           {
-            "name": null,
+            "name": "铁律行军 05",
             "icon": null,
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -3123,14 +3151,14 @@
             ]
           },
           {
-            "name": null,
+            "name": "铁律行军 06",
             "icon": null,
             "banner": null,
             "level": null,
             "max": null,
             "plus": null,
             "stars": null,
-            "set": null,
+            "set": "铁律行军",
             "locked": false,
             "main": {
               "label": null,
@@ -3217,56 +3245,31 @@
         ]
       },
       "ascension": {
-        "stage": null,
-        "notes": null,
-        "art": null,
-        "focus": {
-          "x": null,
-          "y": null,
-          "w": null
-        },
+        "art": "assets/ascend/liselotte-ascend.webp",
         "shards": [
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "军令先于黎明",
+            "desc": "战创单层伤害提高15%。"
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "没有撤退计划",
+            "desc": "施放终结技后获得1点军势。"
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "凯旋庭的命令",
+            "desc": "战技、天赋等级各提高2级。"
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "双重制式",
+            "desc": "异色协同弹最多采样3种属性。"
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "永不递交的辞呈",
+            "desc": "普攻提高1级，终结技提高2级。"
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
-            "art": null,
-            "quote": null
+            "name": "将胜利写入战报",
+            "desc": "战创上限提高至4层，强化战技对主目标施加4层战创，异色协同弹倍率提高至65%。"
           }
         ]
       },
@@ -3296,13 +3299,29 @@
         "locks": []
       },
       "portrait": {
-        "src": null,
+        "src": "assets/art/liselotte-stand.webp",
         "mode": "auto",
-        "crop": null,
-        "face": null,
-        "bbox": null
+        "breath": true,
+        "motion": "liselotte",
+        "blink": "assets/art/liselotte-eyes.webp"
       },
-      "page": "char-liselotte.html"
+      "page": "char-liselotte.html",
+      "levelStats": [
+        {
+          "level": 1,
+          "hp": 163,
+          "atk": 103,
+          "def": 66,
+          "spd": 101
+        },
+        {
+          "level": 80,
+          "hp": 1086,
+          "atk": 684,
+          "def": 438,
+          "spd": 101
+        }
+      ]
     },
     {
       "id": "landa",
@@ -7426,39 +7445,42 @@
       "skills": [
         {
           "slot": "normal",
-          "name": "落花有声",
-          "desc": "对指定敌方单体造成相当于若叶凛==100%==攻击力的演生属性伤害。\n演出：若叶凛轻轻抬手，数片花瓣在身侧旋转，汇聚成一道纤细的光芒，掠过敌人。整个动作克制、轻盈，没有夸张的攻击姿态。\n配音：「失礼了。」",
+          "name": "落瓣",
+          "desc": "对指定敌人造成相当于若叶凛生命上限==25%==的演生伤害。",
           "tags": [
             "单体攻击",
-            "演生伤害"
+            "生命倍率"
           ]
         },
         {
           "slot": "skill",
-          "name": "今天的花，请收下",
-          "desc": "选择我方一名角色，为其恢复相当于若叶凛==22%==生命上限＋==160==点的生命值。同时为其他三名队友分别恢复若叶凛==9%==生命上限＋==60==点的生命值。随后为全队施加【花期】，持续各自==2==次正常行动。\n【花期】：处于花期的角色每次正常行动结束后，恢复若叶凛==4%==生命上限＋==40==点生命值。【花期】按受益角色自身的正常行动次数计算持续时间。同一角色同一次正常行动结束，只能获得一次花期治疗。额外伤害、追击、召唤物行动不会触发花期的行动结束治疗。\n施放战技后，若叶凛恢复==1==枚【花信】。花信通过施放战技或终结技补充，不会无限生成，也不能超过==2==枚持有上限。\n演出：若叶凛将一束尚未开放的花轻轻捧起。花瓣随着光芒散开，四朵半透明的花苞分别落在队友身旁，缓缓绽放。\n配音：「这个，送给你。」",
+          "name": "花期",
+          "desc": "全队恢复若叶凛生命上限的==8%==＋==180==点生命，并获得【花期】。受益者造成的伤害（含持续伤害）提高==12%==，每段伤害结算时，若受益者当前生命高于==80%==则额外提高==8%==。每次自身正常行动结束恢复若叶凛生命上限的==2%==，持续==2==次行动，重施刷新。施放后补充1枚急救花苞。",
           "tags": [
-            "单体主治疗",
-            "群体恢复"
+            "群体治疗",
+            "全队增伤",
+            "持续恢复"
           ]
         },
         {
           "slot": "ult",
-          "name": "等雨停的时候",
-          "desc": "消耗==110==点超限值。\n立即为全体队友恢复相当于若叶凛==20%==生命上限＋==200==点的生命值。解除每名队友身上==1==个可驱散的负面效果，优先解除控制状态。为全体施加【花荫】，持续各自==2==回合。【花荫】：受到的伤害降低==12%==。【花荫】及其他同名减伤效果不叠加，只刷新持续时间，或采用较高数值。若叶凛额外恢复==1==枚【花信】，不能超过==2==枚持有上限。\n演出：镜头切换到雨中的「望月」花店。玻璃窗上，雨水缓慢滑落。若叶凛站在窗前，看着一束尚未开放的鲜花。她伸出手，轻轻拨开花瓣。镜头拉近，她的指尖微微颤抖，却没有缩回。“……等雨停了，我们再走吧。”下一刻，光芒穿过雨幕，战场上绽放出大片柔和的花朵。花瓣在四名队友身边旋转，生命值恢复，负面状态消散。最后，一朵小花轻轻落在若叶凛的掌心。\n配音：「等雨停了，我们再走吧。」",
+          "name": "花荫",
+          "desc": "消耗==110==点超限值。其他存活队友各恢复固定==12==点超限值。全队恢复若叶凛生命上限的==20%==＋==400==点生命，各解除==1==个可驱散负面效果，优先解除控制。受到的伤害降低==10%==，持续各自==2==次正常行动。立即发动一次==150%==威力的强化花信，按一份阈值计算威力，花息余额和自动追击计数照常保留。补充1枚急救花苞。",
           "tags": [
             "群体治疗",
-            "减伤",
-            "净化"
+            "净化减伤",
+            "强化花信",
+            "队友回能"
           ]
         },
         {
           "slot": "talent",
-          "name": "在花谢之前",
-          "desc": "当我方任意角色受到伤害后，生命值低于或等于==40%==，且仍然存活时，若叶凛自动消耗==1==枚【花信】，为其恢复若叶凛==16%==生命上限＋==140==点生命值。每名队友在自身两次正常行动之间，最多触发一次。效果不占用若叶凛的行动，也不会触发其他角色的攻击协同机制。基础天赋只能治疗尚未倒下的角色，不具备复活能力。\n【花信】最多持有==2==枚，战斗开始时拥有==1==枚。队友陷入危险时，消耗花信触发自动治疗。\n演出：濒危角色身边原本黯淡的花苞忽然亮起，花瓣向内收拢，随后重新开放。\n配音：「别动……我在。」\n其他战斗配音：入场「……我会尽力的。」低生命值「还不能……停下来。」队友重伤「等等！我马上来！」胜利「大家都没事吧？……那就好。」\n共通规则：自动治疗、护盾、解除负面状态不计入攻击与伤害记录，也不触发薇拉的协同放电或小惟的幻象伤害复现。升格Ⅵ的致命保护在伤害结算前判定，不能被同一次伤害重复触发。\n升级优先级：战技 ＞ 天赋 ＞ 终结技 ＞ 普通攻击。四个主技能均独立升级至==10==级。",
+          "name": "花开有声",
+          "desc": "若叶凛的有效治疗按==100%==、溢出按==30%==积累【花息】。每完成==2==次其他队友主动行动，可消耗相当于若叶凛生命上限==40%==的花息发动一次【花信】，余量保留。攻击当前生命值最低的存活敌人，基础伤害为若叶凛生命上限的==20%==＋消耗花息的==30%==。\n队友受伤后生命不高于40%时可消耗1枚【急救花苞】，恢复若叶凛生命上限的==16%==＋==140==点生命。开场1枚，上限2枚，每名队友在自身两次正常行动间最多获救一次。",
           "tags": [
-            "被动",
-            "自动紧急治疗"
+            "治疗转伤",
+            "追加攻击",
+            "紧急救援"
           ]
         }
       ],
@@ -7514,7 +7536,7 @@
           "name": "未署名的花束",
           "level": null,
           "icon": "assets/skills/rin/skill.svg",
-          "desc": "基础属性方向为生命值与生命恢复效率。装备者生命上限提高==12%==。装备者施放战技后，下一次【花信】治疗量提高==20%==。若该次治疗产生溢出，则将溢出治疗量的==30%==转化为护盾，护盾上限为若叶凛生命上限的==12%==。专属模组提高救援效率，但不是角色正常运行的必要条件。"
+          "desc": "基础属性方向为生命值与生命恢复效率。装备者生命上限提高==12%==。装备者施放战技后，下一次【急救花苞】治疗量提高==20%==。若该次治疗产生溢出，则将溢出治疗量的==30%==转化为护盾，护盾上限为若叶凛生命上限的==12%==。专属模组提高救援效率，但不是角色正常运行的必要条件。"
         }
       },
       "spectrum": {
@@ -7821,7 +7843,7 @@
         ]
       },
       "ascension": {
-        "stage": null,
+        "stage": 6,
         "notes": null,
         "art": "assets/ascend/rin-ascend.jpg",
         "focus": {
@@ -7832,43 +7854,43 @@
         "shards": [
           {
             "name": "花店开门之前",
-            "desc": "战斗开始时，若叶凛额外获得==1==枚花信，开局花信数量达到==2==枚。同时，首次施放战技时，该战技的治疗量提高==20%==。",
-            "unlocked": null,
+            "desc": "战斗开始时，若叶凛额外获得==1==枚急救花苞，开局急救花苞数量达到==2==枚。同时，首次施放战技时，该战技的治疗量提高==20%==。",
+            "unlocked": true,
             "art": "assets/skills/rin/asc1.svg",
             "quote": null
           },
           {
             "name": "有些雨不会停",
             "desc": "处于【花期】状态的队友首次受到敌人攻击伤害后，立即提前触发一次花期治疗。每名队友在若叶凛两次正常行动之间，最多以此方式额外触发一次。该效果不会消耗花期正常行动结束时的治疗次数。",
-            "unlocked": null,
+            "unlocked": true,
             "art": "assets/skills/rin/asc2.svg",
             "quote": null
           },
           {
             "name": "不必独自承担",
-            "desc": "【花信】触发紧急治疗时，额外解除目标身上==1==个可驱散的负面效果。如果目标当时处于【花荫】状态，则本次治疗量额外提高==15%==。",
-            "unlocked": null,
+            "desc": "【急救花苞】触发紧急治疗时，额外解除目标身上==1==个可驱散的负面效果。如果目标当时处于【花荫】状态，则本次治疗量额外提高==15%==。",
+            "unlocked": true,
             "art": "assets/skills/rin/asc3.svg",
             "quote": null
           },
           {
             "name": "第二个春天",
-            "desc": "【花信】的自动治疗触发门槛由==40%==生命值提高至==50%==。花信治疗结束后，若目标生命值仍低于==50%==，则使其立即额外恢复若叶凛==8%==生命上限的生命值。",
-            "unlocked": null,
+            "desc": "【急救花苞】的自动治疗触发门槛由==40%==生命值提高至==50%==。急救花苞治疗结束后，若目标生命值仍低于==50%==，则使其立即额外恢复若叶凛==8%==生命上限的生命值。",
+            "unlocked": true,
             "art": "assets/skills/rin/asc4.svg",
             "quote": null
           },
           {
             "name": "总有人为你留灯",
             "desc": "若叶凛释放终结技后，全队获得【留灯】，持续==2==回合。【留灯】：角色受到的治疗超过生命上限时，将溢出治疗量的==30%==转化为护盾。护盾上限不超过若叶凛生命上限的==15%==，同名护盾仅刷新，不叠加。",
-            "unlocked": null,
+            "unlocked": true,
             "art": "assets/skills/rin/asc5.svg",
             "quote": null
           },
           {
             "name": "愿你能见到明天",
-            "desc": "解锁特殊被动【不凋之花】。战斗中，当我方角色将要受到致命伤害时，若叶凛持有至少==1==枚【花信】，则可以消耗==1==枚花信：使目标抵御本次致命伤害，生命值最低保留==1==点；立即恢复相当于若叶凛==22%==生命上限＋==200==点的生命值；为目标施加持续==2==回合的【花荫】。【不凋之花】每场战斗最多触发==2==次，同一角色最多触发==1==次。无法阻止剧情强制退场及明确不允许抵御的特殊伤害。判定发生在伤害结算前，不能被同一次伤害重复触发。",
-            "unlocked": null,
+            "desc": "解锁特殊被动【不凋之花】。战斗中，当我方角色将要受到致命伤害时，若叶凛持有至少==1==枚【急救花苞】，则可以消耗==1==枚急救花苞：使目标抵御本次致命伤害，生命值最低保留==1==点；立即恢复相当于若叶凛==22%==生命上限＋==200==点的生命值；为目标施加持续==2==回合的【花荫】。【不凋之花】每场战斗最多触发==2==次，同一角色最多触发==1==次。无法阻止剧情强制退场及明确不允许抵御的特殊伤害。判定发生在伤害结算前，不能被同一次伤害重复触发。",
+            "unlocked": true,
             "art": "assets/skills/rin/asc6.svg",
             "quote": null
           }
@@ -8938,7 +8960,7 @@
       "group": "biz",
       "role": "Terranova Motors 首席设计官",
       "code": "",
-      "stars": 5,
+      "stars": 6,
       "cls": "shibian",
       "element": "leidian",
       "level": {
@@ -9358,42 +9380,42 @@
           {
             "name": "第一份设计稿",
             "desc": "进入战斗时，自动为生命值最高的敌人施加==2回合【导电】==，并获得==1层电荷==。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "不接受无效设计",
             "desc": "协同放电的基础伤害提高==25%==，命中导电目标时有额外效果：使目标下一次受到的雷电持续伤害提高==20%==。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "每一条线路都有意义",
             "desc": "战技命中处于==【导电】==状态的敌人时，立即结算一次该目标==50%==的导电持续伤害，不消耗状态。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "突破额定负荷",
             "desc": "触发==【过载】==所需电荷由==3层==降低至==2层==。每次薇拉自身行动之间，最多触发一次过载。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "完美不等于妥协",
             "desc": "敌人受到==【过载】==伤害后，受到的雷电伤害额外提高==12%==，持续==2==回合。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "最后一项修改",
             "desc": "每次薇拉释放终结技后，下一次==【过载】==伤害提高==100%==，且会额外向当前生命值最高的导电目标释放一次不产生电荷的强化协同放电。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           }
@@ -10571,7 +10593,7 @@
         "effect": {
           "name": "幻海的重写",
           "level": 5,
-          "desc": "装备者施放==终结技后==，使敌方全体陷入【信息溃散】，受到的伤害提高==24%==，持续2回合；装备者的幻海相关效果额外获得1层，且每层使自身暴击伤害提高==6%==。",
+          "desc": "装备者施放==终结技后==，使敌方全体陷入【信息溃散】，受到的伤害提高==24%==，持续2回合；装备者的幻海相关效果额外获得1层，且每层使自身暴击伤害提高==6%==。暴击伤害最多叠加==3==层，幻海结束时清除。",
           "icon": null
         }
       },
@@ -10891,42 +10913,42 @@
           {
             "name": "梦从未请求许可",
             "desc": "战斗开始时，自动展开持续==1==回合的「幻海」。首次施放终结技所需能量降低==20%==。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": "我来到这里，可不是为了等待谁的批准。"
           },
           {
             "name": "第二种答案",
             "desc": "「幻海」持续期间，每名友方每回合首次造成伤害时，额外产生相当于本次伤害==30%==的「幻象伤害」。此伤害不会再次触发该效果。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": "谁规定已经发生过的事情，不能再发生一次？"
           },
           {
             "name": "未被写定的此刻",
             "desc": "每次展开「幻海」时，使我方全体行动提前==20%==，敌方全体行动延后==20%==。每次展开仅触发一次。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": "如果时间的顺序不合意，那就换一个好了。"
           },
           {
             "name": "这件事没有发生",
             "desc": "「幻海」持续期间，首次有友方受到致命伤害时，否决本次伤害，并恢复该角色==30%==生命上限的生命值。每次展开限触发一次。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": "不行。这种结局，我才不要。"
           },
           {
             "name": "边界本是虚构",
             "desc": "「幻海」持续期间，我方全体造成伤害时无视目标==20%==的防御力。攻击未具有对应弱点的敌人时，也能造成原削韧量==50%==的韧性伤害。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": "你说那是不可逾越的边界？可我根本看不见它呀。"
           },
           {
             "name": "我即真实",
             "desc": "「幻海」结束时，对每名敌人额外结算其在本次「幻海」期间受到总伤害==40%==的「现实覆写」伤害，此伤害无视防御力。\n每场战斗首次触发「现实覆写」时，使我方全体行动立即提前==100%==。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           }
@@ -11012,7 +11034,7 @@
       "group": "ai",
       "role": "通用具身人工智能 · 艾索拉所属艺人",
       "code": "CA-04",
-      "stars": 5,
+      "stars": 6,
       "cls": "zhiyuan",
       "element": "fuzhao",
       "level": {
@@ -11090,7 +11112,7 @@
         "roman": null,
         "no": null,
         "stars": 5,
-        "art": "assets/art/module-window.webp",
+        "art": "assets/art/module-window-display.webp",
         "level": {
           "cur": null,
           "max": null
@@ -11420,7 +11442,7 @@
         ]
       },
       "ascension": {
-        "stage": 3,
+        "stage": 6,
         "notes": null,
         "art": "assets/ascend/dekeke-ascend.webp",
         "focus": {
@@ -11432,42 +11454,42 @@
           {
             "name": "冷启动",
             "desc": "战斗开始时获得==2==层演算样本。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "冗余保护",
             "desc": "处于同调状态的队友受到伤害降低==8%==。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
             "name": "自主判断",
             "desc": "路径校正额外为被提前行动的队友恢复==6==点超限值。",
-            "unlocked": null,
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
+            "name": "反馈回路",
+            "desc": "施放终结技后，德可可恢复==4==点超限值。",
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
+            "name": "校准偏差",
+            "desc": "处于同调状态的队友造成直接伤害时，无视目标==5%==防御。",
+            "unlocked": true,
             "art": null,
             "quote": null
           },
           {
-            "name": null,
-            "desc": null,
-            "unlocked": null,
+            "name": "并行解答",
+            "desc": "路径校正触发时，除原目标外的存活队友也行动提前==4%==。每两次德可可行动之间限一次。",
+            "unlocked": true,
             "art": null,
             "quote": null
           }
@@ -12055,6 +12077,1035 @@
         "bbox": null
       },
       "page": "char-dario.html"
+    },
+    {
+      "id": "shen",
+      "name": "沈惠均",
+      "roman": "SHEN HUIJUN",
+      "group": "frostfire-trial",
+      "role": "高频多段·智能转火主C",
+      "stars": 6,
+      "cls": "qianggong",
+      "element": "huoyan",
+      "portrait": {
+        "src": "assets/art/shen-stand.webp",
+        "mode": "auto",
+        "breath": true,
+        "motion": "shen",
+        "blink": "assets/art/shen-eyes.webp"
+      },
+      "skills": [
+        {
+          "slot": "basic",
+          "name": "星火"
+        },
+        {
+          "slot": "skill",
+          "name": "火线齐鸣"
+        },
+        {
+          "slot": "talent",
+          "name": "尽在掌握"
+        },
+        {
+          "slot": "ultimate",
+          "name": "万家灯火"
+        }
+      ],
+      "module": {
+        "name": "长街未眠",
+        "stars": 5,
+        "art": "assets/art/shen-module.webp",
+        "levelStats": [
+          {
+            "level": 1,
+            "hp": 48,
+            "atk": 26,
+            "def": 20
+          },
+          {
+            "level": 20,
+            "hp": 225,
+            "atk": 125,
+            "def": 90
+          },
+          {
+            "level": 40,
+            "hp": 463,
+            "atk": 257,
+            "def": 184
+          },
+          {
+            "level": 60,
+            "hp": 713,
+            "atk": 397,
+            "def": 297
+          },
+          {
+            "level": 80,
+            "hp": 952,
+            "atk": 529,
+            "def": 396
+          }
+        ],
+        "effect": {
+          "name": "未眠之城",
+          "desc": "暴击率提高20%。每次施放从第4段起，火焰伤害独立提高32%。"
+        },
+        "refinement": 5,
+        "baseBonusByRank": [
+          0.12,
+          0.14,
+          0.16,
+          0.18,
+          0.2
+        ],
+        "hitBonusByRank": [
+          0.16,
+          0.2,
+          0.24,
+          0.28,
+          0.32
+        ]
+      },
+      "spectrum": {
+        "set": {
+          "name": "檀陵夜航",
+          "max": 4,
+          "bonuses": [
+            {
+              "n": 2,
+              "desc": "火焰伤害提高10%。"
+            },
+            {
+              "n": 4,
+              "desc": "一次攻击达到五段时，全段伤害提高16%，击杀转火首段额外提高10%。"
+            }
+          ],
+          "bonusStat": "dmgBonus",
+          "bonusValue": 0.1
+        },
+        "sets": [
+          {
+            "name": "檀陵夜航",
+            "max": 4,
+            "bonuses": [
+              {
+                "n": 2,
+                "desc": "火焰伤害提高10%。"
+              },
+              {
+                "n": 4,
+                "desc": "一次攻击达到五段时，全段伤害提高16%，击杀转火首段额外提高10%。"
+              }
+            ],
+            "bonusStat": "dmgBonus",
+            "bonusValue": 0.1
+          },
+          {
+            "name": "市井拾音",
+            "max": 4,
+            "bonuses": [
+              {
+                "n": 2,
+                "desc": "攻击力提高12%。"
+              },
+              {
+                "n": 4,
+                "desc": "普攻或战技命中后，两次自身行动内下一次终结技伤害提高12%。"
+              }
+            ],
+            "bonusStat": "atkPct",
+            "bonusValue": 0.12
+          }
+        ],
+        "slots": [
+          {
+            "name": "檀陵夜航 · Ⅰ",
+            "set": "檀陵夜航",
+            "mainStat": "hp",
+            "mainMax": 705
+          },
+          {
+            "name": "檀陵夜航 · Ⅱ",
+            "set": "檀陵夜航",
+            "mainStat": "atk",
+            "mainMax": 352
+          },
+          {
+            "name": "檀陵夜航 · Ⅲ",
+            "set": "檀陵夜航",
+            "mainStat": "critRate",
+            "mainMax": 0.324
+          },
+          {
+            "name": "檀陵夜航 · Ⅳ",
+            "set": "檀陵夜航",
+            "mainStat": "dmgBonus",
+            "mainMax": 0.388
+          },
+          {
+            "name": "市井拾音 · Ⅴ",
+            "set": "市井拾音",
+            "mainStat": "atkPct",
+            "mainMax": 0.432
+          },
+          {
+            "name": "市井拾音 · Ⅵ",
+            "set": "市井拾音",
+            "mainStat": "spd",
+            "mainMax": 25
+          }
+        ],
+        "intro": "檀陵夜航 4 件 ＋ 市井拾音 2 件"
+      },
+      "background": "assets/art/shen-background.webp",
+      "profile": {
+        "rows": [
+          [
+            "阵营",
+            "九华"
+          ],
+          [
+            "地区",
+            "檀陵"
+          ]
+        ],
+        "quotes": [
+          "檀陵的灯火，不会为谁熄灭。"
+        ]
+      },
+      "levelStats": [
+        {
+          "level": 1,
+          "hp": 175,
+          "atk": 85,
+          "def": 65,
+          "spd": 103
+        },
+        {
+          "level": 20,
+          "hp": 390,
+          "atk": 202,
+          "def": 150,
+          "spd": 103
+        },
+        {
+          "level": 40,
+          "hp": 635,
+          "atk": 340,
+          "def": 245,
+          "spd": 103
+        },
+        {
+          "level": 60,
+          "hp": 895,
+          "atk": 505,
+          "def": 347,
+          "spd": 103
+        },
+        {
+          "level": 80,
+          "hp": 1164,
+          "atk": 682,
+          "def": 463,
+          "spd": 103
+        }
+      ],
+      "ascension": {
+        "art": "assets/ascend/shen-ascend.webp",
+        "shards": [
+          {
+            "name": "先手为势",
+            "desc": "天赋满级连续命中每层增伤8%→10%；击杀转火首段增伤25%→35%。"
+          },
+          {
+            "name": "明察秋毫",
+            "desc": "对同一目标连续命中第4段起，该段暴击伤害+24个百分点，转火重置。"
+          },
+          {
+            "name": "分毫不差",
+            "desc": "战技每段基础倍率额外+6个百分点，普通和燎原强化战技均生效。"
+          },
+          {
+            "name": "不容迟疑",
+            "desc": "终结技能量消耗120→110（能量上限仍为120）。"
+          },
+          {
+            "name": "万灯同明",
+            "desc": "燎原强化后续3次普攻/战技行动（原2次），终结技不消耗次数。"
+          },
+          {
+            "name": "既定之局",
+            "desc": "战技额外增加1段攻击，普通战技6→7段，燎原战技8→9段，自动转火/独立结算照常生效。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "eliot",
+      "name": "ELIOT",
+      "roman": "ELIOT",
+      "group": "frostfire-trial",
+      "role": "冰属性·生命倍率副C（高投入可担当主输出）",
+      "stars": 6,
+      "cls": "qianggong",
+      "element": "bingshuang",
+      "portrait": {
+        "src": "assets/art/eliot-stand.webp",
+        "mode": "auto",
+        "breath": true,
+        "motion": "eliot",
+        "blink": "assets/art/eliot-eyes.webp"
+      },
+      "skills": [
+        {
+          "slot": "basic",
+          "name": "空白帧"
+        },
+        {
+          "slot": "skill",
+          "name": "误差修正"
+        },
+        {
+          "slot": "talent",
+          "name": "生命演算"
+        },
+        {
+          "slot": "ultimate",
+          "name": "零度回归"
+        }
+      ],
+      "module": {
+        "name": "第零次回答",
+        "stars": 5,
+        "art": "assets/art/eliot-module-display.webp",
+        "levelStats": [
+          {
+            "level": 1,
+            "hp": 64,
+            "atk": 18,
+            "def": 20
+          },
+          {
+            "level": 20,
+            "hp": 318,
+            "atk": 78,
+            "def": 78
+          },
+          {
+            "level": 40,
+            "hp": 670,
+            "atk": 165,
+            "def": 161
+          },
+          {
+            "level": 60,
+            "hp": 1042,
+            "atk": 258,
+            "def": 254
+          },
+          {
+            "level": 80,
+            "hp": 1420,
+            "atk": 350,
+            "def": 350
+          }
+        ],
+        "effect": {
+          "name": "尚未终止的回声",
+          "desc": "最大生命提高24%。冰晶回响伤害独立提高32%。"
+        },
+        "refinement": 5,
+        "baseBonusByRank": [
+          0.12,
+          0.15,
+          0.18,
+          0.21,
+          0.24
+        ],
+        "hitBonusByRank": [
+          0.16,
+          0.2,
+          0.24,
+          0.28,
+          0.32
+        ]
+      },
+      "spectrum": {
+        "set": {
+          "name": "霜眠回路",
+          "max": 4,
+          "bonuses": [
+            {
+              "n": 2,
+              "desc": "生命上限提高12%。"
+            },
+            {
+              "n": 4,
+              "desc": "冰晶回响伤害提高16%。战技消耗生命后，下两次回响伤害额外提高12%。"
+            }
+          ],
+          "bonusStat": "hpPct",
+          "bonusValue": 0.12
+        },
+        "sets": [
+          {
+            "name": "霜眠回路",
+            "max": 4,
+            "bonuses": [
+              {
+                "n": 2,
+                "desc": "生命上限提高12%。"
+              },
+              {
+                "n": 4,
+                "desc": "冰晶回响伤害提高16%。战技消耗生命后，下两次回响伤害额外提高12%。"
+              }
+            ],
+            "bonusStat": "hpPct",
+            "bonusValue": 0.12
+          },
+          {
+            "name": "余温备份",
+            "max": 4,
+            "bonuses": [
+              {
+                "n": 2,
+                "desc": "冰霜伤害提高10%。"
+              },
+              {
+                "n": 4,
+                "desc": "终结技后冰霜伤害提高12%，持续两次自身普攻或战技。"
+              }
+            ],
+            "bonusStat": "dmgBonus",
+            "bonusValue": 0.1
+          }
+        ],
+        "slots": [
+          {
+            "name": "霜眠回路 · Ⅰ",
+            "set": "霜眠回路",
+            "mainStat": "hp",
+            "mainMax": 705
+          },
+          {
+            "name": "霜眠回路 · Ⅱ",
+            "set": "霜眠回路",
+            "mainStat": "atk",
+            "mainMax": 352
+          },
+          {
+            "name": "霜眠回路 · Ⅲ",
+            "set": "霜眠回路",
+            "mainStat": "critRate",
+            "mainMax": 0.324
+          },
+          {
+            "name": "霜眠回路 · Ⅳ",
+            "set": "霜眠回路",
+            "mainStat": "dmgBonus",
+            "mainMax": 0.388
+          },
+          {
+            "name": "余温备份 · Ⅴ",
+            "set": "余温备份",
+            "mainStat": "hpPct",
+            "mainMax": 0.432
+          },
+          {
+            "name": "余温备份 · Ⅵ",
+            "set": "余温备份",
+            "mainStat": "spd",
+            "mainMax": 25
+          }
+        ],
+        "intro": "霜眠回路 4 件 ＋ 余温备份 2 件"
+      },
+      "profile": {
+        "rows": [
+          [
+            "阵营",
+            "Aletheia / 幻海"
+          ],
+          [
+            "身份",
+            "思惟诺姆 · SP形态"
+          ]
+        ],
+        "quotes": [
+          "这一次，我不会消失。"
+        ]
+      },
+      "levelStats": [
+        {
+          "level": 1,
+          "hp": 270,
+          "atk": 42,
+          "def": 72,
+          "spd": 108
+        },
+        {
+          "level": 20,
+          "hp": 590,
+          "atk": 115,
+          "def": 170,
+          "spd": 108
+        },
+        {
+          "level": 40,
+          "hp": 980,
+          "atk": 207,
+          "def": 280,
+          "spd": 108
+        },
+        {
+          "level": 60,
+          "hp": 1370,
+          "atk": 294,
+          "def": 385,
+          "spd": 108
+        },
+        {
+          "level": 80,
+          "hp": 1780,
+          "atk": 385,
+          "def": 490,
+          "spd": 108
+        }
+      ],
+      "ascension": {
+        "art": "assets/ascend/eliot-ascend.webp",
+        "shards": [
+          {
+            "name": "请保留这份记录",
+            "desc": "战技生命消耗由当前生命的20%降为15%；每次冰晶回响的自疗由最大生命6%升为8%。"
+          },
+          {
+            "name": "第二份存档",
+            "desc": "每次冰晶回响额外增加1段（普通3→4段；深层4→5段）。"
+          },
+          {
+            "name": "尚未得到的答案",
+            "desc": "战技每段基础生命上限倍率额外增加4个百分点（普通与强化战技均生效）。"
+          },
+          {
+            "name": "我还可以继续",
+            "desc": "终结技消耗的能量从110减少至100，能量上限仍为110。"
+          },
+          {
+            "name": "尚未关闭的窗口",
+            "desc": "深层演算持续2→3次自身普攻／战技；每次展开可发动的队友协同次数上限4→6。"
+          },
+          {
+            "name": "因为太怕痛就把生命力点满了",
+            "desc": "最大生命值提高40%；冰晶回响每段倍率额外增加4个百分点；每场战斗首次受到致命伤害，保留1点生命并立即恢复最大生命的40%，不生成样本。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "daier",
+      "name": "维什妮娜·黛儿",
+      "roman": "VISHNINA DAYER",
+      "group": "first-up",
+      "role": "首期限定 · 持续伤害编排",
+      "code": "",
+      "stars": 6,
+      "cls": "ganshe",
+      "element": "xiliu",
+      "level": {
+        "cur": null,
+        "max": null
+      },
+      "stats": {
+        "hp": null,
+        "atk": null,
+        "def": null,
+        "spd": null,
+        "crit": null,
+        "critdmg": null
+      },
+      "skills": [
+        {
+          "slot": "normal",
+          "name": "足尖试探",
+          "desc": "单体汐流伤害，有80%基础概率施加裂帛。目标已入席时提高至100%。",
+          "tags": [
+            "普攻"
+          ],
+          "icon": "assets/skills/daier/basic.webp"
+        },
+        {
+          "slot": "skill",
+          "name": "仅供观赏",
+          "desc": "扩散攻击，依次判定入席与裂帛，同一目标每次行动最多积一次错拍。",
+          "tags": [
+            "战技"
+          ],
+          "icon": "assets/skills/daier/skill.webp"
+        },
+        {
+          "slot": "talent",
+          "name": "第三次掌声",
+          "desc": "裂帛在目标行动时造成汐流持续伤害。我方行动对入席目标施加负面状态累计错拍，三次触发返场，立即按115%结算已有持续伤害。",
+          "tags": [
+            "天赋"
+          ],
+          "icon": "assets/skills/daier/talent.webp"
+        },
+        {
+          "slot": "ult",
+          "name": "请全场保持安静",
+          "desc": "先群攻并施加入席，再以145%结算全场已有持续伤害。",
+          "tags": [
+            "终结技"
+          ],
+          "icon": "assets/skills/daier/ultimate.webp"
+        }
+      ],
+      "potentials": [
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        },
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        },
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        },
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        },
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        },
+        {
+          "name": null,
+          "desc": null,
+          "unlocked": false
+        }
+      ],
+      "module": {
+        "name": "蓝玫瑰的背面",
+        "roman": null,
+        "no": null,
+        "stars": 5,
+        "art": null,
+        "level": {
+          "cur": null,
+          "max": null
+        },
+        "stats": [
+          {
+            "key": "atk",
+            "value": null
+          },
+          {
+            "key": "hp",
+            "value": null
+          },
+          {
+            "key": "spd",
+            "value": null
+          }
+        ],
+        "effect": {
+          "name": "蓝玫瑰的背面",
+          "desc": "效果命中提高18%。入席易伤额外提高6个百分点，返场倍率提高10个百分点。"
+        },
+        "refinement": 1,
+        "dotHit": [
+          0.18,
+          0.21,
+          0.24,
+          0.27,
+          0.3
+        ]
+      },
+      "spectrum": {
+        "intro": null,
+        "code": null,
+        "set": {
+          "name": "末席余音",
+          "max": 4,
+          "icon": null,
+          "bonuses": [
+            {
+              "n": 2,
+              "desc": "效果命中提高10%。"
+            },
+            {
+              "n": 4,
+              "desc": "速度提高6%，对有三种负面的目标持续伤害提高18%。"
+            }
+          ],
+          "bonusStat": "effectHit",
+          "bonusValue": 0.1
+        },
+        "slots": [
+          {
+            "name": "末席余音 01",
+            "icon": "assets/spectrum/daier/01.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ],
+            "alternateIcon": "assets/spectrum/daier/07.webp"
+          },
+          {
+            "name": "末席余音 02",
+            "icon": "assets/spectrum/daier/02.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ],
+            "alternateIcon": "assets/spectrum/daier/08.webp"
+          },
+          {
+            "name": "末席余音 03",
+            "icon": "assets/spectrum/daier/03.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ]
+          },
+          {
+            "name": "末席余音 04",
+            "icon": "assets/spectrum/daier/04.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ]
+          },
+          {
+            "name": "末席余音 05",
+            "icon": "assets/spectrum/daier/05.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ]
+          },
+          {
+            "name": "末席余音 06",
+            "icon": "assets/spectrum/daier/06.webp",
+            "banner": null,
+            "level": null,
+            "max": null,
+            "plus": null,
+            "stars": null,
+            "set": "末席余音",
+            "locked": false,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            },
+            "subs": [
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              },
+              {
+                "label": null,
+                "value": null,
+                "icon": null
+              }
+            ]
+          }
+        ],
+        "inventory": [
+          {
+            "name": null,
+            "pos": null,
+            "icon": null,
+            "plus": null,
+            "stars": null,
+            "set": null,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            }
+          },
+          {
+            "name": null,
+            "pos": null,
+            "icon": null,
+            "plus": null,
+            "stars": null,
+            "set": null,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            }
+          },
+          {
+            "name": null,
+            "pos": null,
+            "icon": null,
+            "plus": null,
+            "stars": null,
+            "set": null,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            }
+          },
+          {
+            "name": null,
+            "pos": null,
+            "icon": null,
+            "plus": null,
+            "stars": null,
+            "set": null,
+            "main": {
+              "label": null,
+              "value": null,
+              "icon": null
+            }
+          }
+        ]
+      },
+      "ascension": {
+        "art": null,
+        "shards": [
+          {
+            "name": "未售出的入场券",
+            "desc": "入席的基础持续伤害易伤提高至24%。"
+          },
+          {
+            "name": "错位的第三拍",
+            "desc": "返场后保留1点错拍。"
+          },
+          {
+            "name": "镜面后的独舞",
+            "desc": "战技、天赋等级各提高2级。"
+          },
+          {
+            "name": "停止演奏的乐队",
+            "desc": "对拥有至少两种持续伤害的敌人，终结技额外结算提高至175%。"
+          },
+          {
+            "name": "永不凋谢的玫瑰",
+            "desc": "普攻提高1级，终结技提高2级。"
+          },
+          {
+            "name": "无须观众的谢幕",
+            "desc": "返场倍率提高至150%。"
+          }
+        ]
+      },
+      "profile": {
+        "rows": [
+          [
+            "地区",
+            "卡尔季诺"
+          ],
+          [
+            "身份",
+            "芭蕾舞者"
+          ]
+        ],
+        "quotes": []
+      },
+      "portrait": {
+        "src": "assets/art/daier-stand.webp",
+        "mode": "auto",
+        "breath": true,
+        "motion": "daier",
+        "blink": "assets/art/daier-eyes.webp"
+      },
+      "levelStats": [
+        {
+          "level": 1,
+          "hp": 154,
+          "atk": 98,
+          "def": 69,
+          "spd": 106
+        },
+        {
+          "level": 80,
+          "hp": 1024,
+          "atk": 655,
+          "def": 460,
+          "spd": 106
+        }
+      ]
     }
   ]
 }

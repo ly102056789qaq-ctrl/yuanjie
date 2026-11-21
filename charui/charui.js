@@ -8,13 +8,28 @@ const TABS=[['detail','详情','DETAIL'],['skill','技能','SKILL'],['module','�
 const LK=(t='数据锁定')=>`<span class="lk">${ic('lock')}${E(t)}</span>`;
 const cls=id=>S.classes.find(x=>x.id===id),el=id=>S.elements.find(x=>x.id===id),grp=id=>(S.groups.find(g=>g.id===id)||{}).name||'';
 const PH=(t,e,extra='')=>`<div class="ph"><b>${t}</b><small>${e}</small><i></i>${extra}</div>`;
-const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.00 1.00L14.82 9.12L23.41 9.29L16.57 14.48L19.05 22.71L12.00 17.80L4.95 22.71L7.43 14.48L0.59 9.29L9.18 9.12z"/></svg>';
+const {characterStars}=await import('./rarity.js');
 
 try{D=await YJ.load()}catch(e){document.body.insertAdjacentHTML('beforeend','<p class="err">人物数据载入失败。</p>');return}
 S=D.settings;C=D.characters;
+const progress=await import(new URL('js/battle/progression.js',location.href).href);
+const statDef=await (await fetch('data/battle/stats.json')).json();
+let player=progress.loadPlayer();
+const savedCharacter=character=>progress.playable(character.id)&&!YJ.useDraft;
+const rawSkills = {};
+const sheet=character=>savedCharacter(character)?progress.characterSheet(statDef,character,rawSkills[character.id],player):character;
+function trainingButton(action,level,cap,label) {
+  const cost=progress.upgradeCost(action,level);
+  const full=level>=cap;
+  return `<button type="button" data-train="${action}" ${full||player.material<cost?'disabled':''}>${full?'已满级':`${label} · ${cost} 素材`}</button>`;
+}
 /* 技能页：战斗逻辑层 js/battle（纯 ES Module）+ data/skills/<id>.json */
 try{BT=await import(new URL('js/battle/index.js',location.href).href);const ix=await (await fetch('data/skills/index.json',{cache:'no-cache'})).json();
-  for(const id of ix.ids){try{SKD[id]=BT.skillView(await (await fetch('data/skills/'+id+'.json',{cache:'no-cache'})).json())}catch(e){}}}catch(e){console.warn('技能数据载入失败',e)}
+  for(const id of ix.ids){try{
+    const data=await (await fetch('data/skills/'+id+'.json',{cache:'no-store'})).json();
+    rawSkills[id]=data;
+    SKD[id]=BT.skillView(progress.resolveSkills(data));
+  }catch(e){console.warn(id,e)}}}catch(e){console.warn('技能数据载入失败',e)}
 if(YJ.useDraft&&localStorage.getItem(YJ.DRAFT_KEY))$('#draftbar').hidden=false;
 $('#bgimg').src=await YJ.src(S.background);
 $('#rail').innerHTML=TABS.map(([k,n,e],i)=>`<button type="button" role="tab" data-t="${k}" aria-selected="${i?'false':'true'}"><span class="ti">${ic({detail:'detail',skill:'skill',module:'module',spectrum:'spectrum',ascend:'ascend',archive:'archive'}[k])}</span><b>${n}</b><small>${e}</small></button>`).join('')+'<div class="rfoot"><i></i><i></i><i></i><span>ASTERIAL</span></div>';
@@ -25,57 +40,65 @@ function fit(){
   const desk=innerWidth>900&&innerWidth>=innerHeight*1.05;
   app.classList.toggle('desk',desk);app.classList.toggle('mob',!desk);document.body.style.overflow=desk?'hidden':'auto';
   app.style.setProperty('--mk',Math.min(1,innerWidth/1920));if(desk){const k=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(-50%,-50%) scale(${k})`}else stage.style.transform='';
-  if(art.naturalWidth&&cur)YJ.place(art,cur.portrait||{},artbox);if(cur)fitName();
+  if(art.naturalWidth&&cur)YJ.place(art,cur.portrait||{},artbox);
   if(YJ.onArtPlaced)YJ.onArtPlaced()}
 addEventListener('resize',fit);fit();
 
-function stars(c){const m=S.starMax||6;const n=c.stars;const lk=L(n);
-  const sp=lk?'':'<b class="spk s1">✦</b><b class="spk s2">✦</b><b class="spk s3">✦</b>';
-  return `<div class="stars${lk?' none':''}" aria-label="${lk?'星级 未定':'星级 '+n}">${Array.from({length:lk?m:n},()=>`<i>${STAR}</i>`).join('')}${sp}</div>`}
-/* 名字排版：短名一行；长名（去掉「·」超过 5 字，或无「·」超过 6 字）拆成两行错位排列。完全由数据决定。 */
-function nameLines(n){const parts=n.split(/[·・•]/).map(x=>x.trim()).filter(Boolean);const len=[...parts.join('')].length;
-  if(parts.length>1&&len>5)return [parts[0],parts.slice(1).join('·')];
-  if(parts.length===1&&len>6){const a=[...n],h=Math.ceil(a.length/2);return [a.slice(0,h).join(''),a.slice(h).join('')]}
-  return null}
-function ident(c){
-  const n=c.name||'';const lines=nameLines(n);const i=C.indexOf(c);
-  let nm;
-  if(lines){const mx=Math.max(...lines.map(x=>[...x].length));
-    nm=`<h1 class="nm two M${Math.min(mx,7)}" aria-label="${E(n)}"><span class="ln1">${E(lines[0])}<i class="dot" aria-hidden="true"></i></span><span class="ln2">${E(lines[1])}</span></h1>`}
-  else{const len=[...n.replace(/[·・•]/g,'')].length;
-    nm=`<h1 class="nm L${Math.min(len,7)}">${n.includes('·')?n.split('·').map(E).join('<i class="dot mid" aria-hidden="true"></i>'):E(n)}</h1>`}
-  return `<div class="ncard">
-    <i class="slab" aria-hidden="true"></i><i class="face" aria-hidden="true"></i>
-    <i class="br b1"></i><i class="br b2"></i><i class="br b3"></i><i class="br b4"></i>
-    <div class="nmw"><i class="rb"></i>${nm}</div>
+function stars(c){
+  const unknown=L(c.stars);
+  const count=unknown ? S.starMax||6 : c.stars;
+  return characterStars(count,unknown);
+}
+/* 字标按名字长度缩放。 */
+function profileHeading(c){
+  const name=c.name||'';
+  const runs=name.split(/([·・•])/);
+  const lettering=runs.map(run=>/^[·・•]$/.test(run)?`<tspan font-size="50">${E(run)}</tspan>`:E(run)).join('');
+  const advance=[...name].reduce((width,ch)=>{
+    if (/[·・•]/.test(ch)) return width+26;
+    return width+(/[a-z0-9]/i.test(ch)?49:73);
+  },0);
+  const width=Math.max(advance+10,20);
+  const title=`<h1 class="profile-title" aria-label="${E(name)}" style="--word-aspect:${width/110}">
+    <svg viewBox="0 0 ${width} 110" aria-hidden="true"><text x="4" y="85" textLength="${Math.max(advance,1)}" lengthAdjust="spacingAndGlyphs" transform="translate(-12 0) skewX(8)">${lettering}</text></svg>
+  </h1>`;
+  return `<header class="profile-heading">
     ${stars(c)}
-  </div>
-  ${(c.profile&&c.profile.quotes&&c.profile.quotes[0])?`<blockquote class="vq"><i>VOICE</i>「${E(c.profile.quotes[0])}」</blockquote>`:''}`}
-/* 名字永不裁切：超出卡片可用宽度时逐步缩小字号 */
-function fitName(){const h=$('#ident .nm');if(!h)return;h.style.fontSize='';const max=app.classList.contains('mob')?innerWidth-80:520;
-  let fs=parseFloat(getComputedStyle(h).fontSize),g=0;while(h.scrollWidth>max&&fs>28&&g++<40){fs-=3;h.style.fontSize=fs+'px'}}
+    <div class="profile-band">${title}</div>
+  </header>`;
+}
 
 function detail(c){
+  c=sheet(c);
+  const technique={daier:'演出即将开始',liselotte:'战前部署'}[c.id];
   const k=cls(c.cls),e=el(c.element);const lv=c.level||{};
   const lvl=L(lv.cur)?`<b class="lvn none">--</b><span class="lvm">/--</span>`:`<b class="lvn">${E(lv.cur)}</b><span class="lvm">/${E(L(lv.max)?'--':lv.max)}</span>`;
   const pct=!L(lv.cur)&&!L(lv.max)&&lv.max>0?Math.min(100,lv.cur/lv.max*100):0;
-  const stats=S.stats.map(s=>{const v=(c.stats||{})[s.key];return `<li><span class="si">${ic(s.icon)}</span><span class="sn">${E(s.label)}</span>${L(v)?`<span class="sv none">— —</span>`:`<span class="sv">${E(v)}${s.unit&&!String(v).includes(s.unit)?s.unit:''}</span>`}</li>`}).join('');
+  const stats=S.stats.map(s=>{const raw=(c.stats||{})[s.key];const v=typeof raw==='number'?Number(raw.toFixed(2)):raw;return `<li><span class="si">${ic(s.icon)}</span><span class="sn">${E(s.label)}</span>${L(v)?`<span class="sv none">— —</span>`:`<span class="sv">${E(v)}${s.unit&&!String(v).includes(s.unit)?s.unit:''}</span>`}</li>`}).join('');
   const sk=S.skillSlots.map((s,i)=>{const d=(c.skills||[]).find(x=>x.slot===s.slot)||{};return `<button type="button" class="dia${L(d.name)?' lkd':''}" data-sk="${i}"><span class="dg"><i></i>${YJ.slotIcon(s.icon)}</span><b>${E(s.label)}</b><small>${E((s.slot||'').toUpperCase())}</small></button>`}).join('');
   const PHI=`<span class="phi" aria-hidden="true"></span>`;
-  return `<div class="card cecard">
+  return `${profileHeading(c)}
+  <div class="card cecard">
     <div class="cc">${k?`<img src="${E(k.icon)}" alt="职业">`:PHI}<b class="${k?'':'none'}">${k?E(k.name):'数据锁定'}</b></div>
-    <div class="cc" ${e?`style="--ec:${e.color}"`:''}>${e?`<img src="${E(e.icon)}" alt="元素">`:PHI}<b class="${e?'':'none'}">${e?E(e.name):'数据锁定'}</b>${e?`<span class="kw">${(e.keywords||[]).map(x=>`<em>${E(x)}</em>`).join('')}</span>`:''}</div>
+    <div class="cc" ${e?`style="--ec:${e.color}"`:''}>${e?`<img src="${E(e.icon)}" alt="元素">`:PHI}<b class="${e?'':'none'}">${e?E(e.name):'数据锁定'}</b></div>
   </div>
   <div class="card lvcard">
-    <div class="lvrow"><span class="lvl">LV.</span>${lvl}${!L(lv.cur)&&lv.cur===lv.max?'<span class="cap">等级上限 ✓</span>':L(lv.cur)?LK('等级 · 数据锁定'):''}</div>
+    <div class="lvrow">${savedCharacter(c)?`<small class="mat-balance">素材 ${player.material}</small>`:''}<span class="lvl">LV.</span>${lvl}${!L(lv.cur)&&lv.cur===lv.max?'<span class="cap">等级上限 ✓</span>':L(lv.cur)?LK('等级 · 数据锁定'):''}</div>
     <div class="bar${pct?'':' none'}"><i style="width:${pct}%"></i></div>
-    <div class="btns"><button type="button" data-go="ascend">${ic('ascend')}升格预览<i>▸</i></button>${c.page?`<a href="${E(c.page)}">${ic('archive')}完整档案<i>▸</i></a>`:''}</div>
+    <div class="btns">${savedCharacter(c)?trainingButton('level',lv.cur,lv.max,'升级')+'<a href="battle3d/?engine=unity&from='+encodeURIComponent(c.id)+'">出战</a>':''}${technique?`<button type="button" data-prepare="${c.id}" title="${technique}，持续20秒">战前秘技</button>`:''}<button type="button" data-go="ascend">${ic('ascend')}升格预览<i>▸</i></button>${c.page?`<a href="${E(c.page)}">${ic('archive')}完整档案<i>▸</i></a>`:''}</div>
   </div>
-  <div class="card stcard">${PH('基础属性','ATTRIBUTES')}<ul class="stats">${stats}</ul></div>
+  <div class="card stcard">${PH(savedCharacter(c)?'实战属性':'基础属性','ATTRIBUTES')}<ul class="stats">${stats}</ul></div>
   <div class="card skcard">${PH('技能','SKILLS')}<div class="dias">${sk}</div></div>
 `}
 
-function skill(c){const sd=SKD[c.id];return sd?skillNet(c,sd):skillOld(c)}
+function skill(c){
+  const raw=rawSkills[c.id];
+  if (!savedCharacter(c) || !raw?.skills.every(skill=>skill.scaling || skill.rankOne)) return SKD[c.id]?skillNet(c,SKD[c.id]):skillOld(c);
+  const saved=player.characters[c.id];
+  const data=progress.resolveSkills(raw,saved.skillLevels,{},saved.ascension);
+  const active=nodes=>nodes.map(node=>node.unlockLevel==null?node:{...node,unlocked:saved.level>=node.unlockLevel});
+  return skillNet(c,BT.skillView({...data,potential:{major:active(data.potential.major),minor:active(data.potential.minor)}}));
+}
 function skillOld(c){
   const list=S.skillSlots.map((s,i)=>{const d=(c.skills||[]).find(x=>x.slot===s.slot)||{};return `<button type="button" class="sk${i===skillSel?' on':''}" data-sel="${i}"><span class="dg sm"><i></i>${YJ.slotIcon(s.icon)}</span><span class="t"><small>${E(s.label)}</small><b>${L(d.name)?'数据锁定':E(d.name)}</b></span></button>`}).join('');
   const s=S.skillSlots[skillSel],d=(c.skills||[]).find(x=>x.slot===s.slot)||{};
@@ -94,8 +117,8 @@ function skillOld(c){
 /* 技能 / 潜能：版式依据她给的技能页设计图；数据全部来自 data/skills/<id>.json（经 js/battle/view.js 整理） */
 const HLS=t=>E(t).replace(/==(.+?)==/g,'<em class="hb">$1</em>').replace(/\n/g,'<br>');
 const LV=(v,m)=>L(v)?'<span class="none">Lv.数据锁定</span>':`Lv.${E(v)}${L(m)?'':'/'+E(m)}`;
-const PNAME={mult:'伤害倍率',dreamMarkBonus:'梦痕增伤',toughness:'削韧',markDuration:'梦痕持续',replayRatio:'复现比例',domainReplayRatio:'幻海复现比例',aoeMult:'全体倍率',hits:'追加段数',hitMult:'每段倍率',enemyDelay:'敌方行动延后',domainRounds:'幻海持续',replayBonus:'复现增伤',domainExtra:'幻海延长',defIgnore:'无视防御'};
-const PFMT={mult:'%',dreamMarkBonus:'%',replayRatio:'%',domainReplayRatio:'%',aoeMult:'%',hitMult:'%',enemyDelay:'%',replayBonus:'%',defIgnore:'%',markDuration:'回合',domainRounds:'轮',domainExtra:'轮',hits:'段'};
+const PNAME={healRatio:'治疗生命倍率',healFlat:'固定治疗',bloomRatio:'持续治疗生命倍率',hitRatio:'花信生命倍率',streak:'每层连击增伤',transfer:'转火首段增伤',echo:'回响 · 每段生命倍率',joint:'协同 · 每段生命倍率',mult:'伤害倍率',dreamMarkBonus:'梦痕增伤',toughness:'削韧',markDuration:'梦痕持续',replayRatio:'复现比例',domainReplayRatio:'幻海复现比例',aoeMult:'全体倍率',hits:'追加段数',hitMult:'每段倍率',enemyDelay:'敌方行动延后',domainRounds:'幻海持续',replayBonus:'复现增伤',domainExtra:'幻海延长',defIgnore:'无视防御'};
+const PFMT={healRatio:'%',bloomRatio:'%',hitRatio:'%',streak:'%',transfer:'%',echo:'%',joint:'%',mult:'%',dreamMarkBonus:'%',replayRatio:'%',domainReplayRatio:'%',aoeMult:'%',hitMult:'%',enemyDelay:'%',replayBonus:'%',defIgnore:'%',markDuration:'回合',domainRounds:'轮',domainExtra:'轮',hits:'段'};
 const pv=(k,v)=>PFMT[k]==='%'?`${+(v*100).toFixed(1)}%`:PFMT[k]?`${v} ${PFMT[k]}`:String(v);
 /* 网络坐标（1920×1080 舞台） */
 const SKX=[560,760,960,1160],NETC=[860,800];
@@ -103,7 +126,7 @@ const MAJ={A:[610,800],B:[860,520],C:[1110,800]};
 const MAJ6={I:[560,580],II:[860,520],III:[1160,580],IV:[560,820],V:[860,860],VI:[1160,820]};
 const ROMANP='ⅠⅡⅢⅣⅤⅥ';
 const MIN=[[860,610],[860,680],[455,740],[505,670],[1265,740],[1215,670]];
-const MIN9=[[430,810],[390,730],[455,655],[520,720],[1290,810],[1330,730],[1265,655],[860,610],[800,680]];
+const MIN9=[[430,810],[390,730],[455,655],[520,720],[1290,810],[1330,730],[1265,655],[860,610],[800,680],[1200,720]];
 function skNode(sd,key){const [t,id]=key.split(':');
   if(t==='skill')return {kind:'skill',d:sd.skills.find(x=>x.slot===id)};
   if(t==='pot')return {kind:'major',d:sd.major.find(x=>x.id===id)};
@@ -114,16 +137,18 @@ function skDetail(sd,key){const n=skNode(sd,key);if(!n.d)return '';const d=n.d;
   const icon=n.kind==='minor'?`<span class="skmi big">${ic('lock')}</span>`:`<img src="${E(d.icon)}" alt="">`;
   const minorVal=n.kind==='minor'?(d.format==='flat'?`+${d.value}`:`+${(d.value*100).toFixed(1).replace(/\.0$/,'')}%`):'';
   const params=n.kind==='minor'?[[d.name,minorVal]]:Object.entries(d.params||{}).filter(([k])=>PNAME[k]).map(([k,v])=>[PNAME[k],pv(k,v)]);
-  const desc=n.kind==='minor'?`${E(d.name)} ${minorVal}${sd.id==='rin'?'':'（暂定）'}`:d.desc?HLS(d.desc):'<span class="none">数据锁定</span>';
+  const desc=n.kind==='minor'?`${E(d.name)} ${minorVal}${(sd.id==='rin'||d.unlockLevel)?'':'（暂定）'}`:d.desc?HLS(d.desc):'<span class="none">数据锁定</span>';
+  const cost=(d.scaling || d.rankOne) && progress.upgradeCost('skillLevel',d.trained);
+  const next=d.ranks?.[d.trained];
   const tags=(d.type||[]).slice(0,3);
   return `<div class="skc">
     <div class="skch"><span class="skci">${icon}</span><div class="skct"><small>${E(label)}</small><h3>${E(d.name||'数据锁定')}</h3>
       <span class="sklv">${LV(d.level,d.maxLevel)}</span>${tags.length?`<div class="sktags">${tags.map(t=>`<em>${E(t)}</em>`).join('')}</div>`:''}</div></div>
     <div class="skcd">${desc}</div>
-    <div class="skcs"><h4><i></i>升级预览</h4><table>${params.map(([k,v])=>`<tr><td>${E(k)}</td><td>${E(v)}</td><td class="ar">▸</td><td class="nx none">数据锁定</td></tr>`).join('')||'<tr><td class="none" colspan="4">数据锁定</td></tr>'}</table></div>
-    <div class="skcs"><h4><i></i>升级消耗</h4><div class="skmat">${[0,1].map(()=>`<div class="mt"><span>${ic('lock')}</span><b class="none">数据锁定</b></div>`).join('')}</div></div>
+    <div class="skcs"><h4><i></i>升级预览</h4><table>${(d.scaling || d.rankOne)?d.growth.map(key=>[key,d.params[key]]).map(([key,value])=>`<tr><td>${E(PNAME[key])}</td><td>${pv(key,value)}</td><td class="ar">▸</td><td>${next?pv(key,next[key]):'已满级'}</td></tr>`).join(''):params.map(([k,v])=>`<tr><td>${E(k)}</td><td>${E(v)}</td><td class="ar">▸</td><td class="nx none">数据锁定</td></tr>`).join('')||'<tr><td class="none" colspan="4">数据锁定</td></tr>'}</table></div>
+    ${d.scaling?`<div class="skcs"><h4><i></i>升级消耗</h4><b>${next?cost+' 素材':'已满级'}</b> · 持有 ${player.material}</div>`:d.unlockLevel?`<div class="skcs">等级 ${d.unlockLevel} 解锁 · ${d.unlocked?'已激活':'未激活'}</div>`:`<div class="skcs"><h4><i></i>升级消耗</h4><div class="skmat">${[0,1].map(()=>`<div class="mt"><span>${ic('lock')}</span><b class="none">数据锁定</b></div>`).join('')}</div></div>`}
     ${key==='skill:ultimate'?`<button type="button" class="skfxbtn" data-ultfx>▶ 预览演出</button>`:''}
-    <button type="button" class="skup" disabled>升级<small>数据锁定</small><i>»</i></button>
+    ${(d.scaling || d.rankOne)?`<button type="button" class="skup" data-train="skillLevel" data-slot="${E(d.slot)}" ${!next||player.material<cost?'disabled':''}>${next?'升级':'已满级'}<i>»</i></button>`:d.unlockLevel?'':`<button type="button" class="skup" disabled>升级<small>数据锁定</small><i>»</i></button>`}
   </div>`}
 function skillNet(c,sd){
   const on=k=>k===skSel?' on':'';const lit=x=>x&&x.unlocked===true;
@@ -140,7 +165,8 @@ function skillNet(c,sd){
     line(MAJ.B,MIN9[7],lit(mi[7])),line(MIN9[7],MIN9[8],lit(mi[8])),line(MIN9[8],NETC,lit(mi[8])),
     line(MAJ.A,NETC,lit(sd.major[0])),line(MAJ.C,NETC,lit(sd.major[2])),
     line(MAJ.A,MIN9[0],lit(mi[0])),line(MIN9[0],MIN9[1],lit(mi[1])),line(MIN9[1],MIN9[2],lit(mi[2])),line(MIN9[2],MIN9[3],lit(mi[3])),
-    line(MAJ.C,MIN9[4],lit(mi[4])),line(MIN9[4],MIN9[5],lit(mi[5])),line(MIN9[5],MIN9[6],lit(mi[6]))
+    line(MAJ.C,MIN9[4],lit(mi[4])),line(MIN9[4],MIN9[5],lit(mi[5])),line(MIN9[5],MIN9[6],lit(mi[6])),
+    mi[9]?line(MIN9[6],MIN9[9],lit(mi[9])):''
   ].join(''):[
     line(MAJ.B,MIN[0],lit(mi[0])),line(MIN[0],MIN[1],lit(mi[1])),line(MIN[1],NETC,lit(mi[1])),
     line(MAJ.A,NETC,lit(sd.major[0])),line(MAJ.C,NETC,lit(sd.major[2])),
@@ -164,20 +190,32 @@ function skillNet(c,sd){
     <div class="skside">${skDetail(sd,skSel)}</div>
   </div>`}
 function ultFx(sd){const u=sd.skills.find(x=>x.slot==='ultimate')||{};const o=document.createElement('div');o.className='ultfx';
+  if (['shen','eliot','liselotte','daier'].includes(sd.id)) {
+    const video=document.createElement('video');
+    video.src='assets/battle/ult/'+sd.id+'-ult.mp4'+(sd.id==='daier'?'?v=silent-original':'');
+    video.playsInline=true;
+    o.setAttribute('aria-label',u.name+' · 点击关闭');
+    const close=()=>{video.pause();o.remove()};
+    video.onended=close;
+    o.onclick=close;
+    o.appendChild(video);stage.appendChild(o);
+    video.play().catch(()=>{video.controls=true});
+    return;
+  }
   o.innerHTML=`<div class="ufbg"></div>${[0,1,2,3].map(i=>`<i class="rp" style="--d:${i*.28}s"></i>`).join('')}<div class="uft"><small>ULTIMATE</small><b>${E(u.name||'')}</b>${(u.previewTag||(sd.id==='siwei'?'幻海展开':''))?`<em>${E(u.previewTag||'幻海展开')}</em>`:''}</div>${[0,1,2].map(i=>`<i class="sl" style="--d:${1.5+i*.22}s;--r:${[-24,18,-6][i]}deg"></i>`).join('')}<i class="aoe"></i><span class="ufhint">点击关闭 · 正式演出待美术</span>`;
   stage.appendChild(o);const close=()=>{o.remove()};o.addEventListener('click',close);setTimeout(close,3600)}
 /* 模组：版式依据她给的模组设计图；内容全部来自 c.module，未设定显示「数据锁定」 */
 const HL=t=>E(t).replace(/==(.+?)==/g,'<em class="hl">$1</em>').replace(/\n/g,'<br>');
 const MSTAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z"/></svg>';
-function module(c){const m=c.module||{};const lk=L(m.name);const lv=m.level||{};const ef=m.effect||{};
+function module(c){c=sheet(c);const m=c.module||{};const lk=L(m.name);const lv=m.level||{};const ef=m.effect||{};
   const ro=m.roman||c.roman||'';const pct=(!L(lv.cur)&&!L(lv.max)&&+lv.max>0)?Math.min(100,lv.cur/lv.max*100):0;
+  const refinement=savedCharacter(c) && player.characters[c.id].refinement;
   const stats=(m.stats&&m.stats.length?m.stats:[{key:'atk'},{key:'hp'},{key:'spd'}]).map(x=>{const d=S.stats.find(s=>s.key===x.key)||{label:x.key,icon:'lock'};
     return `<div class="mst"><span class="mk">${ic(d.icon)}<b>${E(d.label)}</b></span>${L(x.value)?'<em class="none">— —</em>':`<em>${E(x.value)}</em>`}</div>`}).join('');
   const starN=L(m.stars)?0:+m.stars;
   return `<div class="mxd${lk?' lkd':''}">
-    <div class="mxbg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i><i class="b6"></i></div>
-    <div class="mxno"><b>MODULE</b><small>// EXCLUSIVE</small><em>${E(m.no||'— —')}</em></div>
-    <div class="mxart">${m.art?`<img src="${E(m.art)}" alt="${E(m.name||'模组')}">`:`<div class="mxlock">${ic('lock')}<b>模组立绘 · 数据锁定</b></div>`}</div>
+    <div class="mxno"><b>MODULE</b><small>// EXCLUSIVE</small>${m.no?`<em>${E(m.no)}</em>`:''}</div>
+    <div class="mxart">${m.art?`<div class="mxfloat"><img class="mxobject" src="${E(m.art)}" alt="${E(m.name||'模组')}"><img class="mxfoil" src="${E(m.art)}" alt="" aria-hidden="true"></div>`:`<div class="mxlock">${ic('lock')}<b>模组立绘 · 数据锁定</b></div>`}</div>
     <div class="mxfoot"><b>${E(ro||'— —')} //</b><b>EXCLUSIVE MODULE</b><span class="bc"></span></div>
     <div class="mxtop"><small>// MODULE</small><i></i></div>
     <div class="mxcol">
@@ -186,7 +224,7 @@ function module(c){const m=c.module||{};const lk=L(m.name);const lv=m.level||{};
         <div class="mstars">${starN?Array.from({length:starN},()=>MSTAR).join(''):'<span class="none">星级 · 数据锁定</span>'}</div>
         <svg class="mseal" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 4"/><path d="M28 74L72 26" stroke="currentColor" stroke-width="2"/><path d="M60 30c-12 6-20 18-24 34 10-6 18-14 24-34z" fill="currentColor" opacity=".55"/></svg></div>
       <div class="mc mlv"><i class="mcfx" aria-hidden="true"></i><div class="lvr"><span class="lvt">LV.</span>${L(lv.cur)?'<b class="none">— —</b>':`<b>${E(lv.cur)}</b>`}<span class="lvm">/${L(lv.max)?'— —':E(lv.max)}</span>
-        <button type="button" class="rebuild" disabled>${ic('lock')}<span>重构</span><i><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8a8 8 0 0 0-14 1M5 16a8 8 0 0 0 14-1" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 3v5h-5M5 21v-5h5" fill="none" stroke="currentColor" stroke-width="2"/></svg></i></button></div>
+        ${savedCharacter(c)?`<div class="gear-controls">${refinement?`<label>试用精炼 <select data-refinement>${[1,2,3,4,5].map(rank=>`<option value="${rank}" ${rank===refinement?'selected':''}>${rank}</option>`).join('')}</select></label>`:''}${trainingButton("moduleLevel",lv.cur,lv.max,"强化")}<button type="button" data-train="toggleModule">${player.characters[c.id].module?"卸下":"装备"}</button><small>素材 ${player.material}</small></div>`:`<button type="button" class="rebuild" disabled>${ic('lock')}<span>重构</span><i><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8a8 8 0 0 0-14 1M5 16a8 8 0 0 0 14-1" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 3v5h-5M5 21v-5h5" fill="none" stroke="currentColor" stroke-width="2"/></svg></i></button>`}</div>
         <div class="lvbar"><i style="width:${pct}%"></i></div></div>
       <div class="mc mbase"><i class="mcfx" aria-hidden="true"></i>${PH('基础属性','// BASE ATTRIBUTES')}<div class="msts">${stats}</div></div>
       <div class="mc meff"><i class="mcfx" aria-hidden="true"></i>${PH('模组特性','// MODULE EFFECT')}
@@ -200,14 +238,19 @@ let spSel=0,spSetOpen=true,spx=null;
 const HLB=t=>E(t).replace(/==(.+?)==/g,'<em class="hb">$1</em>').replace(/\n/g,'<br>');
 const SPSTAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9l7.1-.6z"/></svg>';
 const pad2=n=>String(n).padStart(2,'0');
-function spData(c){const sp=c.spectrum&&!Array.isArray(c.spectrum)?c.spectrum:{};const n=S.spectrumSlots||6;
-  const slots=Array.from({length:n},(_,i)=>(sp.slots||[])[i]||{});return {sp,slots,set:sp.set||{},inv:sp.inventory||[]}}
+function spData(c){const sp=savedCharacter(c)?progress.loadout(c,player).spectrum:c.spectrum&&!Array.isArray(c.spectrum)?c.spectrum:{};const n=S.spectrumSlots||6;
+  const slots=Array.from({length:n},(_,i)=>(sp.slots||[])[i]||{});return {sp,slots,set:sp.sets?.find(set=>set.name===slots[spSel]?.set)||sp.set||{},inv:sp.inventory||[]}}
 function spWave(){return '<canvas class="spwave" width="640" height="168" aria-hidden="true"></canvas>'}
 function spTile(s,i,on){const lk=L(s.name);
   return `<button type="button" class="spt p${i+1}${on?' on':''}${lk?' lkd':''}" data-spi="${i}" aria-label="${lk?`频谱 ${pad2(i+1)} 数据锁定`:E(s.name)}">
     <span class="spn">${pad2(i+1)}</span><span class="spim">${s.icon?`<img src="${E(s.icon)}" alt="">`:`<i class="spl">${ic('lock')}<b>数据锁定</b></i>`}</span>
     <span class="spb">${L(s.plus)?'':`<b>+${E(s.plus)}</b>`}<span class="sps">${L(s.stars)?'':Array.from({length:+s.stars},()=>SPSTAR).join('')}</span></span><i class="spy"></i>${on?'<i class="spk"></i>':''}</button>`}
-function spRing(){const V='viewBox="-500 -500 1000 1000" aria-hidden="true"';return `<div class="spring">
+function spRing(selectedSlot, slotCount){const V='viewBox="-500 -500 1000 1000" aria-hidden="true"';return `<div class="spring">
+  <svg class="rl" ${V}><circle class="spticks" r="481" pathLength="360" stroke-dasharray=".32 2.68"/>
+    <g transform="rotate(${selectedSlot*360/slotCount})">
+      <path class="spsector" d="M-58 -478 Q0 -486 58 -478"/>
+      <path class="spindex" d="M-5 -493h10l-5 7z"/>
+    </g></svg>
   <svg class="rl l0" ${V}><circle r="470" class="r0"/></svg>
   <svg class="rl l1" ${V}><circle r="430" class="r1"/></svg>
   <svg class="rl l2" ${V}><circle r="395" class="r2"/><circle r="300" class="r3"/><circle r="250" class="r4"/></svg>
@@ -222,17 +265,17 @@ function spectrum(c){const {sp,slots,set}=spData(c);const n=slots.length;if(spSe
   const m=s.main||{};
   const bon=(set.bonuses||[]).map(b=>`<li><i></i><span>${E(b.n)}件：${L(b.desc)?'<em class="none">数据锁定</em>':HLB(b.desc)}</span></li>`).join('');
   return `<div class="spd">
-  <div class="spbg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i></div>
+  <div class="spbg" aria-hidden="true"></div>
   <div class="spcrumb"><span class="sl">///</span><div><b>角色养成 <i>/</i> 频谱</b><small>DEVELOPMENT <i>/</i> SPECTRUM</small></div></div>
   <div class="sphead"><h2>频谱装载</h2><small>SPECTRUM ARRAY</small>${L(sp.intro)?'':`<p>${HLB(sp.intro)}</p>`}</div>
-  <div class="sparr">${spRing()}
+  <div class="sparr">${spRing(spSel,n)}
     <div class="spcore"><svg class="spstar" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4l6 38 38 8-38 8-6 38-6-38-38-8 38-8z"/></svg>${spWave()}
       <small>SPECTRUM</small><i></i><b>${pad2(loaded)}/${pad2(n)}</b><em>${loaded===n?'装载完成':loaded?'部分装载':'数据锁定'}</em></div>
     ${slots.map((x,i)=>spTile(x,i,i===spSel)).join('')}</div>
   <div class="spcnt"><b>${pad2(loaded)}<small>/${pad2(n)}</small></b><em>${loaded===n?'装载完成':loaded?'部分装载':'数据锁定'}</em><span class="bc"></span></div>
   <div class="spcard${lk?' lkd':''}">
     <div class="sch"><div class="sct"><div class="scno"><i>频谱</i> <b>${pad2(spSel+1)}</b>${lk?'':'<span class="sctag">已装载</span>'}</div>
-      <h3>${lk?'数据锁定':E(s.name)}</h3><small>SPECTRUM RECORD</small></div>
+      <h3>${lk?(savedCharacter(c)?'未装载':'数据锁定'):E(s.name)}</h3><small>SPECTRUM RECORD</small></div>
       <div class="scban">${s.banner||s.icon?`<img src="${E(s.banner||s.icon)}" alt="">`:`<i>${ic('lock')}</i>`}</div></div>
     <div class="sclv"><div class="lvx"><b>Lv.${L(s.level)?'— —':E(s.level)}</b><span>/ ${L(s.max)?'— —':E(s.max)}</span><i style="width:${!L(s.level)&&+s.max>0?Math.min(100,s.level/s.max*100):0}%"></i></div>
       <button type="button" class="sclock${s.locked?' on':''}" disabled aria-label="锁定">${ic('lock')}</button>
@@ -245,7 +288,7 @@ function spectrum(c){const {sp,slots,set}=spData(c);const n=slots.length;if(spSe
         <b>${L(set.name)?'数据锁定':E(set.name)}</b>${L(set.name)?'':`<em>(${Math.min(inSet,smax)}/${smax})</em>`}${ic('chev')}</button>
       <ul class="scbon"${spSetOpen?'':' hidden'}>${bon}</ul></div>
     <div class="scfoot"><span class="bc"></span><i></i><code>${L(sp.code)?'— —':E(sp.code)}</code></div></div>
-  <div class="spact"><button type="button" class="unl" disabled>${ic('unload')}<span>一键卸下</span></button><button type="button" class="enh" disabled>${ic('ffw')}<span>强化</span></button></div>
+  <div class="spact">${savedCharacter(c)?`<button type="button" class="unl" data-train="unload" ${loaded?"":"disabled"}>一键卸下</button>${lk?'<button type="button" disabled>选择一件频谱</button>':trainingButton("spectrum",s.level,15,"强化")}<small>培养素材 ${player.material}</small>`:`<button type="button" class="unl" disabled>${ic('unload')}<span>一键卸下</span></button><button type="button" class="enh" disabled>${ic('ffw')}<span>强化</span></button>`}</div>
   ${spx?spSwap(c):''}</div>`}
 /* 更换界面：左侧候选网格 + 位置/套装筛选 + 排序，右侧「当前装载 vs 选中」对比，底部确认更换（仅前端预览，不写入数据） */
 function spPool(c){const {slots,inv}=spData(c);
@@ -262,7 +305,7 @@ function spSwap(c){const {slots}=spData(c);const pool=spPool(c);const pos=spx.po
   let list=pool.filter(x=>(spx.all||x.pos===pos||x.pos==null)&&(spx.set==='all'||x.set===spx.set));
   list.sort((a,b)=>spx.sort==='lv'?(+b.level||0)-(+a.level||0):(a.pos||99)-(b.pos||99));
   const curS=slots[pos-1]||{};const sel=pool.find(x=>x._k===spx.sel)||null;const sets=[...new Set(pool.map(x=>x.set).filter(x=>!L(x)))];
-  const same=!sel||sel._k==='s'+(pos-1)||L(sel.name);
+  const same=!sel||sel._k==='s'+(pos-1)||L(sel.name)||(savedCharacter(c)&&sel.pos!==pos);
   return `<div class="spx" role="dialog" aria-label="更换频谱"><div class="spxin">
    <div class="sxh"><div class="sxtt"><b>更换频谱</b><small>REPLACE SPECTRUM</small></div>
      <div class="sxpos">${slots.map((_,i)=>`<button type="button" data-sxpos="${i+1}" class="${i+1===pos?'on':''}">${pad2(i+1)}</button>`).join('')}</div>
@@ -274,7 +317,7 @@ function spSwap(c){const {slots}=spData(c);const pool=spPool(c);const pos=spx.po
        <span class="sxim">${x.icon?`<img src="${E(x.icon)}" alt="">`:`<i>${ic('lock')}<b>数据锁定</b></i>`}</span>${x.pos?`<span class="sxp">${pad2(x.pos)}</span>`:''}
        ${x._eq?'<span class="sxeq">装载中</span>':''}<span class="sxb">${L(x.plus)?'':`+${E(x.plus)}`}<span class="sps">${L(x.stars)?'':Array.from({length:+x.stars},()=>SPSTAR).join('')}</span></span>
        <span class="sxn">${lk?'数据锁定':E(x.name)}</span></button>`}).join('')||'<p class="none sxempty">没有符合条件的频谱</p>'}</div>
-     <p class="sxtip">候选条目来自编辑器「频谱 · 备选」；更换为前端预览，不会写入数据。</p></div>
+     <p class="sxtip">${savedCharacter(c)?'同槽位频谱可以互换。确认后，属性将在下一场战斗生效。':'频谱配置预览'}</p></div>
    <div class="sxr"><div class="sxcmp">${spMini(curS,'当前装载')}<span class="sxvs">VS</span>${sel?spMini(sel,'选中',curS):`<div class="sxc empty"><p>从左侧选择一件频谱进行对比</p></div>`}</div>
      <div class="sxbtn"><button type="button" class="ghost" data-sxclose>取消</button><button type="button" class="ok" data-sxok ${same?'disabled':''}>${ic('xchg')}<span>确认更换</span></button></div></div>
   </div></div>`}
@@ -296,6 +339,28 @@ function spKick(){if(!spRaf)spRaf=requestAnimationFrame(spTick)}
 new MutationObserver(spKick).observe(app,{attributes:true,attributeFilter:['data-tab']});
 document.addEventListener('visibilitychange',spKick);spRM.addEventListener?.('change',spKick);
 function spRefresh(){const p=$('.pane[data-p=spectrum]');if(p)p.innerHTML=spectrum(cur);if(spRaf){cancelAnimationFrame(spRaf);spRaf=0}spKick()}
+function refreshTraining(){
+  if(!cur||!savedCharacter(cur))return;
+  $('.pane[data-p=detail]').innerHTML=detail(cur);
+  $('.pane[data-p=module]').innerHTML=module(cur);
+  $('.pane[data-p=skill]').innerHTML=skill(cur);
+  spRefresh();
+}
+async function train(action,index){
+  const id=cur.id;
+  try{player=await progress.saveChange(save=>progress.changePlayer(save,id,action,index))}
+  catch(error){player=progress.loadPlayer();window.alert(error.message)}
+  refreshTraining();
+}
+$('#panes').addEventListener('click',event=>{
+  const button=event.target.closest('[data-train]');
+  if(button&&!button.disabled&&savedCharacter(cur))train(button.dataset.train,button.dataset.slot ?? player.characters[cur.id].equipped[spSel]);
+});
+$('#panes').addEventListener('change',event=>{
+  if(event.target.matches('[data-refinement]') && savedCharacter(cur)) train('refinement',Number(event.target.value));
+});
+addEventListener('storage',event=>{if(event.key===progress.SAVE_KEY||event.key===null){player=progress.loadPlayer();refreshTraining()}});
+addEventListener('pageshow',event=>{if(event.persisted){player=progress.loadPlayer();refreshTraining()}});
 $('#panes').addEventListener('click',e=>{if(!e.target.closest('.pane[data-p=spectrum]'))return;
   let b;
   if(b=e.target.closest('[data-spi]')){const ch=spSel!==+b.dataset.spi;spSel=+b.dataset.spi;if(ch)spPulse=performance.now();spRefresh();if(ch){const c=$('.pane[data-p=spectrum] .spcore');c&&c.classList.add('pulse')}return}
@@ -308,6 +373,7 @@ $('#panes').addEventListener('click',e=>{if(!e.target.closest('.pane[data-p=spec
   if(e.target.closest('[data-sxsort]')){spx.sort=spx.sort==='lv'?'pos':'lv';spRefresh();return}
   if(b=e.target.closest('[data-sxsel]')){spx.sel=b.dataset.sxsel;spRefresh();return}
   if(e.target.closest('[data-sxok]')){const pool=spPool(cur);const sel=pool.find(x=>x._k===spx.sel);const {sp,slots}=spData(cur);
+    if(savedCharacter(cur)){if(sel&&sel.pos===spx.pos){spx=null;train('equip',sel.index)}return}
     if(sel&&!L(sel.name)){const i=spx.pos-1;const o=slots[i];const clean=({_eq,_k,...r})=>r;
       if(sel._k[0]==='s'){const j=+sel._k.slice(1);sp.slots[j]=clean({...o});}else{const j=+sel._k.slice(1);sp.inventory[j]={...clean({...o}),pos:i+1}}
       sp.slots[i]=clean({...sel});spSel=i}
@@ -324,7 +390,22 @@ const inset=(p,d)=>{const c=cen(p);return p.map(q=>{const dx=q[0]-c[0],dy=q[1]-c
 const ASIN=ASPOLY.map(p=>inset(p,6));
 const ASLAB=ASPOLY.map((p,i)=>{const c=cen(p),o=cen(ASOUT[i]);return [c[0]+(o[0]-c[0])*.42,c[1]+(o[1]-c[1])*.42]});
 let asSel=-1,as3=null,as3Busy=false,as3For=null,as3Off=false;
-function asData(c){const a=c.ascension||{};const sh=Array.from({length:6},(_,i)=>(a.shards||[])[i]||{});const st=L(a.stage)?null:+a.stage;
+const glassLayouts = await fetch('assets/ascend/glass-layout.json').then(response=>response.json()).catch(()=>({}));
+function glassLayout(character, ascension, unlocked) {
+  const params=new URLSearchParams(location.search);
+  if(params.has('fx')||params.get('bloom')==='1'||YJ.useDraft)return null;
+  const layout=glassLayouts[character.id];
+  if(!layout||layout.art!==ascension.art)return null;
+  const focus=ascension.focus||{};
+  const matchesFocus=layout.focus.every((value,index)=>value===[focus.x,focus.y,focus.w][index]);
+  return matchesFocus&&layout.unlocked===unlocked.map(Number).join('')?layout:null;
+}
+function glassPlates(character,layout) {
+  const scaled=value=>`${value*.75}px`;
+  const tiles=layout.tiles.map(([left,top,width,height],index)=>`<i class="glass-piece" style="left:${scaled(left)};top:${scaled(top)};width:${scaled(width)};height:${scaled(height)};--phase:${-index*.9}s"><img decoding="async" src="assets/ascend/glass/${encodeURIComponent(character.id)}-${index+1}.webp" width="${width}" height="${height}" alt=""></i>`);
+  return `<div class="glass-plates" aria-hidden="true">${tiles.join('')}</div>`;
+}
+function asData(c){const a=c.ascension||{};const sh=Array.from({length:6},(_,i)=>(a.shards||[])[i]||{});const st=c.levelStats && savedCharacter(c)?player.characters[c.id].ascension:L(a.stage)?null:+a.stage;
   const un=sh.map((s,i)=>s.unlocked===true||s.unlocked===false?s.unlocked:(st!=null&&i<st));
   const f=a.focus||{};const iw=+f.w||1820,ih=iw*941/1672;const fx=L(f.x)?.7:+f.x,fy=L(f.y)?.27:+f.y;
   const img={x:920-fx*iw,y:316-fy*ih,w:iw,h:ih};return {a,sh,st,un,img}}
@@ -336,19 +417,22 @@ function asCard(c,i){const {a,sh,un,img}=asData(c);const s=sh[i]||{};const lk=L(
    <div class="acb"><h3 class="${lk?'none':''}">${lk?'数据锁定':E(s.name)}</h3><i class="acl"></i>${L(s.desc)?`<p class="none">${ic('lock')} 升格效果 · 数据锁定</p>`:`<p>${HL(s.desc)}</p>`}${L(s.quote)?'':`<blockquote class="acq">「${E(s.quote)}」</blockquote>`}</div>
    <div class="acf">${ok?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span>已解锁</span>':unknown?`${ic('lock')}<span>数据锁定</span>`:`${ic('lock')}<span>未解锁</span>`}</div></div>`}
 function ascend(c){const {a,un,st,img}=asData(c);const has=!!a.art;const n=un.filter(Boolean).length;
+  const glass=glassLayout(c,a,un);
   const bg=has?`background-image:url('${E(a.art)}');background-size:${img.w}px ${img.h}px;background-position:${img.x}px ${img.y}px`:'';
   const shards=ASIN.map((p,i)=>`<button type="button" class="ash${un[i]?'':' alk'}${i===asSel?' on':''}" data-asi="${i}" aria-label="升格 ${ROMAN[i]}${un[i]?'':'（未解锁）'}" aria-pressed="${i===asSel}" style="clip-path:polygon(${p.map(q=>q[0].toFixed(1)+'px '+q[1].toFixed(1)+'px').join(',')})"><span class="asimg" style="${bg}"></span><i class="asgl"></i></button>`).join('');
   const labs=ASLAB.map((q,i)=>`<span class="aslb${un[i]?'':' alk'}${i===5?' ult':''}${i===asSel?' on':''}" data-asl="${i}" style="left:${q[0]}px;top:${q[1]}px"><b>${ROMAN[i]}</b><i></i>${un[i]?'<em>◆</em>':ic('lock')}</span>`).join('');
   const segs=ASIN.map(p=>`<polygon points="${p.map(q=>q.join(',')).join(' ')}"/>`).join('');
   const petals=Array.from({length:16},(_,i)=>`<i style="--x:${(i*137)%1100+380}px;--d:${9+(i*7)%9}s;--dl:-${(i*1.3)%9}s;--s:${i%4?5:12}px"></i>`).join('');
-  return `<div class="asd${has?'':' noart'}${asSel>=0?' sel':''}" data-fx="2d">
-  <div class="asstage"><div class="asbg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><svg viewBox="0 0 1920 1080"><circle cx="960" cy="560" r="520"/><circle cx="960" cy="560" r="430" class="d"/><path d="M670 80h28M684 66v28"/></svg></div>
+  return `<div class="asd${has?'':' noart'}${asSel>=0?' sel':''}" data-fx="${glass?'glass':'2d'}">
+  <div class="asstage"><div class="asbg" aria-hidden="true"></div>
   <svg class="asflower" viewBox="0 0 520 620" aria-hidden="true">${asFlower()}</svg>
+  <svg class="asshadow" viewBox="0 0 1920 1080" aria-hidden="true"><defs><filter id="as-shadow"><feGaussianBlur stdDeviation="22"/></filter></defs><g transform="translate(0 18)" filter="url(#as-shadow)">${segs}</g></svg>
   <div class="asfx" aria-hidden="true">
     <svg class="ascrack" viewBox="0 0 1920 1080"><defs><filter id="asglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs>
       <g class="cg">${segs}</g><g class="cl">${segs}</g><g class="cf">${segs}</g>
       ${asSel>=0?`<g class="csel"><polygon points="${ASIN[asSel].map(q=>q.join(',')).join(' ')}"/></g>`:''}</svg></div>
   <div class="asshards">${shards}</div>
+  ${glass?glassPlates(c,glass):''}
   <div class="aslabs" aria-hidden="true">${labs}</div>
   <div class="asdust" aria-hidden="true">${petals}</div>
   <div class="ascrumb"><span>///</span><div><b>角色养成 <i>/</i> 升格</b><small>DEVELOPMENT <i>/</i> ASCENSION</small></div></div>
@@ -369,31 +453,43 @@ function asApply(){const pane=$('.pane[data-p=ascend]');if(!pane)return;const d=
   d.classList.toggle('sel',asSel>=0);
   d.querySelectorAll('.ash').forEach((b,i)=>{b.classList.toggle('on',i===asSel);b.setAttribute('aria-pressed',i===asSel)});
   d.querySelectorAll('.aslb').forEach((b,i)=>b.classList.toggle('on',i===asSel));
+  d.querySelectorAll('.glass-piece').forEach((plate,index)=>plate.classList.toggle('on',index===asSel));
   const svg=d.querySelector('.ascrack');svg.querySelector('.csel')?.remove();
-  if(asSel>=0){svg.insertAdjacentHTML('beforeend',`<g class="csel pulse"><polygon points="${ASIN[asSel].map(q=>q.join(',')).join(' ')}"/></g>`)}
+  if(asSel>=0&&d.dataset.fx==='2d'){svg.insertAdjacentHTML('beforeend',`<g class="csel pulse"><polygon points="${ASIN[asSel].map(q=>q.join(',')).join(' ')}"/></g>`)}
   d.querySelector('.ascside').innerHTML=asSel>=0?asCard(cur,asSel):'';
   if(as3)as3.select(asSel)}
 async function as3Mount(){const pane=$('.pane[data-p=ascend]');const d=pane&&pane.querySelector('.asd');if(!d||as3||as3Busy||as3Off)return;
+  if(d.dataset.fx==='glass')return;
   const force=new URLSearchParams(location.search).get('fx');
+  if(!window.Worker||!HTMLCanvasElement.prototype.transferControlToOffscreen)return;
   if(force==='2d'||(force!=='3d'&&(app.classList.contains('mob')||matchMedia('(prefers-reduced-motion: reduce)').matches)))return;
   const {a,un,img}=asData(cur);if(!a.art&&force!=='3d')return;
-  try{const t=document.createElement('canvas');if(!(t.getContext('webgl2')))return}catch(e){return}
   as3Busy=true;const who=cur;
-  try{const m=await import('./ascend3d.js');
-    if(who!==cur||tab!=='ascend'){as3Busy=false;return}
-    as3=await m.mount(d.querySelector('.asfx'),{polys:ASIN,art:a.art?await YJ.src(a.art):null,img,unlocked:un,sel:asSel,stage:{w:1920,h:1080}});as3For=who;
-    as3.onSlow=()=>{if(force==='3d')return;as3Off=true;as3Drop();};
-    d.dataset.fx='3d';as3.start()}catch(e){console.warn('升格 3D 不可用，使用 2D 版',e);as3=null}
-  as3Busy=false}
+  try{const m=await import('./ascend-view.js');
+    const artUrl=a.art?new URL(await YJ.src(a.art),document.baseURI).href:null;
+    if(!d.isConnected||tab!=='ascend'||document.hidden)return;
+    d.dataset.fx='loading';
+    as3=m.mount(d.querySelector('.asfx'),{polys:ASIN,art:artUrl,img,unlocked:un,sel:asSel,stage:{w:1920,h:1080},bloom:new URLSearchParams(location.search).get('bloom')==='1'},{
+      ready:()=>{d.dataset.fx='3d'},
+      slow:()=>{if(force!=='3d'){as3Off=true;as3Drop()}},
+      failed:message=>{console.warn('升格 3D 不可用，使用 2D 版',message);as3Off=true;as3Drop()}
+    });
+    as3For=who;asTab()}catch(e){d.dataset.fx='2d';console.warn('升格 3D 不可用，使用 2D 版',e)}
+  finally{as3Busy=false;if(!d.isConnected)asTab()}}
 function as3Drop(){if(as3){as3.destroy();as3=null}const d=document.querySelector('.pane[data-p=ascend] .asd');if(d)d.dataset.fx='2d'}
-function asTab(){if(tab==='ascend'){if(as3&&as3For!==cur)as3Drop();if(as3)as3.start();else as3Mount()}else if(as3)as3.stop()}
+function asTab(){
+  if(tab!=='ascend'||document.hidden||$('.asd .asviewer.open')){as3?.stop();return}
+  if(as3&&as3For!==cur)as3Drop();
+  if(as3)as3.start();else as3Mount()}
+document.addEventListener('visibilitychange',asTab);
 $('#panes').addEventListener('click',e=>{const pane=e.target.closest('.pane[data-p=ascend]');if(!pane)return;let b;
-  if(b=e.target.closest('[data-asi]')){const i=+b.dataset.asi;asSel=i;asApply();const p=pane.querySelector('.csel');return}
-  if(e.target.closest('[data-asview]')){const v=pane.querySelector('.asviewer');if(v){v.hidden=false;requestAnimationFrame(()=>v.classList.add('open'));v.querySelector('.avx').focus()}return}
-  if(e.target.closest('[data-asclose]')||e.target.classList.contains('asviewer')){const v=pane.querySelector('.asviewer');v.classList.remove('open');setTimeout(()=>v.hidden=true,220);return}
+  if(b=e.target.closest('[data-asi]')){const index=Number(b.dataset.asi);if(index!==asSel){asSel=index;asApply()}return}
+  if(e.target.closest('[data-asview]')){const v=pane.querySelector('.asviewer');if(v){v.hidden=false;requestAnimationFrame(()=>{v.classList.add('open');asTab()});v.querySelector('.avx').focus()}return}
+  if(e.target.closest('[data-asclose]')||e.target.classList.contains('asviewer')){closeArtViewer(pane.querySelector('.asviewer'));return}
   if(!e.target.closest('.ascard,.asview,button')&&asSel>=0){asSel=-1;asApply()}});
 addEventListener('keydown',e=>{if(e.key!=='Escape'||tab!=='ascend')return;const v=document.querySelector('.pane[data-p=ascend] .asviewer');
-  if(v&&!v.hidden){v.classList.remove('open');setTimeout(()=>v.hidden=true,220)}else if(asSel>=0){asSel=-1;asApply()}});
+  if(v&&!v.hidden){closeArtViewer(v)}else if(asSel>=0){asSel=-1;asApply()}});
+function closeArtViewer(viewer){viewer.classList.remove('open');asTab();setTimeout(()=>{if(!viewer.classList.contains('open'))viewer.hidden=true},220)}
 new MutationObserver(asTab).observe(app,{attributes:true,attributeFilter:['data-tab']});
 function archive(c){const p=c.profile||{};
   const rows=(p.rows||[]).map(([k,v])=>`<div class="r"><dt>${E(k)}</dt><dd>${E(v)}</dd></div>`).join('');
@@ -406,11 +502,18 @@ function archive(c){const p=c.profile||{};
 
 async function render(c,anim=true){
   cur=c;app.dataset.id=c.id;document.title=`${c.name} · 角色 · 源界 ASTERIAL`;
+  $('#bgimg').src=c.background||await YJ.src(S.background);
+  if(cur!==c)return;
   const i=C.indexOf(c);$('#no').innerHTML=`<span class="bcd"></span>No. ${String(i+1).padStart(3,'0')}${c.code?`<em>${E(c.code)}</em>`:''}`;
   $('#footcode').textContent=`SYN-${String(7400+i*13).padStart(4,'0')}-${String(i+1).padStart(2,'0')}`;
   $('#ghost').textContent=(c.roman||'').split(' ')[0]||'';
-  $('#ident').innerHTML=ident(c);fitName();
+  const quote=c.profile?.quotes?.[0];
+  $('#ident').innerHTML=`<b class="archive-name">${E(c.name)}</b>${quote?`<blockquote class="vq"><i>VOICE</i>「${E(quote)}」</blockquote>`:''}`;
   $('#panes').innerHTML=`<section class="pane" data-p="detail">${detail(c)}</section><section class="pane" data-p="skill">${skill(c)}</section><section class="pane" data-p="module">${module(c)}</section><section class="pane" data-p="spectrum">${spectrum(c)}</section><section class="pane" data-p="ascend">${ascend(c)}</section><section class="pane" data-p="archive">${archive(c)}</section>`;
+  const glassPane=$('.asd[data-fx="glass"]');
+  if(glassPane){
+    Promise.all(Array.from(glassPane.querySelectorAll('.glass-piece img'),image=>image.decode())).catch(()=>{if(glassPane.isConnected){glassPane.dataset.fx='2d';asTab()}});
+  }
   if(as3){as3.destroy();as3=null}asSel=-1;setTab(tab,true);spKick();asTab();
   app.classList.remove('in');void app.offsetWidth;if(anim)app.classList.add('in');else app.classList.add('in','now');
   const p=c.portrait||{};
@@ -430,13 +533,22 @@ async function render(c,anim=true){
 
 function setTab(t,quiet){tab=t;app.dataset.tab=t;
   document.querySelectorAll('#rail button').forEach(b=>{b.setAttribute('aria-selected',b.dataset.t===t);if(b.dataset.t===t&&app.classList.contains('mob')){const r=$('#rail');r.scrollTo({left:b.offsetLeft-r.clientWidth/2+b.offsetWidth/2,behavior:quiet?'auto':'smooth'})}});
-  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.p===t));
+  document.querySelectorAll('.pane').forEach(p=>{const active=p.dataset.p===t;p.classList.toggle('on',active);p.inert=!active});
   if(!quiet){const u=new URL(location);u.searchParams.set('tab',t);history.replaceState(null,'',u)}}
 $('#panes').addEventListener('click',e=>{
+  const prep=e.target.closest('[data-prepare]');
+  if(prep){
+    const id=prep.dataset.prepare;
+    sessionStorage.setItem('yuanjie.nextTechnique',JSON.stringify({id,expires:Date.now()+20000}));
+    prep.textContent=id==='daier'?'候场中 · 点击出战':'战备中 · 点击出战';
+    prep.disabled=true;
+    setTimeout(()=>{prep.disabled=false;prep.textContent='战前秘技'},20000);
+    return;
+  }
   const g=e.target.closest('[data-go]');if(g){setTab(g.dataset.go);return}
   const n=e.target.closest('[data-skn]');if(n){skSel=n.dataset.skn;$('.pane[data-p=skill]').innerHTML=skill(cur);return}
   if(e.target.closest('[data-ultfx]')){const sd=SKD[cur.id];if(sd)ultFx(sd);return}
-  const d=e.target.closest('[data-sk]');if(d){skillSel=+d.dataset.sk;const sl=S.skillSlots[skillSel];if(sl)skSel='skill:'+sl.slot;$('.pane[data-p=skill]').innerHTML=skill(cur);setTab('skill');return}
+  const d=e.target.closest('[data-sk]');if(d){skillSel=+d.dataset.sk;const sl=S.skillSlots[skillSel];if(sl){const slot=({normal:'basic',ult:'ultimate'})[sl.slot]||sl.slot;skSel='skill:'+slot}$('.pane[data-p=skill]').innerHTML=skill(cur);setTab('skill');return}
   const s=e.target.closest('[data-sel]');if(s){skillSel=+s.dataset.sel;$('.pane[data-p=skill]').innerHTML=skill(cur);return}
   const r=e.target.closest('a.rel[data-id]');if(r){e.preventDefault();go(r.dataset.id)}});
 
@@ -457,7 +569,8 @@ async function buildRoster(){
       th.style.backgroundImage=`url("${url}")`;th.style.backgroundSize=`${s*ar*100*(th.offsetHeight/th.offsetWidth||1.25)}% auto`;
       th.style.backgroundPosition=`${f.x*100}% ${Math.max(0,f.y*100-6)}%`;th.classList.add('has')};im.src=url}}
 function rosterMark(){document.querySelectorAll('.roster .tile').forEach(t=>t.classList.toggle('on',cur&&t.dataset.id===cur.id))}
-function openR(){$('#roster').hidden=false;requestAnimationFrame(()=>$('#roster').classList.add('open'))}
+let rosterBuilt=false;
+function openR(){if(!rosterBuilt){rosterBuilt=true;buildRoster().then(rosterMark)}$('#roster').hidden=false;requestAnimationFrame(()=>$('#roster').classList.add('open'))}
 function closeR(){if(!cur)return;$('#roster').classList.remove('open');setTimeout(()=>$('#roster').hidden=true,260)}
 $('#swapbtn').addEventListener('click',openR);$('#rclose').addEventListener('click',closeR);
 addEventListener('keydown',e=>{if(e.key==='Escape')closeR()});
@@ -465,7 +578,6 @@ $('#rbody').addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t
 function go(id){const c=byId(id);if(!c)return;app.classList.remove('pick');$('#rclose').hidden=false;const u=new URL(location);u.searchParams.set('id',c.id);history.pushState(null,'',u);skillSel=0;skSel='skill:skill';spSel=0;spx=null;asSel=-1;render(c)}
 addEventListener('popstate',()=>{const id=new URLSearchParams(location.search).get('id');const c=byId(id);if(c)render(c,false)});
 
-await buildRoster();
 const qs=new URLSearchParams(location.search);const id=qs.get('id');tab=TABS.some(t=>t[0]===qs.get('tab'))?qs.get('tab'):'detail';
 const first=byId(id);
 if(first){if(id&&id!==first.id){const u=new URL(location);u.searchParams.set('id',first.id);history.replaceState(null,'',u)}render(first)}else{app.classList.add('pick');$('#rclose').hidden=true;openR()}

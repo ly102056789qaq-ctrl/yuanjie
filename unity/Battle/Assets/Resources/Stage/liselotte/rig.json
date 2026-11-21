@@ -1,0 +1,123 @@
+{
+  "height": 1518,
+  "parts": [
+    {
+      "key": "hair_back",
+      "group": "head",
+      "deform": "long_hair_back",
+      "px": 6,
+      "py": 1266,
+      "dx": -180,
+      "dy": -82
+    },
+    {
+      "key": "legs",
+      "group": "legs",
+      "deform": "",
+      "px": -4,
+      "py": 828,
+      "dx": -176,
+      "dy": -823
+    },
+    {
+      "key": "skirt",
+      "group": "hip",
+      "deform": "fitted_skirt",
+      "px": -4,
+      "py": 828,
+      "dx": -213,
+      "dy": -201
+    },
+    {
+      "key": "neck",
+      "group": "torso",
+      "deform": "",
+      "px": 1,
+      "py": 1062,
+      "dx": -15,
+      "dy": 151
+    },
+    {
+      "key": "arm_l",
+      "group": "arm_l",
+      "deform": "",
+      "px": 135,
+      "py": 1155,
+      "dx": -42,
+      "dy": -522
+    },
+    {
+      "key": "arm_r",
+      "group": "arm_r",
+      "deform": "",
+      "px": -106,
+      "py": 1155,
+      "dx": -165,
+      "dy": -518,
+      "image": "arm_r_grip",
+      "held": {
+        "image": "signature",
+        "pivotX": 0.7595693779904307,
+        "pivotY": 0.2943676939426142,
+        "offsetX": -18.028,
+        "offsetY": -44.473,
+        "scale": 0.44,
+        "angle": 71
+      }
+    },
+    {
+      "key": "bodice",
+      "group": "chest",
+      "deform": "fitted_bodice",
+      "px": 1,
+      "py": 1062,
+      "dx": -135,
+      "dy": -223
+    },
+    {
+      "key": "locks",
+      "group": "head",
+      "deform": "long_hair_front",
+      "px": 6,
+      "py": 1266,
+      "dx": -164,
+      "dy": -266
+    },
+    {
+      "key": "face",
+      "group": "head",
+      "deform": "",
+      "px": 6,
+      "py": 1266,
+      "dx": -92,
+      "dy": -13
+    },
+    {
+      "key": "earrings",
+      "group": "head",
+      "deform": "",
+      "px": 6,
+      "py": 1266,
+      "dx": -55,
+      "dy": -36
+    },
+    {
+      "key": "bangs",
+      "group": "head",
+      "deform": "",
+      "px": 6,
+      "py": 1266,
+      "dx": -147,
+      "dy": -32
+    },
+    {
+      "key": "crest",
+      "group": "head",
+      "deform": "",
+      "px": 6,
+      "py": 1266,
+      "dx": -177,
+      "dy": 130
+    }
+  ]
+}

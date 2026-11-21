@@ -1,4 +1,4 @@
-import { Application } from '../../sprite/vendor/pixi.min.mjs';
+import { Application } from '../../sprite/vendor/pixi.min.js';
 import { BattleScene } from './scene3d.js';
 import { makeActors } from './actors.js';
 import { BattleHUD } from './hud.js';

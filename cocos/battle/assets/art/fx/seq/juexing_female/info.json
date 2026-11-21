@@ -1,0 +1,15 @@
+{
+ "source": "juexing_female.json",
+ "fps": 30,
+ "frames": 30,
+ "size": [
+  125,
+  156
+ ],
+ "duration": 1,
+ "origin": [
+  46.95865804666666,
+  148.42029877766961
+ ],
+ "scale": 1.0
+}

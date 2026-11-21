@@ -1,0 +1,180 @@
+{
+  "id": "daier",
+  "name": "维什妮娜·黛儿",
+  "energy": {
+    "max": 120,
+    "ultCost": 120
+  },
+  "skills": [
+    {
+      "slot": "basic",
+      "label": "普攻",
+      "name": "足尖试探",
+      "desc": "单体汐流伤害，有80%基础概率施加裂帛。目标已入席时提高至100%。",
+      "icon": "assets/skills/daier/basic.webp",
+      "type": [
+        "汐流",
+        "普攻"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1
+      },
+      "rankOne": {
+        "mult": 0.6
+      }
+    },
+    {
+      "slot": "skill",
+      "label": "战技",
+      "name": "仅供观赏",
+      "desc": "扩散攻击，依次判定入席与裂帛，同一目标每次行动最多积一次错拍。",
+      "icon": "assets/skills/daier/skill.webp",
+      "type": [
+        "汐流",
+        "战技"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1,
+        "adjacent": 0.5
+      },
+      "rankOne": {
+        "mult": 0.6,
+        "adjacent": 0.3
+      }
+    },
+    {
+      "slot": "talent",
+      "label": "天赋",
+      "name": "第三次掌声",
+      "desc": "裂帛在目标行动时造成汐流持续伤害。我方行动对入席目标施加负面状态累计错拍，三次触发返场，立即按115%结算已有持续伤害。",
+      "icon": "assets/skills/daier/talent.webp",
+      "type": [
+        "汐流",
+        "天赋"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "tick": 2.4,
+        "encore": 1.15
+      },
+      "rankOne": {
+        "tick": 1.44
+      }
+    },
+    {
+      "slot": "ultimate",
+      "label": "终结技",
+      "name": "请全场保持安静",
+      "desc": "先群攻并施加入席，再以145%结算全场已有持续伤害。",
+      "icon": "assets/skills/daier/ultimate.webp",
+      "type": [
+        "汐流",
+        "终结技"
+      ],
+      "level": 10,
+      "maxLevel": 10,
+      "params": {
+        "mult": 1.4,
+        "settle": 1.45
+      },
+      "rankOne": {
+        "mult": 0.84
+      }
+    }
+  ],
+  "potential": {
+    "major": [
+      {
+        "id": "A",
+        "name": "空荡的观众席",
+        "desc": "入席延长一个目标回合。",
+        "unlockLevel": 20,
+        "icon": "assets/skills/daier/talent.webp"
+      },
+      {
+        "id": "B",
+        "name": "镜面的另一侧",
+        "desc": "入席目标身上有两种持续伤害时，持续伤害易伤额外提高8%。",
+        "unlockLevel": 40,
+        "icon": "assets/skills/daier/talent.webp"
+      },
+      {
+        "id": "C",
+        "name": "她听见掌声",
+        "desc": "返场恢复5点能量，两次自身行动之间最多恢复10点。",
+        "unlockLevel": 60,
+        "icon": "assets/skills/daier/talent.webp"
+      }
+    ],
+    "minor": [
+      {
+        "id": "m0",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.06,
+        "unlockLevel": 10
+      },
+      {
+        "id": "m1",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 20
+      },
+      {
+        "id": "m2",
+        "stat": "spd",
+        "name": "速度",
+        "value": 1,
+        "unlockLevel": 25
+      },
+      {
+        "id": "m3",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.06,
+        "unlockLevel": 30
+      },
+      {
+        "id": "m4",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 40
+      },
+      {
+        "id": "m5",
+        "stat": "spd",
+        "name": "速度",
+        "value": 2,
+        "unlockLevel": 45
+      },
+      {
+        "id": "m6",
+        "stat": "effectHit",
+        "name": "效果命中",
+        "value": 0.06,
+        "unlockLevel": 50
+      },
+      {
+        "id": "m7",
+        "stat": "atkPct",
+        "name": "攻击力",
+        "value": 0.06,
+        "unlockLevel": 60
+      },
+      {
+        "id": "m8",
+        "stat": "spd",
+        "name": "速度",
+        "value": 2,
+        "unlockLevel": 70
+      }
+    ]
+  }
+}

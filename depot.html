@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>物资仓库 · 源界 ASTERIAL</title>
+<link rel="stylesheet" href="lobby/depot.css?v=showroom-light-1">
+<script type="module" src="lobby/depot.js?v=showroom-1"></script>
+</head>
+<body>
+<main class="depot" id="depot">
+  <header class="mast">
+    <div class="identity"><a class="back" href="index.html" aria-label="返回大厅">‹</a><div><small>ASTERIAL · DEPOT</small><h1>物资仓库</h1></div></div>
+    <nav id="categories" aria-label="道具分类"></nav>
+    <div class="balance"><img src="assets/depot/journal.webp" alt=""><div><small>培养素材</small><strong id="balance">—</strong></div></div>
+  </header>
+
+  <section class="stage" id="stage" aria-label="道具陈列台">
+    <div class="landscape" aria-hidden="true"></div>
+    <div class="artifact" aria-hidden="true"><div class="plinth"></div><div class="display-art" id="art"></div></div>
+    <article id="detail" aria-label="当前道具" aria-live="polite"></article>
+    <div class="stepper"><button id="prev" aria-label="上一件物品">‹</button><span id="position"></span><button id="next" aria-label="下一件物品">›</button></div>
+  </section>
+
+  <section class="stock" aria-labelledby="category-name">
+    <header class="tools">
+      <div><h2 id="category-name">全部物品</h2><span id="count"></span></div>
+      <div class="commands">
+        <select id="sort" aria-label="物品排序"><option value="category">默认排序</option><option value="rarity">品质优先</option><option value="count">数量优先</option><option value="name">按名称</option></select>
+        <button id="drawer" aria-expanded="false" aria-controls="grid">展开库存</button>
+      </div>
+    </header>
+    <div id="grid" aria-label="库存物品"></div>
+  </section>
+</main>
+<dialog id="specs" aria-labelledby="spec-name">
+  <header><small>物品详情</small><button id="close-specs" aria-label="关闭物品详情">×</button></header>
+  <h2 id="spec-name"></h2><dl class="facts" id="all-facts"></dl>
+</dialog>
+</body>
+</html>

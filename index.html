@@ -1,259 +1,167 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>源界 ASTERIAL</title>
-<meta name="description" content="源界 ASTERIAL：红潮之下的原创科幻世界观。">
-<link rel="preload" href="fonts/yj-sans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="site.css">
-<link rel="stylesheet" href="polish.css">
-<link rel="stylesheet" href="pages.css">
-<script>document.documentElement.classList.add("js")</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eaf3ff"><title>源界 ASTERIAL · 主页</title>
+<link rel="preload" href="assets/art/siwei-stand.webp" as="image"><link rel="stylesheet" href="lobby/lobby.css?v=wallet-glow">
+<link rel="stylesheet" href="charui/rarity.css">
+<link rel="stylesheet" href="lobby/attendance.css?v=receipt">
+<link rel="stylesheet" href="lobby/reward-success.css">
+<script type="module" src="lobby/lobby.js?v=debut-search"></script>
 </head>
 <body>
-<header class="bar">
-  <a class="logo" href="index.html" aria-label="源界 首页"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M9 2h12L13 16H1z" fill="#1734FF"/><path d="M17 14h12L21 28H9z" fill="#0A0E1F"/><path d="M23 2h4l-3 5h-4z" fill="#FF2B2B"/></svg>源界<small>ASTERIAL</small></a>
-  <nav id="gnav" aria-label="站点导航"><a href="world.html">世界<small>WORLD</small></a><a href="history.html">历史<small>HISTORY</small></a><a href="regions.html">地域<small>REGIONS</small></a><a href="orgs.html">组织<small>FACTIONS</small></a><a href="people.html">人物<small>CHARACTERS</small></a><a href="stories.html">故事<small>STORIES</small></a><a href="rules.html">职业 · 元素<small>CLASS / ELEMENT</small></a></nav>
-  <button class="mbtn" type="button" aria-controls="gnav" aria-expanded="false" aria-label="打开导航"><i></i><i></i><i></i></button>
-</header>
-
-<!-- S1 TITLE -->
-<section class="scr grain" id="title" aria-label="源界">
-  <div class="plate"><img src="assets/cg/hero.webp" alt="悬崖上的白色城市与流过海面的红潮"></div>
-  <svg class="lines" viewBox="0 0 1920 1016" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#1734FF" stroke-width="1.2"><path d="M0 330H90M60 330l60-150h340M760 60h170" opacity=".7"/><path d="M0 930h420l60-100" opacity=".7"/><circle cx="905" cy="140" r="12"/><path d="M905 118v44M883 140h44"/><path d="M760 980l120-260h140" opacity=".6"/><circle cx="1010" cy="560" r="230" stroke-dasharray="4 7" opacity=".55"/></g><g fill="#1734FF"><rect x="118" y="176" width="8" height="8"/><rect x="1020" y="716" width="10" height="10"/><rect x="474" y="826" width="6" height="6" fill="#FF2B2B"/></g></svg>
-  <div class="plane"></div><div class="plane2"></div>
-  <div class="stripe" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="dots" aria-hidden="true"></div>
-  <span class="cross" style="left:4.2%;top:calc(64px + 4%)"></span>
-  <span class="cross" style="left:29%;bottom:6%"></span>
-  <span class="px" style="left:30.4%;top:32%;width:14px;height:14px"></span>
-  <span class="px" style="left:31.6%;top:34.2%;width:8px;height:8px;background:var(--red)"></span>
-  <div class="hud" aria-hidden="true">
-    <svg class="ring" viewBox="0 0 74 74"><circle cx="37" cy="37" r="33" fill="none" stroke="#0A0E1F" stroke-width="1.2"/><path d="M37 4a33 33 0 0 1 33 33H37z" fill="#1734FF"/><circle cx="37" cy="37" r="22" fill="none" stroke="#0A0E1F" stroke-width="1" stroke-dasharray="3 4"/></svg>
-    <div class="mono" style="line-height:1.8;font-weight:700">艾索拉<br>AISORA</div>
-  </div>
-  <div class="copy">
-    <p class="kicker" data-rv="wipe">原创科幻世界观</p>
-    <h1 aria-label="源界"><span class="a" data-rv="drop">源</span><span class="b" data-rv="drop" style="--d:.12s">界</span></h1>
-    <span class="en" data-rv="wipe" style="--d:.3s">ASTERIAL</span>
-    <div class="lead" data-rv="up" style="--d:.4s">
-      <h2>在此，认识源界。</h2>
-      <p>红潮之下，意识与现实的边界逐渐模糊。文明仍在延续，人们仍在追寻。科学、信仰与各自的选择，共同写下这个世界的故事。</p>
-    </div>
-  </div>
-  <nav class="menu" aria-label="进入">
-    <a class="btn cob" data-rv="cut" style="--d:.5s" href="#tide">进入源界 <svg class="arr" viewBox="0 0 26 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="#fff" stroke-width="2.4"/></svg></a>
-    <a class="tile" data-rv="cut" style="--d:.58s" href="regions.html"><small>REGIONS</small>地域</a>
-    <a class="tile" data-rv="cut" style="--d:.64s" href="people.html"><small>CHARACTERS</small>人物</a>
-    <a class="tile" data-rv="cut" style="--d:.7s" href="rules.html"><small>CLASS·ELEMENT</small>职业元素</a>
-  </nav>
-  <div class="meta" data-rv="up" style="--d:.6s"><b>源·界</b><span class="mono">WORLD · PEOPLE · RUINS · TOMORROW</span></div>
-</section>
-
-<!-- S2 RED TIDE -->
-<section class="scr" id="tide" aria-labelledby="tide-h">
-  <div class="art" data-rv="wipeL"><img src="assets/cg/redtide.webp" alt="" loading="lazy"></div>
-  <div class="redcut" aria-hidden="true"></div>
-  <div class="big" aria-hidden="true">RED TIDE</div>
-  <div class="eq">
-    <div class="rail" data-rv="wipe"><span class="mono" style="color:var(--red)">核心构想</span><i class="ticks"></i></div>
-    <h2 id="tide-h" class="visually"><span class="l1" data-rv="drop"><em>红潮</em>信息</span></h2>
-    <div class="op" data-rv="drop" style="--d:.15s"><svg viewBox="0 0 120 120" aria-label="加"><path d="M48 6h24v42h42v24H72v42H48V72H6V48h42z" fill="#FF2B2B" transform="skewX(-12) translate(12 0)"/></svg><span class="l2">源质</span></div>
-    <div class="op" data-rv="drop" style="--d:.3s"><svg viewBox="0 0 120 120" aria-label="等于"><path d="M10 30h104v22H10zM10 68h104v22H10z" fill="#0A0E1F" transform="skewX(-12) translate(12 0)"/></svg>
-      <span class="res"><span>灾难</span></span></div>
-  </div>
-  <aside class="side" data-rv="cut" style="--d:.45s">
-    <h4>红潮 <span class="mono" style="color:var(--red)">已确认</span></h4>
-    <ul>
-      <li>能够在现实中引发灾难；不是温和的资源。</li>
-      <li>源质是承载并使相关信息作用于现实的重要介质。</li>
-      <li>感染、异化与怪物，是已经存在的灾变后果。</li>
-      <li>它也不能凭空创造一切。</li>
-    </ul>
+<main class="hall">
+  <div class="sky" aria-hidden="true"></div><div class="orbit" aria-hidden="true"></div>
+  <header class="top">
+    <button class="profile" data-open="profile"><img id="avatar" src="assets/battle/siwei-face.webp" alt=""><span><b id="nickname">旅人</b><small id="uid">本地档案</small></span><span class="level">Lv.<strong id="level">1</strong><i id="expbar"></i></span></button>
+    <div class="resources" aria-label="货币与检索凭证"></div>
+    <nav class="utility" aria-label="邮件与设置"><button data-open="mail" aria-label="邮件"><i data-icon="mail"></i></button><button data-open="settings" aria-label="设置"><i data-icon="settings"></i></button></nav>
+  </header>
+  <div class="left-tools">
+    <aside class="promo"><button class="promolink" id="promo-open"><small class="promo-kind"><svg class="tide-mark" aria-hidden="true"><use href="assets/lobby/field-marks.svg?v=insignias#tide"></use></svg><span id="promo-kind">试用行动</span></small><strong id="promo-name">冰火同行</strong></button><div class="slides"><button aria-label="上一张推荐" id="previous">‹</button><span id="slide-number">01/03</span><button aria-label="下一张推荐" id="next">›</button></div></aside>
+    <aside class="logbook" aria-label="行动日志">
+    <button class="log-head" data-open="plan"><span>行动日志</span><small>QUEST LOG</small><i data-icon="plan"></i></button>
+    <button class="log-item" data-open="sign"><span>今日签到</span><b id="check-state">待记录</b></button>
+    <button class="log-item" data-open="story-list"><span>故事阅览</span><b id="log-reads">0 / 10</b></button>
   </aside>
-  <div class="note" data-rv="up" style="--d:.55s">
-    <p>整理时区分<b>信息层面的红潮</b>与<b>灾变表现</b>。吞噬物质、孕育生命、保存意识等具体机制，仍需逐项核对。</p>
-    <div class="row"><span class="mono">它不是</span><span class="chip no">普通物质</span><span class="chip no">病毒</span><span class="chip no">能量</span><span class="chip no">频率</span></div>
-    <div class="row"><span class="mono">终极起源</span><span class="lock r">未知 · UNKNOWN</span><a class="more" href="world.html">世界规则 →</a></div>
+    <svg class="mark-material" aria-hidden="true" width="0" height="0">
+      <defs>
+        <linearGradient id="jade-face" x1="18%" y1="0%" x2="72%" y2="100%">
+          <stop stop-color="white" stop-opacity=".98"/>
+          <stop offset=".27" stop-color="white" stop-opacity=".94"/>
+          <stop offset=".50" stop-color="white" stop-opacity=".64"/>
+          <stop offset=".75" stop-color="#f7f7f7" stop-opacity=".74"/>
+          <stop offset="1" stop-color="white" stop-opacity=".96"/>
+        </linearGradient>
+        <linearGradient id="dock-enamel" x2=".22" y2="1">
+          <stop stop-color="white"/><stop offset=".48" stop-color="white" stop-opacity=".96"/>
+          <stop offset=".77" stop-color="#f8faff" stop-opacity=".84"/><stop offset="1" stop-color="white"/>
+        </linearGradient>
+        <filter id="jade-relief" filterUnits="userSpaceOnUse" x="-10" y="-10" width="84" height="86" color-interpolation-filters="sRGB">
+          <feComponentTransfer in="SourceAlpha" result="silhouette"><feFuncA type="linear" slope="1.58"/></feComponentTransfer>
+          <feGaussianBlur in="silhouette" stdDeviation="1.55" result="polishedEdge"/>
+          <feSpecularLighting in="polishedEdge" surfaceScale="4" specularConstant=".95" specularExponent="18" lighting-color="white" result="reflection">
+            <feDistantLight azimuth="222" elevation="50"/>
+          </feSpecularLighting>
+          <feMorphology in="silhouette" operator="erode" radius="1.6" result="interior"/>
+          <feComposite in="silhouette" in2="interior" operator="out" result="bevel"/>
+          <feComposite in="reflection" in2="bevel" operator="in" result="glint"/>
+          <feMorphology in="silhouette" operator="dilate" radius=".7" result="rim"/>
+          <feOffset in="rim" dx=".35" dy="2.5" result="extrusion"/>
+          <feDropShadow in="extrusion" dx=".3" dy="1.2" stdDeviation="1.1" flood-color="#242424" flood-opacity=".65" result="cast"/>
+          <feComposite in="cast" in2="silhouette" operator="out" result="outerShadow"/>
+          <feFlood flood-color="#a5a5a5"/><feComposite in2="extrusion" operator="in" result="silverEdge"/>
+          <feComposite in="silverEdge" in2="silhouette" operator="out" result="side"/>
+          <feMerge><feMergeNode in="outerShadow"/><feMergeNode in="side"/><feMergeNode in="SourceGraphic"/><feMergeNode in="glint"/></feMerge>
+        </filter>
+        <symbol id="quick-news" viewBox="0 0 256 256"><path d="M228.54,86.66l-176.06-54A16,16,0,0,0,32,48V192a16,16,0,0,0,16,16,16,16,0,0,0,4.52-.65L136,181.73V192a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16v-29.9l28.54-8.75A16.09,16.09,0,0,0,240,138V102A16.09,16.09,0,0,0,228.54,86.66ZM184,192H152V176.82L184,167Zm40-54-.11,0L152,160.08V79.91L223.89,102l.11,0v36Z"/></symbol>
+        <symbol id="quick-friends" viewBox="0 0 256 256"><path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"/></symbol>
+        <mask id="cut-news" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><use href="#quick-news" width="64" height="64" fill="white" color="white"/></mask>
+        <mask id="cut-friends" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><use href="#quick-friends" width="64" height="64" fill="white" color="white"/></mask>
+        <mask id="cut-plan" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><use href="assets/lobby/field-marks.svg?v=insignias#plan" width="64" height="64" fill="white" color="white"/></mask>
+        <mask id="cut-events" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><use href="assets/lobby/field-marks.svg?v=insignias#events" width="64" height="64" fill="white" color="white"/></mask>
+        <mask id="cut-supplies" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><use href="assets/lobby/field-marks.svg?v=insignias#supplies" width="64" height="64" fill="white" color="white"/></mask>
+      </defs>
+    </svg>
+    <nav class="quick-actions" aria-label="快捷导航">
+      <button data-open="news"><svg viewBox="0 0 64 64" aria-hidden="true"><g filter="url(#jade-relief)"><rect width="64" height="64" fill="url(#jade-face)" mask="url(#cut-news)"/></g></svg><b>公告</b></button>
+      <button data-open="friends"><svg viewBox="0 0 64 64" aria-hidden="true"><g filter="url(#jade-relief)"><rect width="64" height="64" fill="url(#jade-face)" mask="url(#cut-friends)"/></g></svg><b>好友</b></button>
+      <button data-open="plan"><svg viewBox="0 0 64 64" aria-hidden="true"><g filter="url(#jade-relief)"><rect width="64" height="64" fill="url(#jade-face)" mask="url(#cut-plan)"/></g></svg><b>计划</b></button>
+      <button data-open="events"><svg viewBox="0 0 64 64" aria-hidden="true"><g filter="url(#jade-relief)"><rect width="64" height="64" fill="url(#jade-face)" mask="url(#cut-events)"/></g></svg><b>活动</b></button>
+      <button data-open="supplies"><svg viewBox="0 0 64 64" aria-hidden="true"><g filter="url(#jade-relief)"><rect width="64" height="64" fill="url(#jade-face)" mask="url(#cut-supplies)"/></g></svg><b>补给</b></button>
+    </nav>
   </div>
-</section>
-
-<!-- S3 HISTORY -->
-<section class="scr grain" id="era" aria-labelledby="era-h">
-  <div class="era-bg" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="era-head">
-    <div class="rail" data-rv="wipe"><span class="mono">确认顺序</span><i class="ticks"></i></div>
-    <h2 id="era-h" class="hd" data-rv="up">文明的走向</h2>
-    <p data-rv="up" style="--d:.1s">只写已经确认的先后。<br>中间的因果，留给故事去回答。</p>
-  </div>
-  <div class="chap">
-    <a href="history.html#e1" class="ep" data-rv="cut" style="--d:.05s">
-      <img src="assets/cg/precivil.webp" alt="" loading="lazy"><i class="tint"></i>
-      <h3>前文明</h3>
-      <div class="txt"><p>先进科技与大型工程。白昼之冠属于这一历史框架。</p><span class="lock">白昼之冠机制 · 未定</span></div>
-    <span class="go2">进入章节 →</span></a>
-    <a href="history.html#e2" class="ep red" data-rv="cut" style="--d:.15s">
-      <img src="assets/cg/redtide.webp" alt="" loading="lazy"><i class="tint"></i>
-      <h3>第一次红潮</h3>
-      <div class="txt"><p>重大文明灾难，先于异能时代。白昼之冠失败、核危机与文明衰退相连。</p><span class="lock">具体因果 · 待对齐</span></div>
-    <span class="go2">进入章节 →</span></a>
-    <a href="history.html#e3" class="ep" data-rv="cut" style="--d:.25s">
-      <img src="assets/cg/charon4.webp" alt="" loading="lazy"><i class="tint"></i>
-      <h3>灾后延续</h3>
-      <div class="txt"><p>卡戎四保存部分科技与科研体系；九华文明没有断代。</p></div>
-    <span class="go2">进入章节 →</span></a>
-    <a href="history.html#e4" class="ep now" data-rv="cut" style="--d:.35s">
-      <img src="assets/cg/xinbilun.webp" alt="" loading="lazy"><i class="tint"></i>
-      <h3>现文明</h3>
-      <div class="txt"><p>各地发展出政治、商业、科研与生活秩序，人物故事在此展开。主舞台：艾索拉。</p></div>
-      <span class="here">NOW</span>
-    <span class="go2">进入章节 →</span></a>
-  </div>
-  <div class="era-line" aria-hidden="true"><i></i><b></b><b></b><b></b></div>
-</section>
-
-<!-- S4 REGIONS -->
-<section class="scr grain" id="regions" aria-labelledby="reg-h">
-  <div class="list">
-    <div class="rail" data-rv="wipe"><span class="mono">选择地域</span><i class="ticks"></i></div>
-    <h2 id="reg-h" class="hd" data-rv="up">地域</h2>
-    <ul id="reglist"></ul>
-  </div>
-  <div class="stage">
-    <div class="shadowblk" aria-hidden="true"></div>
-    <div class="pl" id="regpl"><img id="regimg" src="assets/cg/xinbilun.webp" alt=""></div>
-    <div class="name cnm" id="regen" aria-hidden="true"><span>新比伦</span></div>
-    <div class="info">
-      <div class="cn" id="regcn">新比伦</div>
-      <dl id="regdl"></dl>
-      <div class="cnt" id="regcnt"><b>01</b>/09</div>
-      <a class="btn cob regin" id="regin" href="region-xinbilun.html">进入 <svg class="arr" viewBox="0 0 26 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></a>
+  <div class="hero"><div class="figure"><img id="standing" src="assets/art/siwei-stand.webp" alt="思惟诺姆"><img id="eyes" src="assets/art/siwei-stand-blink.webp" alt=""><img class="orb" src="assets/art/siwei-orb.webp" alt=""></div></div>
+  <section class="commands" aria-label="主要玩法">
+    <button class="key expedition" data-open="expedition">
+      <span class="faceplate">
+        <span class="chapter-art" aria-hidden="true"></span>
+        <span class="type"><strong>探索行动</strong><small>EXPEDITION</small><span class="mission" id="mission">故事线 · 循环与终结</span></span>
+        <span class="reading"><b id="read-count">00</b><small>/ <span id="story-count">10</span></small><span>已阅故事</span></span>
+        <span class="launch-arrow" aria-hidden="true"><i data-icon="arrow"></i></span>
+      </span>
+    </button>
+    <div class="pair first">
+      <button class="key companions" data-open="companions"><span class="faceplate"><img class="seal" src="assets/lobby/survey-marks/companions.png?v=ice-print" alt=""><span class="type"><strong>同行者</strong><small>COMPANIONS</small><span class="detail">角色养成</span></span></span></button>
+      <button class="key formation" data-open="formation"><span class="faceplate"><img class="seal" src="assets/lobby/survey-marks/formation.png?v=ice-print" alt=""><span class="type"><strong>编队</strong><small>FORMATION</small><span class="detail" id="team-count">出战成员　4 / 4</span></span></span></button>
     </div>
-  </div>
-</section>
-
-<!-- S5 PEOPLE -->
-<section class="scr" id="people" aria-labelledby="ppl-h">
-  <div class="ppl-bg" aria-hidden="true"></div>
-  <div class="ppl-plate" aria-hidden="true" data-rv="wipeL"><img src="assets/cg/stairs.webp" alt=""><b>33</b><span>收录人物</span></div>
-  <div class="ppl-head">
-    <div class="rail" data-rv="wipe"><span class="mono">人物</span><i class="ticks"></i></div>
-    <h2 id="ppl-h" class="hd" data-rv="up">人物</h2>
-    <p data-rv="up" style="--d:.1s">人物故事是源界的中心。<br>按故事线分组建档，点名字进入档案。<a class="more" href="people.html">进入人物名册 →</a></p>
-  </div>
-  <div class="board" data-rv="up" style="--d:.2s">
-    <div class="bh"><b>名册</b><a class="more" href="people.html">全部人物 →</a><i class="ticks"></i></div>
-    <div class="cols">
-      <div class="col"><h4>法涅斯与克拉拉</h4><ul><li><a href="char-fanes.html"><b>法涅斯·阿玻吕恩</b><small>终焉教会主教</small></a></li><li><a href="char-clara.html"><b>克拉拉</b><small>旧称弗洛洛</small></a></li><li><a href="char-lancelot.html"><b>兰斯特洛</b><small>红潮之眼</small></a></li><li><a href="char-chang.html"><b>常北思</b><small>文明种子库馆长</small></a></li></ul></div>
-      <div class="col"><h4>德兰塔人物</h4><ul><li><a href="char-hedwig.html"><b>海德薇·哈特曼</b><small>德兰塔元首</small></a></li><li><a href="char-landa.html"><b>菲利克斯·兰达</b><small>国家保安总局局长</small></a></li><li><a href="char-liselotte.html"><b>莉泽洛特·法尔肯</b><small>总参谋长</small></a></li><li><a href="char-snow.html"><b>德兰缇斯·斯诺</b><small>从德兰塔逃到新比伦</small></a></li></ul></div>
-      <div class="col"><h4>家庭与生活支线</h4><ul><li><a href="char-jade.html"><b>陈小钰</b><small>Jade Chan · 檀陵埠</small></a></li><li><a href="char-lin.html"><b>林启明</b><small>考古学专家</small></a></li><li><a href="char-loan.html"><b>天钴洛安·笛卡儿</b><small>天钴安的发明者</small></a></li><li><a href="char-poisson.html"><b>珀松·笛卡尔</b><small>洛安的哥哥与老师</small></a></li><li><a href="char-love.html"><b>洛芙·托马斯</b><small>探索者协会</small></a></li><li><a href="tangli.html"><b>棠梨·听雨</b><small>探索者协会 · 卡戎四</small></a></li><li><a href="char-rin.html"><b>若叶凛</b><small>绯津 · 花店「望月」</small></a></li></ul></div>
-      <div class="col"><h4>企业与纸飞机组</h4><ul><li><a href="char-ilen.html"><b>伊伦·布林克</b><small>Terranova</small></a></li><li><a href="char-vera.html"><b>薇拉·洛朗</b><small>Terranova 设计</small></a></li><li><a href="char-mikage.html"><b>御影静流</b><small>绯津</small></a></li></ul></div>
-      <div class="col"><h4>小Y · 思惟诺姆与AI线</h4><ul><li><a href="char-dario.html"><b>达里奥·维塔莱</b><small>Aletheia 创始人</small></a></li><li><a href="char-siwei.html"><b>思惟诺姆</b><small>红潮共鸣者 · 权能「幻海」</small></a></li><li><a href="decoco.html"><b>德可可</b><small>通用具身人工智能</small></a></li><li><a href="char-y.html"><b>小Y</b><small>终章《再见了，所有的人类与美梦们》</small></a></li></ul></div>
+    <div class="pair second">
+      <button class="key search" data-open="search"><span class="faceplate"><svg class="seal receiver" viewBox="0 0 512 512" aria-hidden="true">
+          <defs><clipPath id="dish-frame"><path d="M0 0H352V128H512V512H0Z"/></clipPath></defs>
+          <image href="assets/lobby/survey-marks/global-search.png?v=ice-print" width="512" height="512" clip-path="url(#dish-frame)"/>
+          <path class="signal-mark" d="M500 28 494 35 491 35 484 27 472 27 414 111 444 111Z"/>
+          <path class="signal-mark signal-near" d="M454 27 424 27 367 111 396 111Z"/>
+          <g class="receiver-lock" transform="rotate(-12 314 126)">
+            <rect x="303" y="115" width="22" height="22" fill="#ffbf81"/>
+            <rect x="272" y="84" width="84" height="84" rx="5" fill="none" stroke="#ffcd95" stroke-width="6" stroke-dasharray="21 63" pathLength="336"/>
+          </g>
+        </svg><span class="type"><strong>全域检索</strong><small>GLOBAL SEARCH</small></span></span></button>
+      <button class="key anomaly" data-open="special">
+        <span class="faceplate">
+          <span class="type"><strong>特殊行动</strong><small>SPECIAL OPERATION</small><span class="anomaly-caption">红潮干涉</span></span>
+        </span>
+        <svg class="tide-art" viewBox="0 0 210 112" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="surge-ink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="20" y2="116">
+              <stop stop-color="#ff6655"/><stop offset=".32" stop-color="#e63942"/><stop offset=".73" stop-color="#b82b4a"/><stop offset="1" stop-color="#661f43"/>
+            </linearGradient>
+            <linearGradient id="surge-left"><stop stop-color="white" stop-opacity="0"/><stop offset=".24" stop-color="white" stop-opacity=".76"/><stop offset=".47" stop-color="white"/></linearGradient>
+            <mask id="surge-blend" maskUnits="userSpaceOnUse" x="-9" y="-13" width="222" height="125">
+              <rect x="-9" y="-13" width="222" height="125" fill="url(#surge-left)"/>
+            </mask>
+            <clipPath id="surge-water">
+              <path id="surge-profile" d="M-8 102 C18 94 45 102 69 88 C91 76 99 60 112 44 C130 24 151 16 170 23 C185 28 192 40 191 49 C182 38 173 37 165 45 C151 58 158 76 174 81 C187 85 200 80 210 74 L210 116 L-8 116 Z"/>
+            </clipPath>
+            <clipPath id="surge-window"><rect x="-8" y="-9" width="218" height="121"/></clipPath>
+          </defs>
+          <g clip-path="url(#surge-window)" mask="url(#surge-blend)">
+            <path class="swell" d="M-12 107 Q38 104 65 86 T104 71 Q116 72 124 85 Q142 104 169 86 Q197 66 217 73 V117 H-12Z" fill="#b34a63" opacity=".48"/>
+            <image class="buoy-roll" href="assets/lobby/tide-buoy.webp" x="66" y="18" width="56" height="83"/>
+            <g clip-path="url(#surge-water)">
+              <rect x="-8" y="-9" width="218" height="126" fill="url(#surge-ink)"/>
+              <path class="crest-light" fill="#ffaba1" d="M79 88 C103 73 107 47 135 32 C154 22 173 22 184 34 C173 26 155 27 139 37 C110 53 102 78 79 88Z"/>
+              <g class="breaking-foam" fill="#fff0e0">
+                <path d="M-26 4 Q-13-5 -1-4 Q8-4 16 3 Q10 0 6 1 L9 4 Q2 0 -3 0 L0 2 Q-9 0 -15 3 L-13 1Z"/>
+                <path d="M-29 5 Q-33 6 -37 10 Q-32 8 -29 7Z M13 7 Q17 8 18 12 Q16 10 14 10Z"/>
+              </g>
+              <g class="undertow">
+                <path d="M-8 102 C60 101 91 77 111 62 C91 99 51 102 15 106Z M78 115 C119 104 125 78 131 47 C131 83 127 104 109 115Z M139 115 C156 94 165 91 202 85 C178 96 163 103 157 115Z" fill="#772441" opacity=".78"/>
+                <path d="M-6 104 Q66 103 99 79 Q64 109 -6 108Z M109 116 Q145 91 145 60 Q150 93 121 116Z M156 109 Q179 94 205 91 Q175 100 165 111Z" fill="#ff8576" opacity=".8"/>
+              </g>
+              <g fill="none" class="current-lines" stroke="#fff0dd" stroke-linecap="round">
+                <path stroke-width="1.75" stroke-dasharray="20 9 5 120" d="M13 101 Q89 99 123 44 T174 11"/>
+                <path stroke-width="1.15" stroke-dasharray="13 10 3 90" d="M83 114 Q124 96 134 55"/>
+              </g>
+            </g>
+          </g>
+          <g class="foam-fragments" fill="#e54848">
+            <path class="spindrift drop-long" d="M-5 1Q-1-3 5-2Q3 1-5 1Z"/>
+            <path class="spindrift drop-high" d="M-2 2Q-2-1 2-3Q3 0-2 2Z"/>
+            <path class="spindrift drop-low" d="M-3 1Q-1-2 3-1Q2 1-3 1Z"/>
+          </g>
+          <path class="return-ripple" d="M8 102 Q34 97 51 99 T83 96 M35 106 Q55 103 65 104" fill="none" stroke="#b23c55" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-  </div>
-</section>
-
-<!-- S6 RULES -->
-<section class="scr grain" id="rules" aria-labelledby="rules-h">
-  <div class="rl-bg" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
-  <div class="rl-head">
-    <div class="rail" data-rv="wipe"><span class="mono">职业 · 元素</span><i class="ticks"></i></div>
-    <h2 id="rules-h" class="hd" data-rv="up">六职业<em>／</em>十元素</h2>
-    <p data-rv="up" style="--d:.1s">角色以「职业 ／ 元素」标注。<a class="more" href="rules.html">规则详情 →</a></p>
-  </div>
-  <div class="cls6">
-    <div class="c6" data-rv="cut" style="--d:.00s"><img src="assets/icons/class-qianggong.webp" alt=""><b>强攻</b></div>
-    <div class="c6" data-rv="cut" style="--d:.05s"><img src="assets/icons/class-pozhen.webp" alt=""><b>破阵</b></div>
-    <div class="c6" data-rv="cut" style="--d:.10s"><img src="assets/icons/class-shibian.webp" alt=""><b>蚀变</b></div>
-    <div class="c6" data-rv="cut" style="--d:.15s"><img src="assets/icons/class-ganshe.webp" alt=""><b>干涉</b></div>
-    <div class="c6" data-rv="cut" style="--d:.20s"><img src="assets/icons/class-zhiyuan.webp" alt=""><b>支援</b></div>
-    <div class="c6" data-rv="cut" style="--d:.25s"><img src="assets/icons/class-shouhu.webp" alt=""><b>守护</b></div>
-  </div>
-  <div class="dialw">
-    <div class="dial" id="dial" data-rv="up" style="--d:.15s">
-      <svg class="ring" viewBox="0 0 600 600" aria-hidden="true">
-        <circle cx="300" cy="300" r="292" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-        <circle cx="300" cy="300" r="250" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-dasharray="2 6"/>
-        <circle cx="300" cy="300" r="150" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
-        <g id="tk"></g>
-      </svg>
-      <div class="ptr" id="ptr"><i></i></div>
-      <div class="core"><img id="coreimg" src="assets/icons/el-xiliu.webp" alt=""></div>
-      <div id="els"></div>
-    </div>
-    <div class="read2" id="read2" aria-live="polite" data-rv="cut" style="--d:.25s">
-      <div class="rtop"><span class="mono">元素</span><span class="mono" id="elidx">06 ／ 10</span></div>
-      <b id="elcn">汐流</b>
-      <span class="py" id="elen">XILIU</span>
-      <div class="kw" id="elkw"></div>
-      <div class="elwho" id="elwho" hidden></div>
-    </div>
-  </div>
-</section>
-
-<!-- S7 END -->
-<footer class="scr" id="end">
-  <div class="end-plate" aria-hidden="true"><img src="assets/cg/hero.webp" alt="" loading="lazy"></div>
-  <div class="end-top">
-    <p class="q" data-rv="up">“世界终会为你的勇敢让步。”<small>探索者协会口号</small></p>
-    <nav class="endnav" aria-label="页面导航" data-rv="up" style="--d:.1s"><a href="world.html"><b>世界</b><i></i></a><a href="history.html"><b>历史</b><i></i></a><a href="regions.html"><b>地域</b><i></i></a><a href="orgs.html"><b>组织</b><i></i></a><a href="people.html"><b>人物</b><i></i></a><a href="stories.html"><b>故事</b><i></i></a><a href="rules.html"><b>职业 · 元素</b><i></i></a></nav>
-  </div>
-  <div class="mark" aria-hidden="true" data-rv="wipe">ASTERIAL</div>
-  <div class="fine"><span>源界 ASTERIAL · 原创世界观 · 试做版</span><span>依据《源界设定整理初稿》2026-11-08</span><a href="#title">回到顶部 ↑</a></div>
-</footer>
-
-<script>
-/* reveal */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.18});
-document.querySelectorAll('.scr').forEach(s=>io.observe(s));
-/* regions */
-const R=[
- ['xinbilun','新比伦','',[['原型','美国原型方向'],['已知','世界最大的城市，很少遭遇红潮灾难。'],['故事','伊伦发展、斯诺逃亡生活及小Y支线的重要地点。']],'少受红潮的原因 · 未定'],
- ['deranta','德兰塔','',[['执政','布雷希特与海德薇执政的国家。'],['已知','军政、国家安全体系与斯诺身世线集中于此。']]],
- ['charon4','卡戎四','',[['已知','由航天中转站演化的永久悬浮城。'],['关联','奥勒斯科研体系、探索者协会与科技火种保存。']],'创始医学会细节 · 待核对'],
- ['jiuhua','九华','',[['已知','延续的文明体系，文明没有断代。'],['后代','衡川与霁原均属其后代。']],'首都名称 · 待核对'],
- ['hengchuan','衡川','',[['已知','行政区域及其同名中心城区；包含辖下地方，不作国家处理。'],['职位','最高行政长官「司政」（暂定）。']]],
- ['tanlingbu','檀陵埠','',[['原型','香港原型方向；简称檀埠，位于衡川东南沿海。'],['已知','檀香区参考中环，最高职位称「行政总长」。']]],
- ['feijin','绯津','',[['原型','日本原型'],['已知','突出影像和娱乐文化输出，具有赛博朋克气质。']]],
- ['zanniya','赞尼亚','',[['原型','南非原型方向'],['已知','伊伦的故乡。']]],
- ['kaerjinuo','卡尔季诺','',[['原型','俄罗斯原型方向'],['已知','米洛夫斯克是洛安的成长地。']]]
-];
-const ul=document.getElementById('reglist'),pl=document.getElementById('regpl'),rn=document.getElementById('regen');
-R.forEach((r,i)=>{const li=document.createElement('li');li.setAttribute('data-rv','cut');li.style.setProperty('--d',(i*.04)+'s');
- li.innerHTML=`<button type="button" aria-pressed="false"><span class="ix"></span>${r[1]}<small>${r[2]}</small></button>`;ul.appendChild(li);
- const b=li.firstChild;b.addEventListener('click',()=>{if(cur===i)location.href=`region-${r[0]}.html`;else setR(i)});b.addEventListener('mouseenter',()=>{if(matchMedia('(hover:hover)').matches)setR(i)})});
-let cur=-1;
-function setR(i){if(i===cur)return;cur=i;const r=R[i];
- ul.querySelectorAll('button').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',j===i)});
- pl.classList.add('swap');rn.classList.add('swap');
- setTimeout(()=>{pl.innerHTML=`<img src="assets/cg/${r[0]}.webp" alt="${r[1]}">`;pl.classList.remove('swap');
-   rn.className='name'+(r[2]?'':' cnm');rn.innerHTML=`<span>${r[2]||r[1]}</span>`;},200);
- document.getElementById('regcn').textContent=r[1];
- document.getElementById('regdl').innerHTML=r[3].map(x=>`<dt>${x[0]}</dt><dd>${x[1]}</dd>`).join('')+(r[4]?`<dt>未定</dt><dd><span class="lock">${r[4]}</span></dd>`:'');
- document.getElementById('regin').href=`region-${r[0]}.html`;document.getElementById('regcnt').innerHTML=`<b>${String(i+1).padStart(2,'0')}</b>／${String(R.length).padStart(2,'0')}`;}
-setR(0);
-R.forEach(r=>{const im=new Image();im.src=`assets/cg/${r[0]}.webp`});
-/* elements dial */
-const E=[['wuli','物理','','冲击','破坏','动能','#7D8496'],['huoyan','火焰','','燃烧','热能','毁灭','#E5412A'],['bingshuang','冰霜','','冻结','减速','凝结','#2F86E0'],['leidian','雷电','','电能','爆发','麻痹','#7442D6'],['fengxi','风息','','流动','加速','扩散','#14937F'],['xiliu','汐流','','流动','治愈','适应','#1E5FE0'],['jingyan','晶岩','','坚固','构筑','共振','#B0732A'],['yansheng','演生','','生长','演化','再生','#38913F'],['fuzhao','辐照','','辐射','纯化','照耀','#CF9A12'],['fuxiang','负相','','逆转','虚无','相消','#2C2A78']];
-const els=document.getElementById('els'),tk=document.getElementById('tk');
-let t='';for(let k=0;k<120;k++){const a=k*3*Math.PI/180,r1=k%10==0?268:276;t+=`<line x1="${300+Math.cos(a)*r1}" y1="${300+Math.sin(a)*r1}" x2="${300+Math.cos(a)*284}" y2="${300+Math.sin(a)*284}" stroke="rgba(255,255,255,${k%10==0?.8:.3})" stroke-width="${k%10==0?2:1}"/>`}tk.innerHTML=t;
-E.forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.className='el2';const ang=(-90+i*36);b.style.setProperty('--a',ang+'deg');
- b.innerHTML=`<span><img src="assets/icons/el-${e[0]}.webp" alt=""></span><b>${e[1]}</b>`;
- b.addEventListener('click',()=>setE(i));b.addEventListener('mouseenter',()=>{if(matchMedia('(hover:hover)').matches)setE(i)});els.appendChild(b)});
-function setE(i){const e=E[i];els.querySelectorAll('.el2').forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',j===i)});
- document.getElementById('ptr').style.setProperty('--a',(-90+i*36)+'deg');
- const rd=document.getElementById('read2');rd.style.setProperty('--ec',e[6]);rd.classList.remove('flip');void rd.offsetWidth;rd.classList.add('flip');
- document.getElementById('dial').style.setProperty('--ec',e[6]);
- document.getElementById('coreimg').src=`assets/icons/el-${e[0]}.webp`;document.getElementById('elcn').textContent=e[1];document.getElementById('elen').textContent=e[2];
- document.getElementById('elidx').textContent=String(i+1).padStart(2,'0')+' ／ 10';
- document.getElementById('elkw').innerHTML=e.slice(3,6).map(k=>`<span>${k}</span>`).join('');
- const WHO={yansheng:['tangli.html','棠梨·听雨'],fuzhao:['decoco.html','德可可']};
- const box=document.getElementById('elwho'),w=WHO[e[0]];
- if(w){box.hidden=false;box.innerHTML=`<img src="assets/icons/el-${e[0]}.webp" alt=""><div><b>${w[1]}</b><span>${e[1]}</span></div><a href="${w[0]}">查看档案 →</a>`}
- else{box.hidden=true;box.innerHTML=''}}
-setE(5);
-</script>
-<script src="ui.js"></script>
-</body>
-</html>
+    <nav class="dock" aria-label="档案与物品">
+      <button class="dock-archives" data-open="archives">
+        <span class="dock-art" aria-hidden="true"><svg viewBox="0 0 64 64">
+          <mask id="dock-cut-archives"><use href="assets/lobby/field-marks.svg?v=tide-edition#archives" width="64" height="64" fill="white" color="white"/></mask>
+          <rect width="64" height="64" fill="url(#dock-enamel)" mask="url(#dock-cut-archives)"/>
+        </svg></span>
+        <span class="dock-label"><b>档案</b><small lang="en">ARCHIVES</small></span>
+      </button>
+      <button class="dock-depot" data-open="depot">
+        <span class="dock-art" aria-hidden="true"><svg viewBox="0 0 64 64">
+          <mask id="dock-cut-depot"><use href="assets/lobby/field-marks.svg?v=tide-edition#depot" width="64" height="64" fill="white" color="white"/></mask>
+          <rect width="64" height="64" fill="url(#dock-enamel)" mask="url(#dock-cut-depot)"/>
+        </svg></span>
+        <span class="dock-label"><b>仓库</b><small lang="en">DEPOT</small></span>
+      </button>
+    </nav>
+  </section>
+  <footer class="foot"><button data-open="credits-art">美术署名</button></footer>
+</main>
+<dialog id="panel" aria-labelledby="panel-title"><div class="panel-head"><div><small id="panel-en"></small><h1 id="panel-title"></h1></div><button id="close" aria-label="关闭">×</button></div><div id="panel-body"></div></dialog>
+<noscript>请启用 JavaScript 进入大厅。<a href="atlas.html">阅读世界档案</a></noscript>
+</body></html>

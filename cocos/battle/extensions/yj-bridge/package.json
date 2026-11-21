@@ -1,0 +1,10 @@
+{
+  "package_version": 2,
+  "version": "1.0.0",
+  "name": "yj-bridge",
+  "title": "源界编辑器桥",
+  "description": "开发期用：读取 cmd/ 下的指令文件，转发给编辑器消息系统或场景脚本，结果写到 out/。",
+  "main": "./main.js",
+  "editor": ">=3.8.0",
+  "contributions": { "scene": { "script": "./scene.js" } }
+}

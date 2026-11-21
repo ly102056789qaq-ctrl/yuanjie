@@ -1,0 +1,75 @@
+// 水面：移植自旧版 scene3d.js 的 WATER。法线改为在片元里按波形解析求导（不依赖 dFdx 扩展）。
+CCEffect %{
+  techniques:
+  - name: transparent
+    passes:
+    - vert: water-vs:vert
+      frag: water-fs:frag
+      priority: 90
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties:
+        skyColor:  { value: [0.788, 0.847, 0.918, 1], linear: true, editor: { type: color } }
+        deepColor: { value: [0.290, 0.361, 0.455, 1], linear: true, editor: { type: color } }
+        params:    { value: [0, 1, 0, 0], editor: { tooltip: 'x 幻海强度, y 动画速度' } }
+}%
+
+CCProgram water-vs %{
+  precision highp float;
+  #include <legacy/input>
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
+  out vec3 v_local;
+
+  vec4 vert () {
+    vec4 position;
+    CCVertInput(position);
+    mat4 matWorld;
+    CCGetWorldMatrix(matWorld);
+    vec4 wp = matWorld * position;
+    v_local = wp.xyz;
+    return cc_matProj * cc_matView * wp;
+  }
+}%
+
+CCProgram water-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/output>
+  in vec3 v_local;
+  uniform Constant {
+    vec4 skyColor;
+    vec4 deepColor;
+    vec4 params;
+  };
+
+  vec4 frag () {
+    float t = cc_time.x * params.y;
+    vec2 p = v_local.xz;
+    float r = max(length(p), 1e-4);
+    // 波形 w = sin(r*4.2 - t*1.7)*0.02*env(r) + sin(x*3.4 + z*2.2 + t*1.2)*0.01，对 x、z 求偏导
+    float env = smoothstep(8.4, 1.2, r);
+    float a = cos(r * 4.2 - t * 1.7) * 0.02 * 4.2 * env;
+    float b = cos(p.x * 3.4 + p.y * 2.2 + t * 1.2) * 0.01;
+    vec2 grad = a * (p / r) + vec2(b * 3.4, b * 2.2);
+    vec3 n = normalize(vec3(-grad.x * 18.0, 1.0, -grad.y * 18.0));
+    float fade = smoothstep(8.6, 3.2, r);
+    float fres = pow(1.0 - clamp(n.y, 0.0, 1.0), 2.2);
+    float domain = params.x;
+    vec3 sky = mix(skyColor.rgb, vec3(0.25, 0.4, 0.75), domain);
+    vec3 deep = mix(deepColor.rgb, vec3(0.05, 0.1, 0.22), domain);
+    vec3 col = mix(deep, sky, fres);
+    float rings = sin(r * 12.0 - t * 2.2);
+    col += vec3(0.7, 0.85, 1.0) * smoothstep(0.7, 1.0, rings) * 0.08 * fade;
+    float alpha = (0.42 + fres * 0.4) * fade;
+    return CCFragOutput(vec4(col, alpha));
+  }
+}%

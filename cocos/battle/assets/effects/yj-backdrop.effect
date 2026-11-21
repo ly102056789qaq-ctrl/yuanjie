@@ -1,0 +1,61 @@
+// 全屏远景：等同旧版 battle.css 的 #far（cover 铺满、以 42% 高度为中心、放大 1.05）。
+// 网格顶点直接映射到屏幕，不受镜头、雾和深度影响，永远画在最底层。
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: backdrop-vs:vert
+      frag: backdrop-fs:frag
+      priority: 0
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      properties:
+        mainTexture: { value: white }
+        tint:        { value: [1, 1, 1, 1], linear: true, editor: { type: color } }
+        fit:         { value: [1.05, 0.42, 1.7778, 0], editor: { tooltip: 'x 放大倍数, y 纵向中心, z 图片宽高比' } }
+}%
+
+CCProgram backdrop-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  out vec2 v_screen;
+
+  vec4 vert () {
+    v_uv = a_texCoord;
+    v_screen = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.99999, 1.0);
+  }
+}%
+
+CCProgram backdrop-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/output>
+  in vec2 v_uv;
+  in vec2 v_screen;
+  uniform sampler2D mainTexture;
+  uniform Constant {
+    vec4 tint;
+    vec4 fit;
+  };
+
+  vec4 frag () {
+    // cover：按屏幕与图片的宽高比裁切
+    float screenAspect = cc_screenSize.x / cc_screenSize.y;
+    vec2 uv = vec2(v_screen.x, 1.0 - v_screen.y);
+    vec2 scale = vec2(1.0);
+    if (screenAspect > fit.z) scale.y = fit.z / screenAspect; else scale.x = screenAspect / fit.z;
+    vec2 center = vec2(0.5, fit.y);
+    uv = (uv - center) * scale / fit.x + center;
+    vec4 c = texture(mainTexture, clamp(uv, 0.0, 1.0));
+    c.rgb = SRGBToLinear(c.rgb);
+    c *= tint;
+    return CCFragOutput(c);
+  }
+}%

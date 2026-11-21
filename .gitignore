@@ -1,2 +1,24 @@
 
 fonts/src/
+unity/Battle/Library/
+unity/Battle/Logs/
+unity/Battle/Temp/
+unity/Battle/UserSettings/
+unity/Battle/obj/
+battle3d/unity/player/*
+!battle3d/unity/player/build-id.txt
+!battle3d/unity/player/Build/
+battle3d/unity/player/Build/*
+!battle3d/unity/player/Build/player.data
+!battle3d/unity/player/Build/player.wasm
+!battle3d/unity/player/Build/player.loader.js
+!battle3d/unity/player/Build/player.framework.js
+!battle3d/unity/player/Build/player.symbols.json
+__pycache__/
+unity/Battle/Assets/BattleBeasts*
+unity/Battle/Assets/LocalMoba*
+unity/Battle/Assets/LocalDebut*
+unity/Battle/Assets/Resources/BattleMoba*
+unity/Battle/Assets/PurchasedBattle*
+unity/Battle/Assets/Resources/PurchasedBattle*
+unity/Battle/Assets/TextMesh Pro*

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>源界 · 战报预览</title><link rel="stylesheet" href="operation-report.css"></head>
+<body style="margin:0;background:#191e1e"><script type="module">
+import {openReport} from './operation-report.js';
+const report={
+  "members": [
+    {
+      "id": "shen",
+      "name": "沈惠均",
+      "damage": 3725132.3000000007,
+      "heal": 0,
+      "taken": 0
+    },
+    {
+      "id": "rin",
+      "name": "若叶凛·望月",
+      "damage": 108744.3350317573,
+      "heal": 3350.239999999998,
+      "taken": 0
+    },
+    {
+      "id": "eliot",
+      "name": "ELIOT",
+      "damage": 3722891.774091387,
+      "heal": 11459.760000000002,
+      "taken": 0
+    },
+    {
+      "id": "siwei",
+      "name": "思惟诺姆",
+      "damage": 7443231.590876857,
+      "heal": 0,
+      "taken": 0
+    }
+  ],
+  "win": true,
+  "rounds": 12,
+  "squad": "冰火试用队"
+};
+openReport(report,{demo:true,restart:()=>location.assign('./?engine=unity&squad=frostfire')});
+</script></body></html>

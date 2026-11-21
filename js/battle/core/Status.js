@@ -20,8 +20,11 @@ export class StatusSystem {
   }
   has(target, id) { return target.statuses.has(id); }
   remove(target, id, reason = 'remove') { if (target.statuses.delete(id)) this.bus.emit('status:remove', { target, id, reason }); }
-  /* 统一回合规则：轮末对所有单位扣 1 */
+  /* 统一回合规则：轮末对所有单位扣 1；定义里 unit: 'action' 的状态按受益者自身行动次数计，由角色机制自己扣 */
   tick(units) {
-    for (const u of units) for (const [id, s] of [...u.statuses]) { s.remaining -= 1; if (s.remaining <= 0) this.remove(u, id, 'expire'); }
+    for (const u of units) for (const [id, s] of [...u.statuses]) {
+      if (this.defs[id] && this.defs[id].unit === 'action') continue;
+      s.remaining -= 1; if (s.remaining <= 0) this.remove(u, id, 'expire');
+    }
   }
 }

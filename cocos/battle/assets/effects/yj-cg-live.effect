@@ -1,0 +1,107 @@
+// 大招插画“类 Live2D”动效（2D 精灵材质）：按 UV 区域做网格式变形，不改原图像素。
+//   呼吸：胸口区域沿竖直方向轻微缩放（约 0.5%，4.5 秒一周期）
+//   飘动：头发区域按离发根的距离递增做横向正弦摆动（几像素）
+//   雨水：窗玻璃区域叠加缓慢下滑的水痕和水珠
+// 区域参数都是 0~1 的 UV 坐标，可在材质面板里逐张图调。
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: cg-vs:vert
+      frag: cg-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        breathArea:  { value: [0.5, 0.6, 0.12, 0.1], editor: { tooltip: '呼吸：中心 uv(x,y)、半径(x,y)' } }
+        breathParam: { value: [0.005, 4.5, 0, 0], editor: { tooltip: 'x 幅度, y 周期(秒)' } }
+        hairArea:    { value: [0.4, 0.1, 0.7, 0.75], editor: { tooltip: '头发：左上 uv(x,y)、右下 uv(x,y)' } }
+        hairParam:   { value: [0.0025, 3.8, 0.12, 0], editor: { tooltip: 'x 最大摆幅(uv), y 周期, z 发根高度(uv)' } }
+        rainArea:    { value: [0, 0, 0, 0], editor: { tooltip: '雨水：左上 uv、右下 uv（全 0 关闭）' } }
+        rainParam:   { value: [0.35, 0.18, 40, 0], editor: { tooltip: 'x 强度, y 下滑速度, z 水痕列数' } }
+        grade:       { value: [1, 1, 1, 0], editor: { tooltip: 'xyz 色彩倍增, w 暗角' } }
+}%
+
+CCProgram cg-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+  out vec4 color;
+  out vec2 uv0;
+  vec4 vert () {
+    uv0 = a_texCoord;
+    color = a_color;
+    return cc_matViewProj * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram cg-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/internal/embedded-alpha>
+  in vec4 color;
+  in vec2 uv0;
+  #pragma builtin(local)
+  layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  uniform Live {
+    vec4 breathArea;
+    vec4 breathParam;
+    vec4 hairArea;
+    vec4 hairParam;
+    vec4 rainArea;
+    vec4 rainParam;
+    vec4 grade;
+  };
+
+  float hash11 (float p) { return fract(sin(p * 127.1) * 43758.5453); }
+
+  vec4 frag () {
+    float t = cc_time.x;
+    vec2 uv = uv0;
+
+    // 呼吸：以胸口中心为轴，竖直方向缩放，权重随距离高斯衰减
+    vec2 d = (uv - breathArea.xy) / max(breathArea.zw, vec2(1e-4));
+    float wb = exp(-dot(d, d) * 1.6);
+    float br = breathParam.x * (0.5 + 0.5 * sin(6.28318 * t / breathParam.y));
+    uv.y += (uv.y - breathArea.y) * br * wb;
+
+    // 头发：在区域内，离发根越远摆幅越大，边缘羽化
+    vec2 h0 = hairArea.xy, h1 = hairArea.zw;
+    float inside = smoothstep(h0.x, h0.x + 0.04, uv.x) * (1.0 - smoothstep(h1.x - 0.04, h1.x, uv.x))
+                 * smoothstep(h0.y, h0.y + 0.03, uv.y) * (1.0 - smoothstep(h1.y - 0.06, h1.y, uv.y));
+    float fromRoot = clamp((uv.y - hairParam.z) / max(1e-3, h1.y - hairParam.z), 0.0, 1.0);
+    uv.x += hairParam.x * inside * fromRoot * fromRoot * sin(6.28318 * t / hairParam.y + uv.y * 5.0);
+
+    vec4 o = CCSampleWithAlphaSeparated(cc_spriteTexture, uv);
+
+    // 雨水：窗玻璃区域的水痕（细长、缓慢下滑）和水珠高光
+    if (rainArea.z > rainArea.x) {
+      vec2 r0 = rainArea.xy, r1 = rainArea.zw;
+      float m = step(r0.x, uv0.x) * step(uv0.x, r1.x) * step(r0.y, uv0.y) * step(uv0.y, r1.y);
+      float cols = rainParam.z;
+      float cx = floor(uv0.x * cols);
+      float fx = fract(uv0.x * cols);
+      float seed = hash11(cx);
+      float speed = rainParam.y * (0.5 + seed);
+      float y = fract(uv0.y * (1.5 + seed) - t * speed - seed * 7.0);
+      float streak = smoothstep(0.08, 0.0, abs(fx - 0.5 - 0.15 * sin(uv0.y * 9.0 + seed * 6.0))) * smoothstep(0.0, 0.25, y) * (1.0 - smoothstep(0.25, 0.9, y));
+      float drop = smoothstep(0.12, 0.0, length(vec2(fx - 0.5, (y - 0.22) * 3.0))) * step(0.55, seed);
+      o.rgb += vec3(0.75, 0.85, 1.0) * (streak * 0.35 + drop * 0.8) * rainParam.x * m;
+    }
+
+    // 调色与暗角
+    o.rgb *= grade.xyz;
+    vec2 v = uv0 - 0.5;
+    o.rgb *= 1.0 - grade.w * smoothstep(0.35, 0.75, length(v));
+    return o * color;
+  }
+}%

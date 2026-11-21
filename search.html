@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>全域检索 · 源界</title>
+<link rel="stylesheet" href="lobby/search.css"><link rel="stylesheet" href="charui/rarity.css">
+<script type="module" src="lobby/search.js"></script>
+</head>
+<body>
+<main class="terminal" data-theme="flag">
+  <header class="toolbar"><a href="index.html" aria-label="返回大厅">‹ <span>大厅</span></a><h1>全域检索</h1><span class="brand">ASTERIAL</span><span class="balance"><img id="ticket" width="34" height="28" alt=""><span id="ticket-name"></span><b id="balance">—</b></span></header>
+  <section class="poster" aria-labelledby="pool-title">
+    <div class="set" aria-hidden="true"></div><div class="cast" aria-hidden="true"></div>
+    <div class="caption">
+      <p class="edition" id="edition"></p>
+      <h2 id="pool-title"></h2><i class="translation" lang="en"></i>
+      <div class="billing"><span id="stars"></span><strong id="names"></strong></div>
+    </div>
+    <div class="links"><button id="preview">▷ 演出预览</button><a id="trial" href="battle3d/?engine=unity&amp;squad=debut">角色试用 ↗</a></div>
+  </section>
+  <nav class="pools" aria-label="选择卡池">
+    <button data-pool="liselotte"><img src="assets/lobby/liselotte-portrait.webp" alt=""><span><small>限定 UP</small>荣光永不降旗</span></button>
+    <button data-pool="daier"><img src="assets/lobby/daier-portrait.webp" alt=""><span><small>限定 UP</small>起舞吧天鹅湖</span></button>
+    <button data-pool="standard"><img src="assets/lobby/vera-portrait.webp" alt=""><span><small>常驻</small>群星来信</span></button>
+  </nav>
+  <footer class="actions"><div class="progress"><button id="details">检索详情 ↗</button><span id="pity"></span></div>
+    <div class="pulls"><button data-count="1">检索一次<small></small></button><button data-count="10">检索十次<small></small></button></div>
+    <p id="notice" role="status"></p>
+  </footer>
+</main>
+<dialog id="rules" aria-labelledby="rules-title"><h2 id="rules-title">检索详情</h2><div id="rule-copy"></div><form method="dialog"><button>返回卡池</button></form></dialog>
+<dialog id="show" aria-label="检索演出"><div class="cinema"><div class="filament"></div><div class="ring"></div><img class="apparition" alt=""><button id="skip">跳过 ›</button></div>
+  <section class="results"><h2 id="result-title"></h2><ul></ul><form method="dialog"><button>返回卡池</button></form></section>
+</dialog>
+</body></html>
+
