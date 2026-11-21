@@ -1,0 +1,104 @@
+{
+  "height": 1524,
+  "parts": [
+    {
+      "key": "hair_back",
+      "group": "head",
+      "deform": "long_hair_back",
+      "px": -8,
+      "py": 1308,
+      "dx": -473,
+      "dy": -509
+    },
+    {
+      "key": "dance_gown",
+      "group": "legs",
+      "deform": "dance_gown",
+      "px": -10,
+      "py": 890,
+      "dx": -333,
+      "dy": -890
+    },
+    {
+      "key": "neck",
+      "group": "torso",
+      "deform": "",
+      "px": -10,
+      "py": 1103,
+      "dx": -30,
+      "dy": 131
+    },
+    {
+      "key": "arm_R",
+      "group": "arm_r",
+      "deform": "",
+      "px": -98,
+      "py": 1201,
+      "dx": -173,
+      "dy": -512
+    },
+    {
+      "key": "arm_L",
+      "group": "arm_l",
+      "deform": "",
+      "px": 86,
+      "py": 1204,
+      "dx": -55,
+      "dy": -518
+    },
+    {
+      "key": "waist_ribbon_front",
+      "group": "hip",
+      "deform": "",
+      "px": -10,
+      "py": 890,
+      "dx": -165,
+      "dy": 15
+    },
+    {
+      "key": "bodice",
+      "group": "chest",
+      "deform": "fitted_bodice",
+      "px": -10,
+      "py": 1103,
+      "dx": -155,
+      "dy": -213
+    },
+    {
+      "key": "hair_ornaments",
+      "group": "head",
+      "deform": "",
+      "px": -8,
+      "py": 1308,
+      "dx": -119,
+      "dy": 6
+    },
+    {
+      "key": "face",
+      "group": "head",
+      "deform": "",
+      "px": -8,
+      "py": 1308,
+      "dx": -99,
+      "dy": -24
+    },
+    {
+      "key": "earrings",
+      "group": "head",
+      "deform": "",
+      "px": -8,
+      "py": 1308,
+      "dx": -76,
+      "dy": -26
+    },
+    {
+      "key": "hair_front",
+      "group": "head",
+      "deform": "long_hair_front",
+      "px": -8,
+      "py": 1308,
+      "dx": -165,
+      "dy": -260
+    }
+  ]
+}

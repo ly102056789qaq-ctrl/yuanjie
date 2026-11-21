@@ -2,16 +2,20 @@
    team: 角色 id 数组；enemies: 遭遇数据里的敌人数组；build: 统一养成设定（默认 Lv80、零升格、满潜能属性节点）。 */
 import { Battle, makeUnit } from './index.js';
 import { statsFor, energyPerAction } from './stats.js';
+import { registerEquipment } from './equipment.js';
+import { resolveSkills } from './skill-levels.js';
 
 /* 这几位的专属机制写好后，kit 以 id 为准（技能数据里仍写着 generic 的旧标记） */
-const KIT_BY_ID = { siwei: 'siwei', dekeke: 'dekeke', vera: 'vera', rin: 'rin' };
+const KIT_BY_ID = { siwei: 'siwei', dekeke: 'dekeke', vera: 'vera', rin: 'rin', shen:'shen', eliot:'eliot', daier:'daier', liselotte:'liselotte' };
 
-export function buildMatch({ rules, statsDef, characters, skills, team, enemies, build = {} }) {
+export function buildMatch({ rules, statsDef, characters, skills, team, enemies, build = {}, builds = {} }) {
   const chars = Object.fromEntries(characters.characters.map(c => [c.id, c]));
   const units = [];
   for (const id of team) {
-    const c = chars[id], data = skills[id];
-    const stats = statsFor(statsDef, c, data, build);
+    const c = chars[id];
+    const loadout = builds[id] || build;
+    const data = resolveSkills(skills[id],loadout.skillLevels,loadout.potential,loadout.ascension);
+    const stats = statsFor(statsDef, c, data, loadout);
     const energy = {
       basic: energyPerAction(statsDef, data, 'basic'),
       skill: energyPerAction(statsDef, data, 'skill'),
@@ -23,8 +27,8 @@ export function buildMatch({ rules, statsDef, characters, skills, team, enemies,
     units.push(makeUnit({
       id, name: c.name, side: 'ally', element: c.element, stats,
       kitId: KIT_BY_ID[id] || 'generic', maxEnergy: max,
-      energy: Math.round((max || 0) * (statsDef.energy.battleStart || 0)),
-      config: { data: dataWithEnergy, energy, ascension: build.ascension || 0, potential: build.potential || {} },
+      energy: data.energy?.initial ?? Math.round((max || 0) * (statsDef.energy.battleStart || 0)),
+      config: { data: dataWithEnergy, energy, ascension: loadout.ascension || 0, potential: loadout.potential || {}, gear: {...(loadout.gear ?? {module:loadout.module !== false}), dotRank:loadout.refinement ?? c.module?.refinement, hitBonus:c.module?.hitBonusByRank?.[(loadout.refinement ?? c.module.refinement)-1]}, level: loadout.level ?? statsDef.levelMax },
     }));
   }
   for (const e of enemies) {
@@ -34,6 +38,7 @@ export function buildMatch({ rules, statsDef, characters, skills, team, enemies,
     }));
   }
   const battle = new Battle({ rules, units });
+  for(const unit of units)registerEquipment(battle,unit);
   // 受击回能
   battle.bus.on('damage', ev => {
     if (ev.target.side === 'ally' && ev.target.alive && !ev.derived) battle.gainEnergy(ev.target, statsDef.energy.onHit || 0);

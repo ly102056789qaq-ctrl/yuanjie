@@ -1,0 +1,13 @@
+{
+  "team": ["siwei", "dekeke", "vera", "rin"],
+  "training": [{"hp":5000000,"atk":145,"def":85},{"hp":5000000,"atk":60,"def":65},{"hp":5000000,"atk":55,"def":65}],
+  "build": {"level":80,"ascension":0,"extra":{"critRate":0.3,"critDmg":0.6}},
+  "enemies": [
+    {"id":"e0","name":"重装公牛","boss":true,"node":"Enemy_A","element":"wuli","portrait":"assets/battle/arena-e0.png",
+      "stats":{"atk":1400,"hp":5000000,"def":420,"spd":92},"toughness":90,"weaknesses":["fuxiang","leidian"]},
+    {"id":"e1","name":"浮空炮兽","node":"Enemy_B","element":"wuli","portrait":"assets/battle/arena-e1.png",
+      "stats":{"atk":580,"hp":5000000,"def":300,"spd":98},"toughness":40,"weaknesses":["fuzhao","yansheng"]},
+    {"id":"e2","name":"冰游鲸蛇","node":"Enemy_C","element":"wuli","portrait":"assets/battle/arena-e2.png",
+      "stats":{"atk":470,"hp":5000000,"def":300,"spd":89},"toughness":40,"weaknesses":["leidian","yansheng"]}
+  ]
+}

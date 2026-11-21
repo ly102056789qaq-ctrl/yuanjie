@@ -50,7 +50,7 @@ s = s.replace('body{width:1920px;height:1080px;overflow:hidden;position:relative
               '#loading{position:fixed;inset:0;display:grid;place-items:center;color:#9FB0C4;font:14px/1 "YJ Sans",sans-serif;letter-spacing:.2em;pointer-events:none;transition:opacity .4s}\n'
               '#hud{width:1920px;height:1080px;overflow:hidden;position:relative;')
 s = s.replace('<title>战斗 HUD 精修稿 · 1920×1080</title>', '<title>源界 · 战斗演示（Cocos）</title>')
-s = s.replace('<body>\n', '<body>\n<iframe id="game" src="game/index.html" allow="autoplay; fullscreen"></iframe>\n<div id="loading">战斗场景加载中</div>\n<div id="hudwrap" class="is-hidden"><div id="hud">\n', 1)
+s = s.replace('<body>\n', '<body>\n<iframe id="game" allow="autoplay; fullscreen"></iframe><script src="stage-route.js"></script>\n<div id="loading">战斗场景加载中</div>\n<div id="hudwrap" class="is-hidden"><div id="hud">\n', 1)
 # 可玩对局的逻辑和样式在 battle3d/play.js、play.css（ES Module，直接引用仓库里的 js/battle）
 script = '''
 </div></div>

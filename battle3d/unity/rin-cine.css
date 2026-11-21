@@ -1,0 +1,10 @@
+#rin-cine{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+#rin-cine>*{position:absolute;opacity:0}
+#rin-cine img{inset:0;width:100%;height:100%;object-fit:cover;transform:translateX(var(--pan,0)) scale(var(--push,1.02))}
+#rin-cine[data-beat="1"] .flower-shop,#rin-cine[data-beat="2"] .petals,#rin-cine:is([data-beat="1"],[data-beat="2"]) .letterbox{opacity:1}
+#rin-cine .letterbox{inset:0;border-block:5vh solid #080c12}
+#rin-cine .subtitle{bottom:11%;width:100%;text-align:center;font:clamp(16px,2.3vw,40px)/1.4 'Microsoft YaHei',sans-serif;color:#f0f4fa;text-shadow:0 1px 5px #10151f;opacity:var(--subtitle,0)}
+#rin-cine .flash{inset:0;background:white;opacity:var(--flash,0)}
+#rin-cine .rain{inset:-30% -3%;background:repeating-linear-gradient(99deg,transparent 0 41px,#adc8dd24 42px,transparent 43px 91px);mask-image:linear-gradient(95deg,transparent 52%,#0008);animation:window-rain 2s linear infinite}
+#rin-cine[data-beat="1"] .rain{opacity:.27}
+@keyframes window-rain{to{transform:translate(-.9%,8%)}}

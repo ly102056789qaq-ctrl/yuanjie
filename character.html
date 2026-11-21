@@ -6,8 +6,16 @@
 <title>角色 · 源界 ASTERIAL</title>
 <meta name="description" content="源界角色界面：职业、元素、属性、技能、模组、频谱、升格与档案。">
 <link rel="preload" href="fonts/yj-sans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="charui/charui.css">
-<script type="importmap">{"imports":{"three":"./charui/vendor/three/three.module.min.js"}}</script>
+<link rel="stylesheet" href="charui/charui.css?v=profile-band-3">
+<link rel="stylesheet" href="charui/rarity.css">
+<script type="importmap">
+{"imports": {
+  "three": "./charui/vendor/three/three.module.min.js",
+  "./js/battle/stats.js": "./js/battle/stats.js?v=relic-six-2",
+  "./js/battle/progression.js": "./js/battle/progression.js?v=frostfire-2",
+  "./js/battle/skill-levels.js": "./js/battle/skill-levels.js?v=rin-v11"
+}}
+</script>
 </head>
 <body>
 <div id="app" class="cu" data-tab="detail">
@@ -44,7 +52,7 @@
   <div class="draftbar" id="draftbar" hidden>正在预览本地草稿 · 不会影响线上页面 <a href="editor.html">回到编辑器</a></div>
 </div>
 <script src="charui/core.js"></script>
-<script src="charui/charui.js"></script>
+<script src="charui/charui.js?v=profile-band-4"></script>
 <script type="module" src="charui/portrait-breath.js"></script>
 </body>
 </html>

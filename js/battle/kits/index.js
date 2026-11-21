@@ -2,3 +2,5 @@
 import './generic.js';
 import './siwei.js';
 import './support.js';
+import './frostfire.js';
+import './debut.js';

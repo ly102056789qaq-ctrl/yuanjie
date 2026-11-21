@@ -181,18 +181,15 @@
 /* ── 大招视频演出 ── */
 #cine{position:fixed;inset:0;z-index:50;display:none;background:#000;pointer-events:none}
 #cine.on{display:block}
-#cine video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#cine .bar{position:absolute;left:0;right:0;height:7vh;background:#000;z-index:2}
-#cine .bar.top{top:0}
-#cine .bar.bot{bottom:0}
+#cine video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+
 #cine .cap{position:absolute;left:6vw;bottom:11vh;z-index:3;display:flex;flex-direction:column;gap:.4vh;animation:cap-in 3s ease forwards}
 #cine .cap .who{font-size:1.5vw;letter-spacing:.2em;color:#E8EEF6}
 #cine .cap .nm{font-family:var(--title);font-size:4vw;letter-spacing:.12em;color:#fff;-webkit-text-stroke:0;filter:drop-shadow(0 0 18px rgba(170,140,255,.75)) drop-shadow(0 3px 4px rgba(0,0,0,.6))}
 @keyframes cap-in{0%{opacity:0;transform:translateX(-3vw)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 #cinewhite{position:fixed;inset:0;background:#fff;opacity:0;z-index:60;pointer-events:none}
 @keyframes cine-white{0%{opacity:1}100%{opacity:0}}
-@keyframes cine-push{0%{transform:scale(1.03) translateX(0)}100%{transform:scale(1.13) translateX(var(--dx,2%))}}
-#cine video{transform-origin:55% 45%}
+
 
 /* ── 照抄崩铁：伤害数字用 DIN（D-DIN，OFL 授权的 DIN 1451 复刻），浅色渐变 + 同色系细描边 + 外发光，不用黑描边 ── */
 @font-face{font-family:"YJ DIN";src:url(../fonts/yj-ddin.woff2) format("woff2");font-weight:400}
@@ -208,3 +205,5 @@
 #total .v{font-family:"YJ DIN",var(--sans);font-weight:700}
 #cine video{opacity:0}
 #cine video.live{opacity:1}
+
+#return-training{position:fixed;left:50%;bottom:14%;transform:translateX(-50%);z-index:100;color:white;background:#182234;padding:9px 20px;border:1px solid #79cdda;text-decoration:none}

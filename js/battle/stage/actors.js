@@ -1,5 +1,5 @@
 /* 角色视图：有分层数据的用 SpriteRig，没有的用一张立绘。朝向与战斗位移在这一层做，不改拆层文件。 */
-import { Sprite, Texture, ColorMatrixFilter, Container } from '../../sprite/vendor/pixi.min.mjs';
+import { Sprite, Texture, ColorMatrixFilter, Container } from '../../sprite/vendor/pixi.min.js';
 import { SpriteRig, loadSpriteData } from '../../sprite/rig.js';
 
 function contactShadowTexture() {

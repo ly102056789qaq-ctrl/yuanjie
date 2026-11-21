@@ -2,6 +2,20 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<script type="importmap">
+{"imports": {
+  "../js/battle/stats.js": "../js/battle/stats.js?v=relic-six-2",
+  "../js/battle/progression.js": "../js/battle/progression.js?v=frostfire-2",
+  "../js/battle/skill-levels.js": "../js/battle/skill-levels.js?v=rin-v11",
+  "../js/battle/kits/frostfire.js": "../js/battle/kits/frostfire.js?v=frostfire-2",
+  "../js/battle/core/Damage.js": "../js/battle/core/Damage.js?v=frostfire-2",
+  "../js/battle/kits/index.js": "../js/battle/kits/index.js?v=frostfire-1",
+  "./unity/effects.js": "./unity/effects.js?v=motion-1",
+  "../js/battle/kits/support.js": "../js/battle/kits/support.js?v=rin-v11",
+  "../js/battle/equipment.js": "../js/battle/equipment.js?v=relic-six-2",
+  "../js/battle/match.js": "../js/battle/match.js?v=frostfire-1"
+}}
+</script>
 <title>源界 · 战斗演示（Cocos）</title>
 <!-- 设计稿：布局沿用 battle.css，只精修组件本体。固定 1920×1080 像素，切图给 Cocos 用。 -->
 <style>
@@ -30,8 +44,12 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #hudwrap.is-hidden{opacity:0}
 #hudwrap #ult-tile,#hudwrap #pc-rin .ult{pointer-events:auto;cursor:pointer}
 #hudwrap #ult-tile:hover .tile{transform:translateY(-10px)}
-#loading{position:fixed;inset:0;display:grid;place-items:center;color:#9FB0C4;font:14px/1 "YJ Sans",sans-serif;letter-spacing:.2em;pointer-events:none;transition:opacity .4s}
-#hud{width:1920px;height:1080px;overflow:hidden;position:relative;font-family:var(--sans);color:#fff;-webkit-font-smoothing:antialiased}
+#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#081322;color:#dcefff;font:14px/1.6 "YJ Sans",sans-serif;text-align:center;padding:24px;z-index:5}
+#loading[hidden]{display:none}
+#game[src^="unity/"] + #loading:has(#load-retry[hidden]){background:transparent;justify-content:flex-end;padding-bottom:clamp(24px,12vh,112px);text-shadow:0 1px 4px #081322}
+#load-retry{padding:6px 16px;color:inherit;background:#18283a;border:1px solid #738ca4;cursor:pointer}
+#hudwrap{font-family:var(--sans);color:#fff;-webkit-font-smoothing:antialiased}
+#hud{width:1920px;height:1080px;overflow:hidden;position:relative}
 #bg{position:absolute;inset:0;background:none center/cover}
 .t{text-shadow:var(--stroke)}
 .n{font-family:var(--num);font-stretch:85%;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0}
@@ -255,12 +273,13 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #cue{left:50%;top:126px;transform:translateX(-50%);font-size:15px;letter-spacing:.24em}
 #cue::before,#cue::after{content:"";display:inline-block;width:40px;height:1px;background:#fff;vertical-align:middle;margin:0 14px;box-shadow:0 1px 0 rgba(16,28,44,.6)}
 </style>
-<link rel="stylesheet" href="play.css">
+<link rel="stylesheet" href="play.css?v=ddin-1">
+<link rel="stylesheet" href="operation-report.css">
 </head>
 <body>
-<iframe id="game" src="game/index.html" allow="autoplay; fullscreen"></iframe>
-<div id="loading">战斗场景加载中</div>
-<div id="hudwrap" class="is-hidden"><div id="hud">
+<iframe id="game" allow="autoplay; fullscreen"></iframe>
+<div id="loading"><span id="load-message" role="status">正在打开战场</span><button id="load-retry" type="button" hidden>重新载入</button></div>
+<div id="hudwrap" class="is-hidden"><div id="hud" hidden>
 
 
 <!-- 回合 -->
@@ -411,6 +430,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 
 <div id="cue" class="abs t">点击终结技</div>
 </div></div>
-<script type="module" src="play.js"></script>
+<script src="stage-route.js?v=motion-1"></script>
 </body>
 </html>

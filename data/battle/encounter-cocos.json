@@ -1,6 +1,7 @@
 {
   "_doc": "Cocos 战斗页（/battle3d/）的演示遭遇。敌人名称、设定沿用测试占位，不编世界观；数值按 stats.json 的我方 Lv80 属性配平（约 6 轮打完）。",
   "team": ["siwei", "dekeke", "vera", "rin"],
+  "training": [{"hp":1000000,"atk":145,"def":85},{"hp":2200,"atk":115,"def":65}],
   "build": { "level": 80, "ascension": 0, "extra": { "critRate": 0.3, "critDmg": 0.6 }, "_extra": "演示用频谱词条：暴击率 +30%、暴击伤害 +60%" },
   "enemies": [
     {

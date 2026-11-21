@@ -3,7 +3,7 @@
 import {
   Assets, Container, Sprite, MeshPlane, Graphics, ColorMatrixFilter,
   Matrix,
-} from './vendor/pixi.min.mjs';
+} from './vendor/pixi.min.js';
 
 const DEG = Math.PI / 180;
 

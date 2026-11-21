@@ -18,19 +18,19 @@
     { "slot": "basic", "label": "普通攻击", "no": "01", "name": "一次普通的问候", "type": ["单体伤害"], "icon": "assets/skills/siwei/basic.webp",
       "params": { "mult": 1.0, "dreamMarkBonus": 0.2, "toughness": 10 },
       "desc": "对指定敌方单体造成相当于小惟==100%==攻击力的负相伤害。\n若目标处于「梦痕」状态，则本次伤害提高==20%==。\n普通攻击可以触发天赋的伤害记录条件，但不得触发自身的重复伤害记录。",
-      "level": null, "maxLevel": null, "upgrade": null },
+      "level": 6, "maxLevel": 6, "upgrade": null },
     { "slot": "skill", "label": "战技", "no": "02", "name": "假如这一切都未发生", "type": ["群体伤害", "状态施加", "增伤"], "icon": "assets/skills/siwei/skill.webp",
       "params": { "mult": 1.6, "markDuration": 2, "toughness": 10 },
       "desc": "对敌方全体造成相当于小惟==160%==攻击力的负相伤害，并施加持续==2==回合的「梦痕」。\n「梦痕」：受到友方直接攻击时记录此次攻击实际造成的伤害；受到攻击时，伤害来源获得「虚实倍率」加成；同一目标的梦痕不可重复叠加，重新施加仅刷新持续时间。\n虚实倍率：==×1.30==，独立伤害乘区，不再对伤害复现、幻象追击或现实覆写重复生效。",
-      "level": null, "maxLevel": null, "upgrade": null },
+      "level": 10, "maxLevel": 10, "upgrade": null },
     { "slot": "talent", "label": "天赋", "no": "03", "name": "我记得你做过的事", "type": ["被动", "伤害记录与复现"], "icon": "assets/skills/siwei/talent.webp",
       "params": { "replayRatio": 0.4, "domainReplayRatio": 0.7 },
       "desc": "友方单位对带有「梦痕」的敌人造成直接伤害时，记录该次伤害的实际数值，每个目标独立记录。\n正常状态下，小惟回合结束时，对带有「梦痕」的目标结算累计记录伤害的==40%==，造成一次「幻象复现」伤害，并清空已结算的记录值。\n「幻海」状态下：复现比例提升至==70%==，暂停普通回合末结算，延迟至「幻海」结束时统一结算。\n「幻象复现」属于衍生伤害，不再次触发伤害记录。",
-      "level": null, "maxLevel": null, "upgrade": null },
+      "level": 10, "maxLevel": 10, "upgrade": null },
     { "slot": "ultimate", "label": "终结技", "no": "04", "name": "美梦成真！", "type": ["群体爆发", "单体追击", "领域展开"], "icon": "assets/skills/siwei/ultimate.webp",
       "params": { "aoeMult": 2.0, "hits": 3, "hitMult": 1.5, "enemyDelay": 0.35, "domainRounds": 2, "domainTiming": "before", "toughness": 20 },
       "desc": "小惟展开「幻海」，并对敌方发动攻击：对敌方全体造成相当于小惟==200%==攻击力的负相伤害；再对指定敌方单体追加==3==段攻击，每段造成==150%==攻击力的负相伤害（指定单体总理论倍率==650%==）。目标被击败时剩余攻击转移至其他存活敌人。\n施放后：敌方全体行动延后==35%==；展开持续==2==轮的「幻海」，期间伤害复现比例提高至==70%==，我方符合条件的直接伤害获得虚实倍率加成。\n同一时间仅可存在一个「幻海」，再次释放终结技会刷新持续时间。",
-      "level": null, "maxLevel": null, "upgrade": null }
+      "level": 10, "maxLevel": 10, "upgrade": null }
   ],
   "ascensions": [
     { "no": "I", "name": "梦从未请求许可", "params": { "openingDomainRounds": 1, "firstUltCostCut": 0.2 } },

@@ -27,7 +27,16 @@ export class Battle {
   start() { this.bus.emit('battle:start', { battle: this }); return this; }
   advance(u, pct, cause) { this.timeline.advance(u.id, pct); this.bus.emit('action:advance', { unit: u, pct, cause }); }
   delay(u, pct, cause) { this.timeline.delay(u.id, pct); this.bus.emit('action:delay', { unit: u, pct, cause }); }
-  gainEnergy(u, n) { if (u.maxEnergy == null) return; u.energy = Math.min(u.maxEnergy, u.energy + n * (1 + (u.stats.energyRegen || 0))); }
+  gainEnergy(u, n, {fixed = false} = {}) {
+    if (u.maxEnergy == null) return;
+    let amount = n;
+    if (!fixed) {
+      const context = {unit:u, bonus:u.stats.energyRegen || 0};
+      this.bus.pipe('energy:calc',context);
+      amount *= 1 + context.bonus;
+    }
+    u.energy = Math.min(u.maxEnergy, u.energy + amount);
+  }
   hitToughness(t, amount, element, ctx) {
     if (t.maxToughness <= 0 || t.broken) return;
     const weak = t.weaknesses.includes(element); const eff = weak ? amount : amount * (ctx.offWeakRatio || 0);
@@ -46,21 +55,32 @@ export class Battle {
   takeTurn(u, action) {
     if (this.over || !u.alive) return;
     this.turnUnit = u; this.bus.emit('turn:start', { unit: u });
+    if (!u.alive || this.over) { this.turnUnit = null; return; }
     const kit = this.kits.get(u.id);
     const act = action || (this.controllers[u.id] && this.controllers[u.id](this, u)) || (kit && kit.ai && kit.ai()) || { type: 'basic' };
-    if (kit && kit.act) kit.act(act); else this.genericAct(u, act);
-    this.bus.emit('action', { unit: u, action: act });
+    this.resolveAction(u, act);
     if (!this.over) this.bus.emit('turn:end', { unit: u });
     this.turnUnit = null; this.timeline.resetAfterTurn(u.id);
+    if (u.alive && !this.over) this.bus.emit('turn:reset',{unit:u});
   }
   /* 插入行动（终结技）：不占回合、不重置行动条，也不触发 turn:start / turn:end 上的回合类结算 */
   insertAction(u, action) {
     if (this.over || !u.alive) return;
     const prev = this.turnUnit; this.turnUnit = u;
-    const kit = this.kits.get(u.id);
-    if (kit && kit.act) kit.act(action); else this.genericAct(u, action);
-    this.bus.emit('action', { unit: u, action, inserted: true });
+    this.resolveAction(u, action, true);
     this.turnUnit = prev;
+  }
+  resolveAction(unit, action, inserted = false) {
+    const previous = this.activeCast;
+    const cast = {unit, action, inserted, attacked:false};
+    this.activeCast = cast;
+    try {
+      const kit = this.kits.get(unit.id);
+      if (kit?.act) kit.act(action); else this.genericAct(unit, action);
+      this.bus.emit('action', cast);
+    } finally {
+      this.activeCast = previous;
+    }
   }
   genericAct(u, act) { const t = act.target || this.enemiesOf(u)[0]; if (t) this.damage.dealDirect(u, t, { mult: act.mult ?? 1, tag: act.type }); }
   /* 按行动序列走一步 */

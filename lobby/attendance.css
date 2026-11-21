@@ -1,0 +1,179 @@
+#panel.sign-panel {
+  --cobalt: #0a4bfd;
+  --frame: #19385d;
+  width: min(1280px, 95vw);
+  max-height: 94svh;
+  padding: 3px 5px 8px 3px;
+  border: 1px solid #283e62;
+  color: #152845;
+  background: linear-gradient(145deg, #f7fbff 8%, #acc4df 43%, #6888ad 78%, #d8e8fc 100%);
+  box-shadow: 2px 3px 0 #456487, 4px 7px 0 #163355, 4px 10px 3px #13254475, 0 18px 72px #091e4677;
+}
+#panel.sign-panel::backdrop { background: #14233db8; }
+.sign-panel .panel-head { display: contents; }
+.sign-panel .panel-head > div { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.sign-panel #close {
+  position: absolute; z-index: 5; top: 10px; right: 5px; width: 44px; height: 39px;
+  padding: 0 0 3px 3px; background: #163863; color: white; border: 0;
+  box-shadow: inset 0 1px #628fbd,inset 0 -3px #0c223f; font: 28px/1 var(--sans);
+  clip-path: polygon(0 0,100% 0,100% 100%,10px 100%,0 calc(100% - 10px));
+}
+.sign-panel #close:focus-visible { outline: 2px solid white; outline-offset: -5px; }
+.sign-panel #panel-body { display: block; padding: 0; }
+.attendance {
+  position: relative; display: grid; grid-template-columns: 29% minmax(0,1fr);
+  container-type: inline-size; isolation: isolate; overflow: hidden;
+  padding-top: 9px; border: 1px solid #456482; border-bottom: 4px solid var(--frame);
+  background: #f2f7fb;
+}
+.sign-rail {
+  position: absolute; inset: 0 0 auto; height: 9px; overflow: hidden; z-index: 3;
+  background: linear-gradient(to bottom, #7eb1ff 0 1px, #2562e3 1px 4px, #124197 4px 7px, #092c64 7px);
+}
+.sign-rail::after {
+  content: ''; position: absolute; right: 0; top: 0; width: 9%; height: 100%; opacity: .7;
+  background: repeating-linear-gradient(120deg,transparent 0 5px,#bfdcfe 5px 7px);
+}
+.sign-rail i {
+  display: block; position: absolute; inset: 1px auto 2px 0; width: 24%;
+  background: linear-gradient(90deg, transparent,#63a3ff 46%,#effdff 84%,#fff 89%,transparent 90%,transparent 93%,#9adeff 93% 96%,transparent 97%);
+  transform: translateX(-105%); animation: sign-scan 4.1s linear infinite;
+}
+@keyframes sign-scan { 0% {transform: translateX(-105%);} 88%,100% {transform: translateX(430%);} }
+body.still .sign-rail i { animation: none; transform: translateX(110%); }
+@media (prefers-reduced-motion:reduce) { .sign-rail i { animation: none; transform: translateX(110%); } }
+.attendance::before {
+  content: ''; position: absolute; inset: 0; z-index: -2;
+  background: linear-gradient(105deg,transparent 10%, #e6eff8bf 40%,#eff6fbec 62%,#edf4f9b8),url('../assets/lobby/ice-coast.webp') center 46%/cover;
+}
+.attendance::after {
+  content: ''; position: absolute; z-index: -1; inset: 0;
+  background-image: radial-gradient(#3e65937a .7px,transparent .9px);
+  background-size: 4px 4px; mask-image: linear-gradient(150deg, black,transparent 29%,transparent 79%,#0009);
+}
+.sign-portrait { position: relative; min-width: 0; }
+.sign-portrait::before {
+  content: ''; position: absolute; inset: 0 -8% 0 0;
+  background: linear-gradient(90deg,#0a4bfd80,#416dea38),url('../assets/lobby/survey-observatory.webp') 34% 55%/auto 110%;
+  clip-path: polygon(0 0,97% 0,61% 100%,0 100%);
+}
+.sign-vera { position: absolute; top: 1%; left: -5%; width: 116%; max-width: none; filter: drop-shadow(5px 5px 0 #24437628); }
+.sign-caption {
+  --star-size: clamp(26px,2.85cqw,39px);
+  position: absolute; z-index: 1; left: 0; right: -3%; bottom: 0; padding: 5cqw 1cqw 2cqw 2.3cqw;
+  color: white; background: linear-gradient(0deg,#132b54f5 0%,#132b54c9 49%,transparent);
+}
+.sign-caption [lang="en"] { display: block; font: 700 clamp(13px,1.15cqw,16px)/1 DIN,sans-serif; letter-spacing: .13em; }
+.sign-caption strong { display: block; margin: 2px 0 3px; font: 850 clamp(28px,3.2cqw,44px)/1.2 var(--sans); }
+.sign-content { position: relative; padding: 2.65cqw 2.2cqw 1.2cqw 1.1cqw; }
+.sign-heading { margin: 0 0 clamp(21px,2.1cqw,28px); padding-left: .3cqw; }
+.sign-kicker { display: flex; align-items: center; gap: 9px; color: #254f8b; font-size: clamp(14px,1.18cqw,17px); font-weight: 800; letter-spacing: .1em; }
+.sign-kicker i { width: 28px; height: 6px; background: repeating-linear-gradient(118deg,#2458bd 0 6px, transparent 6px 9px); }
+.sign-heading h2 { margin: .3cqw 0 .65cqw; color: #172e53; font: 950 clamp(44px,6.3cqw,84px)/1.1 var(--sans); letter-spacing: -.065em; }
+.sign-panel #panel-body .sign-heading p { margin: 0; font: 650 clamp(15px,1.42cqw,20px)/1.5 var(--sans); color: #354c69; }
+.sign-heading p b { color: #0947b7; font-weight: 850; white-space: nowrap; }
+.stamp-row { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)) minmax(0,1.2fr); gap: max(5px,.5cqw); }
+.stamp-card {
+  --rim:#7892ac; --lip:#526f91; --rail:#385b84; --date:#203d63;
+  min-width: 0; position: relative; display: grid; padding: 0 2px 2px;
+  grid-template-rows: auto auto auto auto; text-align: left; background: #e9f2fa;
+  border: 1px solid var(--rim); border-bottom: 3px solid var(--lip);
+  color: #233a57; box-shadow: inset 1px 1px #fff,inset -1px -1px #acbed1,1px 3px 0 #213d6455;
+}
+.stamp-day {
+  position: relative; isolation:isolate; display:flex; justify-content:space-between; align-items:flex-end;
+  padding: 0 max(4px,.44cqw) 4px; height:clamp(42px,4.55cqw,59px);
+  border-bottom: 2px solid var(--rail); color:var(--date);
+  background:linear-gradient(127deg,transparent 68%,#b2c8dc55 68% 76%,transparent 76%);
+}
+.stamp-day::before {
+  content:''; z-index:-1; position:absolute; left:-2px; right:0; bottom:4px; height:39%;
+  background:var(--rail); clip-path:polygon(0 0,44% 0,35% 84%,100% 84%,100% 100%,0 100%);
+}
+.stamp-day small { padding-bottom:1px; color:white; font:bold clamp(11px,1.1cqw,15px)/1 DIN,sans-serif; }
+.stamp-day b { font:800 clamp(34px,4.05cqw,54px)/.91 DIN,sans-serif; letter-spacing:-.065em; transform:skewX(-8deg); text-shadow:1px 1px #fff,2px 3px #93acca; }
+.stamp-card:first-child .stamp-day {
+  --rail:#ff650b; --date:#af3c08;
+  background:linear-gradient(127deg,#fff6e9 67%,#ffc392 67% 76%,#ffdfc4 76%);
+}
+.stamp-card:first-child .stamp-day small { color:#351f19; }
+.stamp-card:first-child .stamp-day b { text-shadow:1px 1px white,2px 3px #ebad84; }
+.stamp-object { height: clamp(68px,8.7cqw,115px); position: relative; display:grid; place-items:center; overflow:hidden;
+  background: linear-gradient(145deg,#fff 10%,#e8f0fa 65%,#c3d7ea); }
+.stamp-object::before { content:''; position:absolute; inset:11%; border:1px solid #a6bed096; transform: rotate(-33deg) scale(.8); }
+.stamp-object img { position:relative; width:83%; height:80%; object-fit:contain; filter:drop-shadow(0 3px 2px #293e582f); }
+.stamp-object strong { position:absolute; right:2px; bottom:2px; color:#143964; background:#f8fcfff0; font:bold clamp(17px,1.65cqw,23px)/1 DIN,sans-serif; padding:2px 4px; }
+.stamp-name,.stamp-state { display:block; text-align:center; white-space:nowrap; line-height:1.3; font-weight:800; }
+.stamp-name { padding: .6cqw 0; font-size:clamp(14px,1.35cqw,18px); }
+.stamp-state { background:#ccdae7; color:#334e6e; padding:.52cqw 0; border-top:1px solid #a6bbcf; font-size:clamp(14px,1.32cqw,18px); }
+.stamp-card.ready { --rim:#1249d7; --lip:#123582; --rail:var(--cobalt); --date:#0a4bfd; }
+.stamp-card.ready .stamp-state { background:var(--cobalt); color:white; border-color:#2c68fd; }
+.stamp-card.ready:hover .stamp-object img { transform:translateY(-2px); }
+.stamp-card.ready:focus-visible { outline:2px solid #ff812b; outline-offset:2px; }
+.stamp-card.signature { --rim:#193d79; --lip:#102957; --rail:#9ec8ff; color:white; background:#203f76; }
+.signature .stamp-day b { color:white; text-shadow:1px 2px #425797,2px 3px #132d5c; }
+.signature .stamp-day small { color:#0d305e; }
+.signature .stamp-object { background:#9ab8ed; }
+.signature .stamp-object img { width:100%; height:100%; object-fit:cover; object-position:50% 35%; }
+.signature .stars { --star-size:clamp(14px,1.55cqw,22px); position:absolute; bottom:5px; left:50%; transform:translateX(-50%); }
+.signature .stamp-state { background:#b7cbe1; color:#25426b; }
+.claimed .stamp-object img { opacity:.62; }
+.claimed .stamp-state { background:#cedfe3; color:#31576a; }
+.sign-foot {
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  margin-top:clamp(16px,1.55cqw,22px); padding-top:9px; border-top:2px solid #788fab;
+  font:700 clamp(15px,1.35cqw,19px)/1.35 var(--sans); color:#294563;
+}
+.sign-count { flex:none; display:flex; gap:6px; align-items:baseline; }
+.sign-count b { font:800 1.95em/.95 DIN,sans-serif; color:#124aac; }
+.sign-count small { font:700 1.15em/1 DIN,sans-serif; }
+.sign-feedback a { color:#164eaa; }
+
+@media (min-width:641px) and (max-width:980px) {
+  .attendance { grid-template-columns:minmax(0,29%) minmax(0,1fr); }
+  .sign-portrait { grid-area:1 / 1; }
+  .sign-content { display:contents; }
+  .sign-vera { top:0; left:2%; width:88%; }
+  .sign-caption { --star-size:22px; padding:24px 8px 7px 14px; right:0; background:linear-gradient(0deg,#173c69ed,#123d6255 59%,transparent); }
+  .sign-caption strong { font-size:24px; }
+  .sign-caption [lang="en"] { font-size:11px; }
+  .sign-heading { grid-area:1 / 2; margin:0; padding:25px 42px 20px 15px; min-height:182px; align-self:center; }
+  .sign-heading h2 { font-size:clamp(48px,7.5vw,66px); }
+  .stamp-row,.sign-foot { grid-column:1/-1; margin-inline:13px; }
+  .stamp-row { z-index:1; margin-top:7px; }
+  .sign-portrait { overflow:hidden; }
+  .sign-foot { margin-bottom:12px; }
+  .sign-foot { padding:8px 10px; background:#f2f7fbed; }
+  .stamp-name,.stamp-state { font-size:clamp(14px,2.1vw,17px); }
+}
+@media (max-width:640px) {
+  #panel.sign-panel { width:96vw; }
+  .attendance { display:block; }
+  .sign-portrait { position:absolute; right:0; top:9px; width:41%; height:157px; overflow:hidden; }
+  .sign-portrait::before { inset:0; clip-path:polygon(21% 0,100% 0,100% 100%,0 100%); }
+  .sign-vera { width:100%; left:5%; top:0; }
+  .sign-caption { display:none; }
+  .sign-content { padding:0 9px 12px; }
+  .sign-heading { min-height:157px; width:61%; display:flex; flex-direction:column; justify-content:center; margin:0; }
+  .sign-heading h2 { font-size:clamp(34px,10vw,53px); margin:5px 0; }
+  .stamp-row { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px 5px; }
+  .stamp-object { height:clamp(49px,15vw,80px); }
+  .stamp-day { height:38px; }
+  .stamp-day b { font-size:33px; }
+  .stamp-name,.stamp-state { padding:5px 0; font-size:clamp(12px,3.45vw,16px); }
+  .stamp-row .signature { grid-column:span 2; }
+  .signature .stamp-object img { object-position:50% 50%; }
+  .signature .stars { left:auto; right:4px; transform:none; }
+  .sign-foot { flex-wrap:wrap; margin-top:12px; padding-top:7px; font-size:14px; }
+  .sign-count { margin-left:auto; }
+}
+@media (max-height:500px) and (min-width:641px) {
+  .sign-heading { min-height:118px; padding-top:5px; padding-bottom:5px; }
+  .sign-heading h2 { font-size:38px; }
+  .sign-portrait .sign-vera { top:-4%; width:68%; }
+  .sign-caption { left:50%; padding:4px; }
+  .sign-caption [lang="en"] { display:none; }
+  .sign-caption strong { font-size:16px; }
+  .sign-caption .stars { --star-size:15px; }
+  .stamp-object { height:clamp(45px,14svh,67px); }
+}

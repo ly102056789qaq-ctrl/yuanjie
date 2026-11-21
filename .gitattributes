@@ -1,0 +1,2 @@
+battle3d/unity/player/Build/player.data filter=lfs diff=lfs merge=lfs -text
+battle3d/unity/player/Build/player.wasm filter=lfs diff=lfs merge=lfs -text

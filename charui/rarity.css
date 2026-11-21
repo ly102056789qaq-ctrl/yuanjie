@@ -1,0 +1,7 @@
+.stars { display:flex; width:max-content; align-items:center; isolation:isolate; flex:none; }
+.stars svg {
+  width:var(--star-size); height:var(--star-size); overflow:visible; fill:white;
+  filter:drop-shadow(2px 2.5px 0 #002fa7) drop-shadow(0 0 3px rgb(126 182 255 / 78%)) drop-shadow(0 2px 2px rgb(16 33 76 / 35%));
+}
+.stars svg+svg { margin-inline-start:calc(var(--star-size) * -.27); }
+.stars.unknown svg { fill:#eef2f9; filter:drop-shadow(1px 2px 0 #9aa9bd); }

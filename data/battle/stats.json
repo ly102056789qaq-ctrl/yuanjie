@@ -14,7 +14,11 @@
   "common": { "critRate": 0.05, "critDmg": 0.5, "effectHit": 0, "effectRes": 0, "energyRegen": 0, "dmgBonus": 0 },
   "module": {
     "_doc": "5★ 专属模组 Lv80 的基础属性，按定位取值",
-    "default": { "atk": 530, "hp": 1060, "def": 400 }
+    "default": { "atk": 530, "hp": 1060, "def": 400 },
+    "siwei": { "atk": 530, "hp": 1060 },
+    "vera": { "atk": 530, "hp": 1060 },
+    "dekeke": { "hp": 1060, "spd": 8 },
+    "rin": { "hp": 1060, "def": 400 }
   },
   "energy": {
     "_doc": "超限值获取：行动与受击。角色技能数据里写了 perAction 的以角色数据为准",

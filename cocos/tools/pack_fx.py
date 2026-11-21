@@ -82,6 +82,17 @@ FX = {
     'g_red_orb': ('E54020', 2.4, 30, False),
     'g_ice_shatter': ('E54093', 2.6, 30, False),
     'g_sea_wave': ('E54122', 4.2, 30, False),
+    'ion_lens': ('E54056', 1.35, 40, False),
+    'gold_filings': ('E54046', 1.55, 42, False),
+    'gold_dial': ('E54078', 1.85, 22, False),
+    'gold_footlight': ('E50114', 2.2, 28, False),
+    'dream_crescent': ('E54104', 2.5, 45, False),
+    'dream_rain': ('E54120', 2.7, 42, False),
+    'leaf_ribbon': ('E54071', 1.75, 46, False),
+    'tx_blue_trace': ('TX0023', 2.65, 25, False),
+    'tx_violet_edge': ('TX0186', 2.25, 22, False),
+    'tx_gold_contact': ('TX0492', 2.10, 28, False),
+    'tx_red_edge': ('TX0164', 2.3, 24, False),
 }
 
 
@@ -89,8 +100,16 @@ SRC38 = os.path.join('C:' + os.sep, 'Users', '86193', 'repos', 'work', 'fxbake38
 
 
 def pack(name, src_dir, size, fps, loop):
-    root = SRC38 if src_dir.startswith('E') else SRC
-    info = json.load(open(os.path.join(root, src_dir, 'info.json'), encoding='utf-8'))
+    if src_dir.startswith('TX'):
+        import glob
+        folder = os.path.join(os.path.dirname(SRC), 'fx', 'TX040125C', 'PNG', src_dir[2:])
+        files = sorted(glob.glob(os.path.join(folder, '*.png')))
+        with Image.open(files[0]) as first:
+            info = {'size': first.size, 'frames': len(files)}
+    else:
+        root = SRC38 if src_dir.startswith('E') else SRC
+        info = json.load(open(os.path.join(root, src_dir, 'info.json'), encoding='utf-8'))
+        files = [os.path.join(root, src_dir, f'f{i:03d}.png') for i in range(info['frames'])]
     n, (w, h) = info['frames'], info['size']
     cols = math.ceil(math.sqrt(n * h / w))
     rows = math.ceil(n / cols)
@@ -98,7 +117,7 @@ def pack(name, src_dir, size, fps, loop):
     fw, fh = max(1, int(w * k)), max(1, int(h * k))
     sheet = Image.new('RGB', (cols * fw, rows * fh), (0, 0, 0))
     for i in range(n):
-        im = Image.open(os.path.join(root, src_dir, f'f{i:03d}.png')).convert('RGBA')
+        im = Image.open(files[i]).convert('RGBA')
         bg = Image.new('RGBA', im.size, (0, 0, 0, 255))
         bg.alpha_composite(im)
         fr = bg.convert('RGB').resize((fw, fh), Image.LANCZOS)
